@@ -36,7 +36,8 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
     }
     
     func generateForm() {
-        form +++ Section()
+        form
+            /* +++ Section()
             <<< LabelRow() {
                 $0.title = "Feedback".localized()
                 }.cellSetup({ (cell, row) -> () in
@@ -45,7 +46,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
                 }).onCellSelection({ [unowned self] (cell, row) -> () in
                     cell.setSelected(false, animated: true)
                     self.feedback()
-                    })
+                    })*/
         +++ Section()
             <<< LabelRow() {
                 $0.title = "Import From URL".localized()
@@ -71,7 +72,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
             <<< ButtonRow() {
                 $0.title = "User Manual".localized()
                 $0.presentationMode = PresentationMode.PresentModally(controllerProvider: ControllerProvider.Callback(builder: { [unowned self]() -> BaseSafariViewController in
-                    let url = "http://manual.potatso.com/"
+                    let url = "http://vpn.liruqi.info/ios/"
                     let vc = BaseSafariViewController(URL: NSURL(string: url)!, entersReaderIfAvailable: false)
                     vc.delegate = self
                     return vc
@@ -96,7 +97,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
 //            })
         +++ Section()
         <<< LabelRow() {
-            $0.title = "Rate on App Store".localized()
+            $0.title = "Feedback".localized()
         }.cellSetup({ (cell, row) -> () in
             cell.selectionStyle = .Default
             cell.accessoryType = .DisclosureIndicator
@@ -118,6 +119,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
             self.presentViewController(shareVC, animated: true, completion: nil)
         })
         form +++ Section()
+            /*
             <<< LabelRow() {
                 $0.title = "Follow on Twitter".localized()
                 $0.value = "@PotatsoApp"
@@ -148,15 +150,16 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
                     cell.setSelected(false, animated: true)
                     UIApplication.sharedApplication().openURL(NSURL(string: "https://telegram.me/potatso")!)
                 })
+ */
             <<< LabelRow() {
                 $0.title = "Website".localized()
-                $0.value = "http://potatso.com"
+                $0.value = "http://vpn.liruqi.info/"
                 }.cellSetup({ (cell, row) -> () in
                     cell.selectionStyle = .Default
                     cell.accessoryType = .DisclosureIndicator
                 }).onCellSelection({ (cell, row) -> () in
                     cell.setSelected(false, animated: true)
-                    UIApplication.sharedApplication().openURL(NSURL(string: "http://potatso.com")!)
+                    UIApplication.sharedApplication().openURL(NSURL(string: "http://vpn.liruqi.info/")!)
                 })
             <<< LabelRow() {
                 $0.title = "Version".localized()
