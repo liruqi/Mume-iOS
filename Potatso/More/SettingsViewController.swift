@@ -159,7 +159,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
 
     func shareWithFriends() {
         var shareItems: [AnyObject] = []
-        shareItems.append("Potatso [https://itunes.apple.com/us/app/id1070901416]")
+        shareItems.append("Mume VPN: https://itunes.apple.com/us/app/id1144787928")
         shareItems.append(UIImage(named: "AppIcon60x60")!)
         let shareVC = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
         self.presentViewController(shareVC, animated: true, completion: nil)

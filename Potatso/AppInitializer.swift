@@ -12,7 +12,7 @@ import Appirater
 import Fabric
 import LogglyLogger_CocoaLumberjack
 
-let appID = "1070901416"
+let appID = "1144787928"
 
 class AppInitializer: NSObject, AppLifeCycleProtocol {
     
