@@ -275,7 +275,7 @@ extension Manager {
         root.addChild(filter)
         
         let socksConf = root.XMLString
-        try socksConf.writeToURL(Potatso.sharedSocksConfUrl(), atomically: true, encoding: NSUTF8StringEncoding)
+        try socksConf().writeToURL(Potatso.sharedSocksConfUrl(), atomically: true, encoding: NSUTF8StringEncoding)
     }
     
     func generateShadowsocksConfig() throws {
@@ -310,8 +310,8 @@ extension Manager {
         mainConf["mmdbpath"] = maxminddbPath
         mainConf["global-mode"] = defaultToProxy
 //        mainConf["debug"] = 1024+65536+1
-//        mainConf["debug"] = 131071
-        mainConf["debug"] = mainConf["debug"] as! Int + 4096
+        mainConf["debug"] = 131071
+//        mainConf["debug"] = mainConf["debug"] as! Int + 4096
         mainConf["actionsfile"] = userActionUrl.path!
 
         let mainContent = mainConf.map { "\($0) \($1)"}.joinWithSeparator("\n")

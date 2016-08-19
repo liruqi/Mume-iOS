@@ -18,14 +18,14 @@ extension UIViewController {
         hideHUD()
         let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
         hud.mode = .Indeterminate
-        hud.label.text = text
+        hud.labelText = text
     }
     
     func showTextHUD(text: String?, dismissAfterDelay: NSTimeInterval) {
         hideHUD()
         let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
         hud.mode = .Text
-        hud.detailsLabel.text = text
+        hud.detailsLabelText = text
         hideHUD(dismissAfterDelay)
     }
     
