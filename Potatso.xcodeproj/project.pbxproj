@@ -208,7 +208,6 @@
 		B8CCC6EB1CFF1501000E7E2E /* ProxyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CCC6EA1CFF1501000E7E2E /* ProxyRow.swift */; };
 		B8D7F1841D518FF000B115F3 /* DBUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D7F1831D518FF000B115F3 /* DBUtils.swift */; };
 		B8D8CC0A1D506CB900CE6C0D /* Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D8CC091D506CB900CE6C0D /* Localized.swift */; };
-		B8D8CC0C1D508F7500CE6C0D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8D8CC0B1D508F7500CE6C0D /* CloudKit.framework */; };
 		B8D8CC111D50D5CD00CE6C0D /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D8CC101D50D5CD00CE6C0D /* SyncManager.swift */; };
 		B8D8CC131D50D5DB00CE6C0D /* ICloudSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D8CC121D50D5DB00CE6C0D /* ICloudSyncService.swift */; };
 		B8EAC5941D40BF310046963C /* TunnelError.m in Sources */ = {isa = PBXBuildFile; fileRef = B8EAC5931D40BF310046963C /* TunnelError.m */; };
@@ -906,7 +905,6 @@
 		B8CF2F991D3DF69E009C9FF3 /* Confidential.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Confidential.h; sourceTree = "<group>"; };
 		B8D7F1831D518FF000B115F3 /* DBUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DBUtils.swift; sourceTree = "<group>"; };
 		B8D8CC091D506CB900CE6C0D /* Localized.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localized.swift; sourceTree = "<group>"; };
-		B8D8CC0B1D508F7500CE6C0D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B8D8CC101D50D5CD00CE6C0D /* SyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		B8D8CC121D50D5DB00CE6C0D /* ICloudSyncService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICloudSyncService.swift; sourceTree = "<group>"; };
 		B8EAC5921D40BF310046963C /* TunnelError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TunnelError.h; sourceTree = "<group>"; };
@@ -941,7 +939,6 @@
 				9B9B15C41C21595B000B6541 /* PotatsoLibrary.framework in Frameworks */,
 				9BC6FFF11CB28B4B00E5EA61 /* PotatsoModel.framework in Frameworks */,
 				B88559EB1D21319D00B1243E /* YAML.framework in Frameworks */,
-				B8D8CC0C1D508F7500CE6C0D /* CloudKit.framework in Frameworks */,
 				553D95BB1D63FE6700B193B7 /* NetworkExtension.framework in Frameworks */,
 				234575943B38F4EAD3E2B481 /* Pods_Potatso.framework in Frameworks */,
 				B8822CD31D2B81C400AD252C /* libcrypto.a in Frameworks */,
@@ -2048,7 +2045,6 @@
 		C8B2149E8757C44C469576D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B8D8CC0B1D508F7500CE6C0D /* CloudKit.framework */,
 				553D95BA1D63FE6700B193B7 /* NetworkExtension.framework */,
 				B8822CD51D2B861E00AD252C /* StoreKit.framework */,
 				B8822CD11D2B81C400AD252C /* libcrypto.a */,
@@ -2330,10 +2326,10 @@
 								enabled = 0;
 							};
 							com.apple.Push = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.iCloud = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
