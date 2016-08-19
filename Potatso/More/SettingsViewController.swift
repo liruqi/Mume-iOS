@@ -58,11 +58,13 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
             }.onCellSelection({ [unowned self] (cell, row) in
                 self.showUserManual()
             })
+            /*
             <<< ActionRow {
                 $0.title = "Feedback".localized()
             }.onCellSelection({ (cell, row) in
                 FeedbackManager.shared.showFeedback()
             })
+            */
         return section
     }
 
@@ -94,7 +96,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
         let section = Section()
         section
             <<< ActionRow() {
-                $0.title = "Rate on App Store".localized()
+                $0.title = "Feedback".localized()
             }.onCellSelection({ (cell, row) -> () in
                 Appirater.rateApp()
             })
@@ -109,6 +111,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
     func generateAboutSection() -> Section {
         let section = Section()
         section
+            /*
             <<< ActionRow() {
                 $0.title = "Follow on Twitter".localized()
                 $0.value = "@PotatsoApp"
@@ -127,6 +130,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
             }.onCellSelection({ [unowned self] (cell, row) -> () in
                 self.joinTelegramGroup()
             })
+             */
             <<< LabelRow() {
                 $0.title = "Version".localized()
                 $0.value = AppEnv.fullVersion
@@ -135,7 +139,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
     }
 
     func showUserManual() {
-        let url = "https://manual.potatso.com/"
+        let url = "http://vpn.liruqi.info/ios/"
         let vc = BaseSafariViewController(URL: NSURL(string: url)!, entersReaderIfAvailable: false)
         vc.delegate = self
         presentViewController(vc, animated: true, completion: nil)
