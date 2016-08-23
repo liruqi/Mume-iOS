@@ -19,7 +19,6 @@
 		9B0CFA0F1C1C0B1B007BD7C6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0CFA0E1C1C0B1B007BD7C6 /* AppDelegate.swift */; };
 		9B0CFA161C1C0B1B007BD7C6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B0CFA151C1C0B1B007BD7C6 /* Assets.xcassets */; };
 		9B0CFA191C1C0B1B007BD7C6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B0CFA171C1C0B1B007BD7C6 /* LaunchScreen.storyboard */; };
-		9B0CFA241C1C0B1B007BD7C6 /* PotatsoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0CFA231C1C0B1B007BD7C6 /* PotatsoTests.swift */; };
 		9B17F8EB1C53379700679FCB /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B17F8EA1C53379700679FCB /* SettingsViewController.swift */; };
 		9B17F8F01C533BBF00679FCB /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B17F8EF1C533BBF00679FCB /* Color.swift */; };
 		9B1D9B7B1CA4C45F0078D814 /* HUDUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B1D9B7A1CA4C45F0078D814 /* HUDUtils.swift */; };
@@ -226,13 +225,6 @@
 			remoteGlobalIDString = 9B9B15BC1C21595B000B6541;
 			remoteInfo = PotatsoLibrary;
 		};
-		9B0CFA201C1C0B1B007BD7C6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9B0CFA031C1C0B1A007BD7C6 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9B0CFA0A1C1C0B1A007BD7C6;
-			remoteInfo = Potatso;
-		};
 		9B8193BC1CBCFEE700BE320D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9B0CFA031C1C0B1A007BD7C6 /* Project object */;
@@ -355,9 +347,6 @@
 		9B0CFA151C1C0B1B007BD7C6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9B0CFA181C1C0B1B007BD7C6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9B0CFA1A1C1C0B1B007BD7C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9B0CFA1F1C1C0B1B007BD7C6 /* PotatsoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PotatsoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9B0CFA231C1C0B1B007BD7C6 /* PotatsoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PotatsoTests.swift; sourceTree = "<group>"; };
-		9B0CFA251C1C0B1B007BD7C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9B17F8EA1C53379700679FCB /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = More/SettingsViewController.swift; sourceTree = "<group>"; };
 		9B17F8EF1C533BBF00679FCB /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		9B1D9B7A1CA4C45F0078D814 /* HUDUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HUDUtils.swift; sourceTree = "<group>"; };
@@ -946,13 +935,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9B0CFA1C1C1C0B1B007BD7C6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9B8193AF1CBCFEE700BE320D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1052,7 +1034,6 @@
 			isa = PBXGroup;
 			children = (
 				9B0CFA0D1C1C0B1B007BD7C6 /* Potatso */,
-				9B0CFA221C1C0B1B007BD7C6 /* PotatsoTests */,
 				9B8705FB1C1D788F00651424 /* PacketTunnel */,
 				9B8193B51CBCFEE700BE320D /* TodayWidget */,
 				9B9B15BE1C21595B000B6541 /* PotatsoLibrary */,
@@ -1070,7 +1051,6 @@
 			isa = PBXGroup;
 			children = (
 				9B0CFA0B1C1C0B1B007BD7C6 /* Potatso.app */,
-				9B0CFA1F1C1C0B1B007BD7C6 /* PotatsoTests.xctest */,
 				9B8705FA1C1D788F00651424 /* PacketTunnel.appex */,
 				9B9B15BD1C21595B000B6541 /* PotatsoLibrary.framework */,
 				9BDA625B1CAE2576007F2581 /* PacketProcessor.framework */,
@@ -1111,15 +1091,6 @@
 				B8319A0F1D1BD696001E50C2 /* Localizable.strings */,
 			);
 			path = Potatso;
-			sourceTree = "<group>";
-		};
-		9B0CFA221C1C0B1B007BD7C6 /* PotatsoTests */ = {
-			isa = PBXGroup;
-			children = (
-				9B0CFA231C1C0B1B007BD7C6 /* PotatsoTests.swift */,
-				9B0CFA251C1C0B1B007BD7C6 /* Info.plist */,
-			);
-			path = PotatsoTests;
 			sourceTree = "<group>";
 		};
 		9B17F8EC1C53392D00679FCB /* Utils */ = {
@@ -2160,24 +2131,6 @@
 			productReference = 9B0CFA0B1C1C0B1B007BD7C6 /* Potatso.app */;
 			productType = "com.apple.product-type.application";
 		};
-		9B0CFA1E1C1C0B1B007BD7C6 /* PotatsoTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9B0CFA2B1C1C0B1B007BD7C6 /* Build configuration list for PBXNativeTarget "PotatsoTests" */;
-			buildPhases = (
-				9B0CFA1B1C1C0B1B007BD7C6 /* Sources */,
-				9B0CFA1C1C1C0B1B007BD7C6 /* Frameworks */,
-				9B0CFA1D1C1C0B1B007BD7C6 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				9B0CFA211C1C0B1B007BD7C6 /* PBXTargetDependency */,
-			);
-			name = PotatsoTests;
-			productName = PotatsoTests;
-			productReference = 9B0CFA1F1C1C0B1B007BD7C6 /* PotatsoTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		9B8193B11CBCFEE700BE320D /* TodayWidget */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9B8193C11CBCFEE800BE320D /* Build configuration list for PBXNativeTarget "TodayWidget" */;
@@ -2333,10 +2286,6 @@
 							};
 						};
 					};
-					9B0CFA1E1C1C0B1B007BD7C6 = {
-						CreatedOnToolsVersion = 7.2;
-						TestTargetID = 9B0CFA0A1C1C0B1A007BD7C6;
-					};
 					9B8193B11CBCFEE700BE320D = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = M54LAUT7S6;
@@ -2399,7 +2348,6 @@
 			projectRoot = "";
 			targets = (
 				9B0CFA0A1C1C0B1A007BD7C6 /* Potatso */,
-				9B0CFA1E1C1C0B1B007BD7C6 /* PotatsoTests */,
 				9B8705F91C1D788F00651424 /* PacketTunnel */,
 				9B8193B11CBCFEE700BE320D /* TodayWidget */,
 				9B9B15BC1C21595B000B6541 /* PotatsoLibrary */,
@@ -2445,13 +2393,6 @@
 				B8319A0D1D1BD696001E50C2 /* Localizable.strings in Resources */,
 				9B8285471CE20DE40027D15C /* HMScanner.bundle in Resources */,
 				9B0CFA161C1C0B1B007BD7C6 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9B0CFA1D1C1C0B1B007BD7C6 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2960,14 +2901,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9B0CFA1B1C1C0B1B007BD7C6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9B0CFA241C1C0B1B007BD7C6 /* PotatsoTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9B8193AE1CBCFEE700BE320D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3095,11 +3028,6 @@
 			isa = PBXTargetDependency;
 			target = 9B9B15BC1C21595B000B6541 /* PotatsoLibrary */;
 			targetProxy = 9B07D6B61CB7A6A900182C1B /* PBXContainerItemProxy */;
-		};
-		9B0CFA211C1C0B1B007BD7C6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 9B0CFA0A1C1C0B1A007BD7C6 /* Potatso */;
-			targetProxy = 9B0CFA201C1C0B1B007BD7C6 /* PBXContainerItemProxy */;
 		};
 		9B8193BD1CBCFEE700BE320D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3298,8 +3226,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Potatso/Potatso.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: li ruqi (AF4AJ5CG3B)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: li ruqi (AF4AJ5CG3B)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3334,7 +3262,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = info.liruqi.potatso;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "f2acd778-23c3-4304-80e7-e05de605797c";
 				SWIFT_OBJC_BRIDGING_HEADER = "Potatso/Potatso-Bridge-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "";
@@ -3347,8 +3275,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Potatso/Potatso.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: LI RUQI (M54LAUT7S6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: LI RUQI (M54LAUT7S6)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3377,34 +3305,10 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.liruqi.potatso;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "8d0a7be2-3e15-44bd-9e20-d1ce44ed00cf";
 				SWIFT_OBJC_BRIDGING_HEADER = "Potatso/Potatso-Bridge-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "";
-			};
-			name = Release;
-		};
-		9B0CFA2C1C1C0B1B007BD7C6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = PotatsoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.touchingapp.PotatsoTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Potatso.app/Potatso";
-			};
-			name = Debug;
-		};
-		9B0CFA2D1C1C0B1B007BD7C6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = PotatsoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.touchingapp.PotatsoTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Potatso.app/Potatso";
 			};
 			name = Release;
 		};
@@ -3414,8 +3318,8 @@
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CODE_SIGN_ENTITLEMENTS = TodayWidget/TodayWidget.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: li ruqi (AF4AJ5CG3B)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: li ruqi (AF4AJ5CG3B)";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3427,6 +3331,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = info.liruqi.potatso.TodayWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "b760c79b-055a-4f91-8e0b-9dc7db506c6b";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -3437,8 +3342,8 @@
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CODE_SIGN_ENTITLEMENTS = TodayWidget/TodayWidget.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: LI RUQI (M54LAUT7S6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: LI RUQI (M54LAUT7S6)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3449,6 +3354,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = info.liruqi.potatso.TodayWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "eb48ed48-79f1-475d-a43a-66fc77ba0586";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -3458,8 +3364,8 @@
 			baseConfigurationReference = 8AB4A0AD4E706A738479B24F /* Pods-PacketTunnel.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "PacketTunnel/Supporting Files/PacketTunnel.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: li ruqi (AF4AJ5CG3B)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: li ruqi (AF4AJ5CG3B)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3490,7 +3396,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.liruqi.potatso.tunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "d5a02a27-1548-4dc6-bfff-af2020d26765";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -3500,8 +3406,8 @@
 			baseConfigurationReference = 50F18DE964A0791935D07268 /* Pods-PacketTunnel.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "PacketTunnel/Supporting Files/PacketTunnel.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: LI RUQI (M54LAUT7S6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: LI RUQI (M54LAUT7S6)";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3530,7 +3436,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.liruqi.potatso.tunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "18acd871-5989-48f6-8991-230fe75ba718";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -3822,15 +3728,6 @@
 			buildConfigurations = (
 				9B0CFA291C1C0B1B007BD7C6 /* Debug */,
 				9B0CFA2A1C1C0B1B007BD7C6 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9B0CFA2B1C1C0B1B007BD7C6 /* Build configuration list for PBXNativeTarget "PotatsoTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9B0CFA2C1C1C0B1B007BD7C6 /* Debug */,
-				9B0CFA2D1C1C0B1B007BD7C6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
