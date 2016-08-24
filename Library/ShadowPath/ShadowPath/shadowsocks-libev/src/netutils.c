@@ -195,6 +195,9 @@ int sockaddr_cmp(struct sockaddr_storage *addr1,
         return -1;
     if (p1_in->sin_family > p2_in->sin_family)
         return 1;
+    if (verbose) {
+        LOGI("sockaddr_cmp: sin_family equal? %d", p1_in->sin_family == p2_in->sin_family);
+    }
     /* compare ip4 */
     if (p1_in->sin_family == AF_INET) {
         /* just order it, ntohs not required */
@@ -202,6 +205,9 @@ int sockaddr_cmp(struct sockaddr_storage *addr1,
             return -1;
         if (p1_in->sin_port > p2_in->sin_port)
             return 1;
+        if (verbose) {
+            LOGI("sockaddr_cmp: sin_port equal? %d", p1_in->sin_port == p2_in->sin_port);
+        }
         return memcmp(&p1_in->sin_addr, &p2_in->sin_addr, INET_SIZE);
     } else if (p1_in6->sin6_family == AF_INET6) {
         /* just order it, ntohs not required */
@@ -209,6 +215,9 @@ int sockaddr_cmp(struct sockaddr_storage *addr1,
             return -1;
         if (p1_in6->sin6_port > p2_in6->sin6_port)
             return 1;
+        if (verbose) {
+            LOGI("sockaddr_cmp: sin6_port equal? %d", p1_in6->sin6_port == p2_in6->sin6_port);
+        }
         return memcmp(&p1_in6->sin6_addr, &p2_in6->sin6_addr,
                       INET6_SIZE);
     } else {
@@ -228,6 +237,9 @@ int sockaddr_cmp_addr(struct sockaddr_storage *addr1,
         return -1;
     if (p1_in->sin_family > p2_in->sin_family)
         return 1;
+    if (verbose) {
+        LOGI("sockaddr_cmp_addr: sin_family equal? %d", p1_in->sin_family == p2_in->sin_family);
+    }
     /* compare ip4 */
     if (p1_in->sin_family == AF_INET) {
         return memcmp(&p1_in->sin_addr, &p2_in->sin_addr, INET_SIZE);

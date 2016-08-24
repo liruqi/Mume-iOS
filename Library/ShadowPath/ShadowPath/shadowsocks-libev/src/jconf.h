@@ -52,10 +52,7 @@ typedef struct {
     char *local_addr;
     char *local_port;
     char *password;
-    char *protocol; // SSR
     char *method;
-    char *obfs; // SSR
-    char *obfs_param; // SSR
     char *timeout;
     int auth;
     int fast_open;

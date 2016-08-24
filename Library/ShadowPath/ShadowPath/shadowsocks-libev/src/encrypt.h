@@ -119,30 +119,30 @@ typedef struct {
 #endif
 
 #define SODIUM_BLOCK_SIZE   64
-#define CIPHER_NUM          19
+#define CIPHER_NUM          21
 
-enum crpher_index {
-    NONE = -1,
-    TABLE = 0,
-    RC4,
-    RC4_MD5_6,
-    RC4_MD5,
-    AES_128_CFB,
-    AES_192_CFB,
-    AES_256_CFB,
-    BF_CFB,
-    CAMELLIA_128_CFB,
-    CAMELLIA_192_CFB,
-    CAMELLIA_256_CFB,
-    CAST5_CFB,
-    DES_CFB,
-    IDEA_CFB,
-    RC2_CFB,
-    SEED_CFB,
-    SALSA20,
-    CHACHA20,
-    CHACHA20IETF,
-};
+#define NONE                -1
+#define TABLE               0
+#define RC4                 1
+#define RC4_MD5             2
+#define AES_128_CFB         3
+#define AES_192_CFB         4
+#define AES_256_CFB         5
+#define AES_128_CTR         6
+#define AES_192_CTR         7
+#define AES_256_CTR         8
+#define BF_CFB              9
+#define CAMELLIA_128_CFB    10
+#define CAMELLIA_192_CFB    11
+#define CAMELLIA_256_CFB    12
+#define CAST5_CFB           13
+#define DES_CFB             14
+#define IDEA_CFB            15
+#define RC2_CFB             16
+#define SEED_CFB            17
+#define SALSA20             18
+#define CHACHA20            19
+#define CHACHA20IETF        20
 
 #define ONETIMEAUTH_FLAG 0x10
 #define ADDRTYPE_MASK 0xF
@@ -182,13 +182,9 @@ int ss_decrypt(buffer_t *ciphertext, enc_ctx_t *ctx, size_t capacity);
 void enc_ctx_init(int method, enc_ctx_t *ctx, int enc);
 int enc_init(const char *pass, const char *method);
 int enc_get_iv_len(void);
-uint8_t* enc_get_key(void);
-int enc_get_key_len(void);
 void cipher_context_release(cipher_ctx_t *evp);
 unsigned char *enc_md5(const unsigned char *d, size_t n, unsigned char *md);
 
-int ss_sha1_hmac(char *auth, char *msg, int msg_len, uint8_t *iv);
-int ss_sha1_hmac_with_key(char *auth, char *msg, int msg_len, uint8_t *auth_key, int key_len);
 int ss_onetimeauth(buffer_t *buf, uint8_t *iv, size_t capacity);
 int ss_onetimeauth_verify(buffer_t *buf, uint8_t *iv);
 
@@ -198,7 +194,5 @@ int ss_gen_hash(buffer_t *buf, uint32_t *counter, enc_ctx_t *ctx, size_t capacit
 int balloc(buffer_t *ptr, size_t capacity);
 int brealloc(buffer_t *ptr, size_t len, size_t capacity);
 void bfree(buffer_t *ptr);
-
-int rand_bytes(uint8_t *output, int len);
 
 #endif // _ENCRYPT_H

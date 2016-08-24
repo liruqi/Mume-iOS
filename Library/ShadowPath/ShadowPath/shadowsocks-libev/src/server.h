@@ -53,7 +53,7 @@ typedef struct server {
     int fd;
     int stage;
     buffer_t *buf;
-    ssize_t buf_capacity;
+    buffer_t *header_buf;
 
     int auth;
     struct chunk *chunk;
@@ -84,7 +84,6 @@ typedef struct remote_ctx {
 typedef struct remote {
     int fd;
     buffer_t *buf;
-    ssize_t buf_capacity;
     struct remote_ctx *recv_ctx;
     struct remote_ctx *send_ctx;
     struct server *server;

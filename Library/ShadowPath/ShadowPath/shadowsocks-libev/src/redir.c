@@ -1,8 +1,8 @@
 /*
  * redir.c - Provide a transparent TCP proxy through remote shadowsocks
- *            server
+ *           server
  *
- * Copyright (C) 2013 - 2015, Max Lv <max.c.lv@gmail.com>
+ * Copyright (C) 2013 - 2016, Max Lv <max.c.lv@gmail.com>
  *
  * This file is part of the shadowsocks-libev.
  *
@@ -29,7 +29,6 @@
 #include <locale.h>
 #include <netdb.h>
 #include <netinet/in.h>
-#include <netinet/tcp.h>
 #include <pthread.h>
 #include <signal.h>
 #include <string.h>
@@ -68,8 +67,6 @@
 #define IP6T_SO_ORIGINAL_DST 80
 #endif
 
-#include "obfs.c" // I don't want to modify makefile
-
 static void accept_cb(EV_P_ ev_io *w, int revents);
 static void server_recv_cb(EV_P_ ev_io *w, int revents);
 static void server_send_cb(EV_P_ ev_io *w, int revents);
@@ -84,7 +81,7 @@ static void close_and_free_remote(EV_P_ remote_t *remote);
 static void free_server(server_t *server);
 static void close_and_free_server(EV_P_ server_t *server);
 
-int verbose = 0;
+int verbose        = 0;
 int keep_resolving = 1;
 
 static int mode = TCP_ONLY;
@@ -222,33 +219,18 @@ static void server_recv_cb(EV_P_ ev_io *w, int revents)
         ss_gen_hash(remote->buf, &remote->counter, server->e_ctx, BUF_SIZE);
     }
 
-    // SSR beg
-    if (server->protocol_plugin) {
-        obfs_class *protocol_plugin = server->protocol_plugin;
-        if (protocol_plugin->client_pre_encrypt) {
-            remote->buf->len = protocol_plugin->client_pre_encrypt(server->protocol, &remote->buf->array, remote->buf->len, &remote->buf->capacity);
-        }
+    if (!remote->send_ctx->connected) {
+        ev_io_stop(EV_A_ & server_recv_ctx->io);
+        ev_io_start(EV_A_ & remote->send_ctx->io);
+        return;
     }
+
     int err = ss_encrypt(remote->buf, server->e_ctx, BUF_SIZE);
 
     if (err) {
         LOGE("invalid password or cipher");
         close_and_free_remote(EV_A_ remote);
         close_and_free_server(EV_A_ server);
-        return;
-    }
-
-    if (server->obfs_plugin) {
-        obfs_class *obfs_plugin = server->obfs_plugin;
-        if (obfs_plugin->client_encode) {
-            remote->buf->len = obfs_plugin->client_encode(server->obfs, &remote->buf->array, remote->buf->len, &remote->buf->capacity);
-        }
-    }
-    // SSR end
-
-    if (!remote->send_ctx->connected) {
-        ev_io_stop(EV_A_ & server_recv_ctx->io);
-        ev_io_start(EV_A_ & remote->send_ctx->io);
         return;
     }
 
@@ -353,33 +335,6 @@ static void remote_recv_cb(EV_P_ ev_io *w, int revents)
 
     server->buf->len = r;
 
-    // SSR beg
-    if (server->obfs_plugin) {
-        obfs_class *obfs_plugin = server->obfs_plugin;
-        if (obfs_plugin->client_decode) {
-            int needsendback;
-            server->buf->len = obfs_plugin->client_decode(server->obfs, &server->buf->array, server->buf->len, &server->buf->capacity, &needsendback);
-            if ((int)server->buf->len < 0) {
-                LOGE("client_decode");
-                close_and_free_remote(EV_A_ remote);
-                close_and_free_server(EV_A_ server);
-                return;
-            }
-            if (needsendback) {
-                size_t capacity = BUF_SIZE;
-                char *buf = (char*)malloc(capacity);
-                obfs_class *obfs_plugin = server->obfs_plugin;
-                if (obfs_plugin->client_encode) {
-                    int len = obfs_plugin->client_encode(server->obfs, &buf, 0, &capacity);
-                    send(remote->fd, buf, len, 0);
-                }
-                free(buf);
-            }
-        }
-    }
-    if ( server->buf->len == 0 )
-        return;
-
     int err = ss_decrypt(server->buf, server->d_ctx, BUF_SIZE);
     if (err) {
         LOGE("invalid password or cipher");
@@ -387,23 +342,6 @@ static void remote_recv_cb(EV_P_ ev_io *w, int revents)
         close_and_free_server(EV_A_ server);
         return;
     }
-
-    if (server->protocol_plugin) {
-        obfs_class *protocol_plugin = server->protocol_plugin;
-        if (protocol_plugin->client_post_decrypt) {
-            server->buf->len = protocol_plugin->client_post_decrypt(server->protocol, &server->buf->array, server->buf->len, &server->buf->capacity);
-            if ((int)server->buf->len < 0) {
-                LOGE("client_post_decrypt");
-                close_and_free_remote(EV_A_ remote);
-                close_and_free_server(EV_A_ server);
-                return;
-            }
-            if ( server->buf->len == 0 )
-                return;
-        }
-    }
-    // SSR end
-
     int s = send(server->fd, server->buf->array, server->buf->len, 0);
 
     if (s == -1) {
@@ -443,7 +381,7 @@ static void remote_send_cb(EV_P_ ev_io *w, int revents)
         if (r == 0) {
             remote_send_ctx->connected = 1;
             ev_io_stop(EV_A_ & remote_send_ctx->io);
-            //ev_io_stop(EV_A_ & server->recv_ctx->io);
+            ev_io_stop(EV_A_ & server->recv_ctx->io);
             ev_timer_stop(EV_A_ & remote_send_ctx->watcher);
 
             // send destaddr
@@ -479,25 +417,10 @@ static void remote_send_cb(EV_P_ ev_io *w, int revents)
                 ss_onetimeauth(abuf, server->e_ctx->evp.iv, BUF_SIZE);
             }
 
-
-            // SSR beg
-            if (server->protocol_plugin) {
-                obfs_class *protocol_plugin = server->protocol_plugin;
-                if (protocol_plugin->client_pre_encrypt) {
-                    abuf->len = protocol_plugin->client_pre_encrypt(server->protocol, &abuf->array, abuf->len, &abuf->capacity);
-                }
-            }
-
-            if (remote->buf->len > 0) {
-                brealloc(remote->buf, remote->buf->len + abuf->len, BUF_SIZE);
-                memmove(remote->buf->array + abuf->len, remote->buf->array, remote->buf->len);
-                memcpy(remote->buf->array, abuf->array, abuf->len);
-                remote->buf->len += abuf->len;
-            } else {
-                brealloc(remote->buf, abuf->len, BUF_SIZE);
-                memcpy(remote->buf->array, abuf->array, abuf->len);
-                remote->buf->len = abuf->len;
-            }
+            brealloc(remote->buf, remote->buf->len + abuf->len, BUF_SIZE);
+            memmove(remote->buf->array + abuf->len, remote->buf->array, remote->buf->len);
+            memcpy(remote->buf->array, abuf->array, abuf->len);
+            remote->buf->len += abuf->len;
             bfree(abuf);
 
             int err = ss_encrypt(remote->buf, server->e_ctx, BUF_SIZE);
@@ -507,14 +430,6 @@ static void remote_send_cb(EV_P_ ev_io *w, int revents)
                 close_and_free_server(EV_A_ server);
                 return;
             }
-
-            if (server->obfs_plugin) {
-                obfs_class *obfs_plugin = server->obfs_plugin;
-                if (obfs_plugin->client_encode) {
-                    remote->buf->len = obfs_plugin->client_encode(server->obfs, &remote->buf->array, remote->buf->len, &remote->buf->capacity);
-                }
-            }
-            // SSR end
 
             ev_io_start(EV_A_ & remote->recv_ctx->io);
         } else {
@@ -661,20 +576,6 @@ static void free_server(server_t *server)
             bfree(server->buf);
             ss_free(server->buf);
         }
-        // SSR beg
-        if (server->obfs_plugin) {
-            server->obfs_plugin->dispose(server->obfs);
-            server->obfs = NULL;
-            free_obfs_class(server->obfs_plugin);
-            server->obfs_plugin = NULL;
-        }
-        if (server->protocol_plugin) {
-            server->protocol_plugin->dispose(server->protocol);
-            server->protocol = NULL;
-            free_obfs_class(server->protocol_plugin);
-            server->protocol_plugin = NULL;
-        }
-        // SSR end
         ss_free(server->recv_ctx);
         ss_free(server->send_ctx);
         ss_free(server);
@@ -731,7 +632,7 @@ static void accept_cb(EV_P_ ev_io *w, int revents)
     setsockopt(remotefd, SOL_SOCKET, SO_NOSIGPIPE, &opt, sizeof(opt));
 #endif
 
-    // Setup
+    // Enable TCP keepalive feature
     int keepAlive    = 1;
     int keepIdle     = 40;
     int keepInterval = 20;
@@ -741,7 +642,7 @@ static void accept_cb(EV_P_ ev_io *w, int revents)
     setsockopt(remotefd, SOL_TCP, TCP_KEEPINTVL, (void *)&keepInterval, sizeof(keepInterval));
     setsockopt(remotefd, SOL_TCP, TCP_KEEPCNT, (void *)&keepCount, sizeof(keepCount));
 
-    // Setup
+    // Set non blocking
     setnonblocking(remotefd);
 
     // Enable MPTCP
@@ -767,48 +668,9 @@ static void accept_cb(EV_P_ ev_io *w, int revents)
         return;
     }
 
-    // SSR beg
-    remote->remote_index = index;
-    server->obfs_plugin = new_obfs_class(listener->obfs_name);
-    if (server->obfs_plugin) {
-        server->obfs = server->obfs_plugin->new_obfs();
-    }
-    server->protocol_plugin = new_obfs_class(listener->protocol_name);
-    if (server->protocol_plugin) {
-        server->protocol = server->protocol_plugin->new_obfs();
-    }
-    if (listener->list_obfs_global[remote->remote_index] == NULL && server->obfs_plugin) {
-        listener->list_obfs_global[remote->remote_index] = server->obfs_plugin->init_data();
-    }
-    if (listener->list_protocol_global[remote->remote_index] == NULL && server->protocol_plugin) {
-        listener->list_protocol_global[remote->remote_index] = server->protocol_plugin->init_data();
-    }
-    server_info _server_info;
-    memset(&_server_info, 0, sizeof(server_info));
-    strcpy(_server_info.host, inet_ntoa(((struct sockaddr_in*)remote_addr)->sin_addr));
-    _server_info.port = ((struct sockaddr_in*)remote_addr)->sin_port;
-    _server_info.port = _server_info.port >> 8 | _server_info.port << 8;
-    _server_info.param = listener->obfs_param;
-    _server_info.g_data = listener->list_obfs_global[remote->remote_index];
-    _server_info.head_len = (AF_INET6 == server->destaddr.ss_family ? 19 : 7);
-    _server_info.iv = server->e_ctx->evp.iv;
-    _server_info.iv_len = enc_get_iv_len();
-    _server_info.key = enc_get_key();
-    _server_info.key_len = enc_get_key_len();
-    _server_info.tcp_mss = 1460;
-
-    if (server->obfs_plugin)
-        server->obfs_plugin->set_server_info(server->obfs, &_server_info);
-
-    _server_info.param = NULL;
-    _server_info.g_data = listener->list_protocol_global[remote->remote_index];
-
-    if (server->protocol_plugin)
-        server->protocol_plugin->set_server_info(server->protocol, &_server_info);
-    // SSR end
-
     if (r == 0) {
-        if (verbose) LOGI("connected immediately");
+        if (verbose)
+            LOGI("connected immediately");
         remote_send_cb(EV_A_ & remote->send_ctx->io, 0);
     } else {
         // listen to remote connected event
@@ -816,17 +678,11 @@ static void accept_cb(EV_P_ ev_io *w, int revents)
         ev_timer_start(EV_A_ & remote->send_ctx->watcher);
     }
 
-    if (verbose) {
-        int port = ((struct sockaddr_in*)&destaddr)->sin_port;
-        port = (uint16_t)(port >> 8 | port << 8);
-        LOGI("connect to %s:%d", inet_ntoa(((struct sockaddr_in*)&destaddr)->sin_addr), port);
-    }
-
-    // listen to remote connected event
-    ev_io_start(EV_A_ & remote->send_ctx->io);
+    ev_io_start(EV_A_ & server->recv_ctx->io);
 }
 
-void signal_cb(int dummy) {
+void signal_cb(int dummy)
+{
     keep_resolving = 0;
     exit(-1);
 }
@@ -842,14 +698,11 @@ int main(int argc, char **argv)
     char *user       = NULL;
     char *local_port = NULL;
     char *local_addr = NULL;
-    char *password = NULL;
-    char *timeout = NULL;
-    char *protocol = NULL; // SSR
-    char *method = NULL;
-    char *obfs = NULL; // SSR
-    char *obfs_param = NULL; // SSR
-    char *pid_path = NULL;
-    char *conf_path = NULL;
+    char *password   = NULL;
+    char *timeout    = NULL;
+    char *method     = NULL;
+    char *pid_path   = NULL;
+    char *conf_path  = NULL;
 
     int remote_num = 0;
     ss_addr_t remote_addr[MAX_REMOTE_NUM];
@@ -857,15 +710,15 @@ int main(int argc, char **argv)
 
     int option_index                    = 0;
     static struct option long_options[] = {
-        { "mtu",  required_argument, 0, 0 },
-        { "mptcp", no_argument     , 0, 0 },
-        { "help",  no_argument     , 0, 0 },
-        {      0,            0     , 0, 0 }
+        { "mtu",   required_argument, 0, 0 },
+        { "mptcp", no_argument,       0, 0 },
+        { "help",  no_argument,       0, 0 },
+        {       0,                 0, 0, 0 }
     };
 
     opterr = 0;
 
-    while ((c = getopt_long(argc, argv, "f:s:p:l:k:t:m:c:b:a:n:O:o:G:g:huUvA", // SSR
+    while ((c = getopt_long(argc, argv, "f:s:p:l:k:t:m:c:b:a:n:huUvA",
                             long_options, &option_index)) != -1) {
         switch (c) {
         case 0:
@@ -902,22 +755,9 @@ int main(int argc, char **argv)
         case 't':
             timeout = optarg;
             break;
-        // SSR beg
-        case 'O':
-            protocol = optarg;
-            break;
         case 'm':
             method = optarg;
             break;
-        case 'o':
-            obfs = optarg;
-            break;
-        case 'G':
-            break;
-        case 'g':
-            obfs_param = optarg;
-            break;
-        // SSR end
         case 'c':
             conf_path = optarg;
             break;
@@ -984,24 +824,9 @@ int main(int argc, char **argv)
         if (password == NULL) {
             password = conf->password;
         }
-        // SSR beg
-        if (protocol == NULL) {
-            protocol = conf->protocol;
-            LOGI("protocol %s", protocol);
-        }
         if (method == NULL) {
             method = conf->method;
-            LOGI("method %s", method);
         }
-        if (obfs == NULL) {
-            obfs = conf->obfs;
-            LOGI("obfs %s", obfs);
-        }
-        if (obfs_param == NULL) {
-            obfs_param = conf->obfs_param;
-            LOGI("obfs_param %s", obfs_param);
-        }
-        // SSR end
         if (timeout == NULL) {
             timeout = conf->timeout;
         }
@@ -1017,7 +842,7 @@ int main(int argc, char **argv)
 #ifdef HAVE_SETRLIMIT
         if (nofile == 0) {
             nofile = conf->nofile;
-    }
+        }
         /*
          * no need to check the return value here since we will show
          * the user an error message if setrlimit(2) fails
@@ -1029,10 +854,6 @@ int main(int argc, char **argv)
             set_nofile(nofile);
         }
 #endif
-    }
-    if (protocol && strcmp(protocol, "verify_sha1") == 0) {
-        auth = 1;
-        protocol = NULL;
     }
 
     if (remote_num == 0 || remote_port == NULL ||
@@ -1061,7 +882,7 @@ int main(int argc, char **argv)
     // ignore SIGPIPE
     signal(SIGPIPE, SIG_IGN);
     signal(SIGABRT, SIG_IGN);
-    signal(SIGINT,  signal_cb);
+    signal(SIGINT, signal_cb);
     signal(SIGTERM, signal_cb);
 
     // Setup keys
@@ -1084,16 +905,7 @@ int main(int argc, char **argv)
         listen_ctx.remote_addr[i] = (struct sockaddr *)storage;
     }
     listen_ctx.timeout = atoi(timeout);
-    // SSR beg
-    listen_ctx.protocol_name = protocol;
-    listen_ctx.method = m;
-    listen_ctx.obfs_name = obfs;
-    listen_ctx.obfs_param = obfs_param;
-    listen_ctx.list_protocol_global = malloc(sizeof(void *) * remote_num);
-    listen_ctx.list_obfs_global = malloc(sizeof(void *) * remote_num);
-    memset(listen_ctx.list_protocol_global, 0, sizeof(void *) * remote_num);
-    memset(listen_ctx.list_obfs_global, 0, sizeof(void *) * remote_num);
-    // SSR end
+    listen_ctx.method  = m;
     listen_ctx.mptcp   = mptcp;
 
     struct ev_loop *loop = EV_DEFAULT;
