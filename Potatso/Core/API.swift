@@ -14,8 +14,7 @@ import ISO8601DateFormatter
 
 struct API {
 
-//    static let URL = "http://192.168.2.217:8000/api/"
-    static let URL = "https://api.potatso.com/"
+    static let URL = "http://api.liruqi.info/"
 
     enum Path {
         case RuleSets
@@ -26,9 +25,9 @@ struct API {
             let path: String
             switch self {
             case .RuleSets:
-                path = "rulesets"
+                path = "mume-rulesets.json"
             case .RuleSet(let uuid):
-                path = "ruleset/\(uuid)"
+                path = "ruleset/\(uuid).json"
             case .RuleSetListDetail():
                 path = "rulesets/detail"
             }
@@ -44,11 +43,6 @@ struct API {
     static func getRuleSetDetail(uuid: String, callback: Alamofire.Response<RuleSet, NSError> -> Void) {
         DDLogVerbose("API.getRuleSetDetail ===> uuid: \(uuid)")
         Alamofire.request(.GET, Path.RuleSet(uuid).url).responseObject(completionHandler: callback)
-    }
-
-    static func updateRuleSetListDetail(uuids: [String], callback: Alamofire.Response<[RuleSet], NSError> -> Void) {
-        DDLogVerbose("API.updateRuleSetListDetail ===> uuids: \(uuids)")
-        Alamofire.request(.POST, Path.RuleSetListDetail().url, parameters: ["uuids": uuids], encoding: .JSON).responseArray(completionHandler: callback)
     }
 
 }

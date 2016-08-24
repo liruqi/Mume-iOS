@@ -18,7 +18,6 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
         Manager.sharedManager.setup()
-        CloudSetManager.shared.update()
         sync()
         return true
     }
