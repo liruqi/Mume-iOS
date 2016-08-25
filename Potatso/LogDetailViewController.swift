@@ -16,6 +16,7 @@ class LogDetailViewController: UIViewController {
     var source: dispatch_source_t?
     var fd: Int32 = 0
     var data = NSMutableData()
+    var logs = NSMutableArray()
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -74,8 +75,13 @@ class LogDetailViewController: UIViewController {
         let readSize = Darwin.read(fd, buffer, size)
         data.appendBytes(buffer, length: readSize)
         if let content = String(data: data, encoding: NSUTF8StringEncoding) {
-            dispatch_async(dispatch_get_main_queue(), { 
-                self.logView.text = self.logView.text.stringByAppendingString(content)
+            logs.addObject(content)
+            if logs.count > 16 {
+                logs.removeObjectAtIndex(0)
+            }
+            let slog = self.logs.componentsJoinedByString("")
+            dispatch_async(dispatch_get_main_queue(), {
+                self.logView.text = slog
             })
             data = NSMutableData()
         }

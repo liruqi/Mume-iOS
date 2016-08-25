@@ -453,8 +453,10 @@ extension Manager {
                 manager.onDemandRules = [quickStartRule]
                 manager.saveToPreferencesWithCompletionHandler({ (error) -> Void in
                     if let error = error {
+                        print("Failed to saveToPreferencesWithCompletionHandler" + error.description)
                         complete(nil, error)
                     }else{
+                        print("Did saveToPreferencesWithCompletionHandler")
                         manager.loadFromPreferencesWithCompletionHandler({ (error) -> Void in
                             if let error = error {
                                 complete(nil, error)
@@ -485,7 +487,13 @@ extension Manager {
     
     private func createProviderManager() -> NETunnelProviderManager {
         let manager = NETunnelProviderManager()
-        manager.protocolConfiguration = NETunnelProviderProtocol()
+        let p = NETunnelProviderProtocol()
+        p.providerBundleIdentifier = "info.liruqi.potatso.tunnel"
+        if let upstreamProxy = upstreamProxy where upstreamProxy.type == .Shadowsocks {
+            p.providerConfiguration = ["host": upstreamProxy.host, "port": upstreamProxy.port]
+            p.serverAddress = upstreamProxy.host
+        }
+        manager.protocolConfiguration = p
         return manager
     }
 }

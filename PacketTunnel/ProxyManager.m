@@ -94,6 +94,7 @@ int sock_port (int fd) {
 
 - (void)_startShadowsocks {
     NSString *confContent = [NSString stringWithContentsOfURL:[Potatso sharedProxyConfUrl] encoding:NSUTF8StringEncoding error:nil];
+    NSLog(@"_startShadowsocks: %@ [%@]", confContent, [Potatso sharedProxyConfUrl]);
     NSDictionary *json = [confContent jsonDictionary];
     NSString *host = json[@"host"];
     NSNumber *port = json[@"port"];

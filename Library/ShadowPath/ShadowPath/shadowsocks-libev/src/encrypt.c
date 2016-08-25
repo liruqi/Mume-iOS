@@ -88,7 +88,7 @@ static int enc_method;
 
 static struct cache *iv_cache;
 
-#ifdef DEBUG
+#ifdef SS_DEBUG
 static void dump(char *tag, char *text, int len)
 {
     int i;
@@ -103,6 +103,7 @@ static void dump(char *tag, char *text, int len)
 static const char *supported_ciphers[CIPHER_NUM] = {
     "table",
     "rc4",
+    "rc4-md5-6",
     "rc4-md5",
     "aes-128-cfb",
     "aes-192-cfb",
@@ -127,6 +128,7 @@ static const char *supported_ciphers[CIPHER_NUM] = {
 #ifdef USE_CRYPTO_POLARSSL
 static const char *supported_ciphers_polarssl[CIPHER_NUM] = {
     "table",
+    "ARC4-128",
     "ARC4-128",
     "ARC4-128",
     "AES-128-CFB128",
@@ -155,6 +157,7 @@ static const char *supported_ciphers_mbedtls[CIPHER_NUM] = {
     "table",
     "ARC4-128",
     "ARC4-128",
+    "ARC4-128",
     "AES-128-CFB128",
     "AES-192-CFB128",
     "AES-256-CFB128",
@@ -181,6 +184,7 @@ static const CCAlgorithm supported_ciphers_applecc[CIPHER_NUM] = {
     kCCAlgorithmInvalid,
     kCCAlgorithmRC4,
     kCCAlgorithmRC4,
+    kCCAlgorithmRC4,
     kCCAlgorithmAES,
     kCCAlgorithmAES,
     kCCAlgorithmAES,
@@ -205,6 +209,7 @@ static const CCMode supported_modes_applecc[CIPHER_NUM] = {
     kCCAlgorithmInvalid,
     kCCAlgorithmInvalid,
     kCCModeRC4,
+    kCCModeRC4,
     kCCModeCFB,
     kCCModeCFB,
     kCCModeCFB,
@@ -227,11 +232,11 @@ static const CCMode supported_modes_applecc[CIPHER_NUM] = {
 #endif
 
 static const int supported_ciphers_iv_size[CIPHER_NUM] = {
-    0, 0, 16, 16, 16, 16, 16, 16, 16, 8, 16, 16, 16, 8, 8, 8, 8, 16, 8, 8, 12
+    0,  0,  6, 16, 16, 16, 16, 16, 16, 16,  8, 16, 16, 16,  8,  8,  8,  8, 16,  8,  8, 12
 };
 
 static const int supported_ciphers_key_size[CIPHER_NUM] = {
-    0, 16, 16, 16, 24, 32, 16, 24, 32, 16, 16, 24, 32, 16, 8, 16, 16, 16, 32, 32, 32
+    0, 16, 16, 16, 16, 24, 32, 16, 24, 32, 16, 16, 24, 32, 16,  8, 16, 16, 16, 32, 32, 32
 };
 
 static int safe_memcmp(const void *s1, const void *s2, size_t n)
@@ -374,6 +379,16 @@ static void merge_sort(uint8_t array[], int length,
 int enc_get_iv_len()
 {
     return enc_iv_len;
+}
+
+uint8_t* enc_get_key()
+{
+    return enc_key;
+}
+
+int enc_get_key_len()
+{
+    return enc_key_len;
 }
 
 unsigned char *enc_md5(const unsigned char *d, size_t n, unsigned char *md)
@@ -812,7 +827,7 @@ const cipher_kt_t *get_cipher_type(int method)
         return NULL;
     }
 
-    if (method == RC4_MD5) {
+    if (method == RC4_MD5 || method == RC4_MD5_6) {
         method = RC4;
     }
 
@@ -956,11 +971,11 @@ void cipher_context_set_iv(cipher_ctx_t *ctx, uint8_t *iv, size_t iv_len,
         return;
     }
 
-    if (enc_method == RC4_MD5) {
+    if (enc_method == RC4_MD5 || enc_method == RC4_MD5_6) {
         unsigned char key_iv[32];
         memcpy(key_iv, enc_key, 16);
-        memcpy(key_iv + 16, iv, 16);
-        true_key = enc_md5(key_iv, 32, NULL);
+        memcpy(key_iv + 16, iv, iv_len);
+        true_key = enc_md5(key_iv, 16 + iv_len, NULL);
         iv_len   = 0;
     } else {
         true_key = enc_key;
@@ -1046,7 +1061,7 @@ void cipher_context_set_iv(cipher_ctx_t *ctx, uint8_t *iv, size_t iv_len,
     }
 #endif
 
-#ifdef DEBUG
+#ifdef SS_DEBUG
     dump("IV", (char *)iv, iv_len);
 #endif
 }
@@ -1106,6 +1121,43 @@ static int cipher_context_update(cipher_ctx_t *ctx, uint8_t *output, size_t *ole
     return !mbedtls_cipher_update(evp, (const uint8_t *)input, ilen,
                                   (uint8_t *)output, olen);
 #endif
+}
+
+int ss_sha1_hmac(char *auth, char *msg, int msg_len, uint8_t *iv)
+{
+    uint8_t hash[ONETIMEAUTH_BYTES * 2];
+    uint8_t auth_key[MAX_IV_LENGTH + MAX_KEY_LENGTH];
+    memcpy(auth_key, iv, enc_iv_len);
+    memcpy(auth_key + enc_iv_len, enc_key, enc_key_len);
+
+#if defined(USE_CRYPTO_OPENSSL)
+    HMAC(EVP_sha1(), auth_key, enc_iv_len + enc_key_len, (uint8_t *)msg, msg_len, (uint8_t *)hash, NULL);
+#elif defined(USE_CRYPTO_MBEDTLS)
+    mbedtls_md_hmac(mbedtls_md_info_from_type(MBEDTLS_MD_SHA1), auth_key, enc_iv_len + enc_key_len, (uint8_t *)msg, msg_len, (uint8_t *)hash);
+#else
+    sha1_hmac(auth_key, enc_iv_len + enc_key_len, (uint8_t *)msg, msg_len, (uint8_t *)hash);
+#endif
+
+    memcpy(auth, hash, ONETIMEAUTH_BYTES);
+
+    return 0;
+}
+
+int ss_sha1_hmac_with_key(char *auth, char *msg, int msg_len, uint8_t *auth_key, int key_len)
+{
+    uint8_t hash[ONETIMEAUTH_BYTES * 2];
+
+#if defined(USE_CRYPTO_OPENSSL)
+    HMAC(EVP_sha1(), auth_key, key_len, (uint8_t *)msg, msg_len, (uint8_t *)hash, NULL);
+#elif defined(USE_CRYPTO_MBEDTLS)
+    mbedtls_md_hmac(mbedtls_md_info_from_type(MBEDTLS_MD_SHA1), auth_key, key_len, (uint8_t *)msg, msg_len, (uint8_t *)hash);
+#else
+    sha1_hmac(auth_key, key_len, (uint8_t *)msg, msg_len, (uint8_t *)hash);
+#endif
+
+    memcpy(auth, hash, ONETIMEAUTH_BYTES);
+
+    return 0;
 }
 
 int ss_onetimeauth(buffer_t *buf, uint8_t *iv, size_t capacity)
@@ -1195,7 +1247,7 @@ int ss_encrypt_all(buffer_t *plain, int method, int auth, size_t capacity)
             return -1;
         }
 
-#ifdef DEBUG
+#ifdef SS_DEBUG
         dump("PLAIN", plain->array, plain->len);
         dump("CIPHER", cipher->array + iv_len, cipher->len);
 #endif
@@ -1270,7 +1322,7 @@ int ss_encrypt(buffer_t *plain, enc_ctx_t *ctx, size_t capacity)
             }
         }
 
-#ifdef DEBUG
+#ifdef SS_DEBUG
         dump("PLAIN", plain->array, plain->len);
         dump("CIPHER", cipher->array + iv_len, cipher->len);
 #endif
@@ -1341,7 +1393,7 @@ int ss_decrypt_all(buffer_t *cipher, int method, int auth, size_t capacity)
             return -1;
         }
 
-#ifdef DEBUG
+#ifdef SS_DEBUG
         dump("PLAIN", plain->array, plain->len);
         dump("CIPHER", cipher->array + iv_len, cipher->len - iv_len);
 #endif
@@ -1386,7 +1438,7 @@ int ss_decrypt(buffer_t *cipher, enc_ctx_t *ctx, size_t capacity)
             ctx->counter = 0;
             ctx->init    = 1;
 
-            if (enc_method >= RC4_MD5) {
+            if (enc_method > RC4) {
                 if (cache_key_exist(iv_cache, (char *)iv, iv_len)) {
                     bfree(cipher);
                     return -1;
@@ -1427,7 +1479,7 @@ int ss_decrypt(buffer_t *cipher, enc_ctx_t *ctx, size_t capacity)
             return -1;
         }
 
-#ifdef DEBUG
+#ifdef SS_DEBUG
         dump("PLAIN", plain->array, plain->len);
         dump("CIPHER", cipher->array + iv_len, cipher->len - iv_len);
 #endif
@@ -1538,8 +1590,8 @@ void enc_key_init(int method, const char *pass)
     if (enc_key_len == 0) {
         FATAL("Cannot generate key and IV");
     }
-    if (method == RC4_MD5) {
-        enc_iv_len = 16;
+    if (method == RC4_MD5 || method == RC4_MD5_6) {
+        enc_iv_len = supported_ciphers_iv_size[method];
     } else {
         enc_iv_len = cipher_iv_size(cipher);
     }

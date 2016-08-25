@@ -36,7 +36,7 @@
 
 - (void)startTunnelWithOptions:(NSDictionary *)options completionHandler:(void (^)(NSError *))completionHandler {
     [self openLog];
-    NSLog(@"starting potatso tunnel...");
+    NSLog(@"starting mume tunnel...");
     [self updateUserDefaults];
     NSError *error = [TunnelInterface setupWithPacketTunnelFlow:self.packetFlow];
     if (error) {
@@ -249,6 +249,7 @@
 - (void)stopTunnelWithReason:(NEProviderStopReason)reason completionHandler:(void (^)(void))completionHandler
 {
 	// Add code here to start the process of stopping the tunnel
+    NSLog(@"stopTunnelWithReason: %ld", (long)reason);
     self.pendingStopCompletion = completionHandler;
     [self stop];
 }

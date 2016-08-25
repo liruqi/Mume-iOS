@@ -32,9 +32,15 @@ typedef struct {
     int local_port;       // port number of local server
     int timeout;          // connection timeout
 
+    /* SSR */
+    char *protocol;
+    char *obfs;
+    char *obfs_param;
+
     /*  Optional, set NULL if not valid   */
     char *acl;            // file path to acl
     char *log;            // file path to log
+    int use_sys_log;            // file path to log
     int fast_open;        // enable tcp fast open
     int mode;             // enable udp relay
     int auth;             // enable one-time authentication
