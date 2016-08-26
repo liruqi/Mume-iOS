@@ -57,8 +57,14 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         handleRefreshUI()
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: "List".templateImage, style: .Plain, target: presenter, action: #selector(HomePresenter.chooseConfigGroups))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: presenter, action: #selector(HomePresenter.showAddConfigGroup))
+        startTimer()
     }
-
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        stopTimer()
+    }
+    
     // MARK: - HomePresenter Protocol
 
     func handleRefreshUI() {
@@ -285,10 +291,25 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         return b
     }()
 
+    var timer: NSTimer?
+    
+    func startTimer() {
+        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(DashboardVC.onTime), userInfo: nil, repeats: true)
+        timer?.fire()
+    }
+    
+    func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    func onTime() {
+        connectButton.setTitle(status.hintDescription, forState: .Normal)
+    }
 }
 
 extension VPNStatus {
-
+    
     var color: UIColor {
         switch self {
         case .On, .Disconnecting:
@@ -301,7 +322,15 @@ extension VPNStatus {
     var hintDescription: String {
         switch self {
         case .On, .Disconnecting:
+            if let time = Settings.shared().startTime {
+                let flags = NSCalendarUnit(rawValue: UInt.max)
+                let difference = NSCalendar.currentCalendar().components(flags, fromDate: time, toDate: NSDate(), options: NSCalendarOptions.MatchFirst)
+                let f = NSDateComponentsFormatter()
+                f.unitsStyle = .Abbreviated
+                return f.stringFromDateComponents(difference)! + " - " + "Disconnect".localized()
+            }
             return "Disconnect".localized()
+            
         case .Off, .Connecting:
             return "Connect".localized()
         }

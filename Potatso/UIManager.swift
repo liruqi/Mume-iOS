@@ -43,7 +43,7 @@ class UIManager: NSObject, AppLifeCycleProtocol {
     }
     
     func makeChildViewControllers() -> [UIViewController] {
-        let cons: [(UIViewController.Type, String, String)] = [(HomeVC.self, "Home".localized(), "Home"), (DashboardVC.self, "Statistics".localized(), "Dashboard"), (CollectionViewController.self, "Manage".localized(), "Config"), (SettingsViewController.self, "More".localized(), "More")]
+        let cons: [(UIViewController.Type, String, String)] = [(HomeVC.self, "Home".localized(), "Home"), (RecentRequestsVC.self, "Recent Requests".localized(), "Dashboard"), (CollectionViewController.self, "Manage".localized(), "Config"), (SettingsViewController.self, "More".localized(), "More")]
         return cons.map {
             let vc = UINavigationController(rootViewController: $0.init())
             vc.tabBarItem = UITabBarItem(title: $1, image: $2.originalImage, selectedImage: $2.templateImage)
