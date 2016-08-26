@@ -94,7 +94,6 @@ int sock_port (int fd) {
 
 - (void)_startShadowsocks {
     NSString *confContent = [NSString stringWithContentsOfURL:[Potatso sharedProxyConfUrl] encoding:NSUTF8StringEncoding error:nil];
-    NSLog(@"_startShadowsocks: %@ [%@]", confContent, [Potatso sharedProxyConfUrl]);
     NSDictionary *json = [confContent jsonDictionary];
     NSString *host = json[@"host"];
     NSNumber *port = json[@"port"];
@@ -115,6 +114,15 @@ int sock_port (int fd) {
         profile.local_port = 0;
         profile.timeout = 600;
         profile.auth = ota;
+        if (protocol.length > 0) {
+            profile.protocol = strdup([protocol UTF8String]);
+        }
+        if (obfs.length > 0) {
+            profile.obfs = strdup([obfs UTF8String]);
+        }
+        if (obfs_param.length > 0) {
+            profile.obfs_param = strdup([obfs_param UTF8String]);
+        }
         start_ss_local_server(profile, shadowsocks_handler, (__bridge void *)self);
     }else {
         if (self.shadowsocksCompletion) {

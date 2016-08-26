@@ -281,7 +281,7 @@ extension Manager {
     func generateShadowsocksConfig() throws {
         let confURL = Potatso.sharedProxyConfUrl()
         var content = ""
-        if let upstreamProxy = upstreamProxy where upstreamProxy.type == .Shadowsocks {
+        if let upstreamProxy = upstreamProxy where upstreamProxy.type == .Shadowsocks || upstreamProxy.type == .ShadowsocksR {
             content = ["host": upstreamProxy.host, "port": upstreamProxy.port, "password": upstreamProxy.password ?? "", "authscheme": upstreamProxy.authscheme ?? "", "ota": upstreamProxy.ota, "protocol": upstreamProxy.ssrProtocol ?? "", "obfs": upstreamProxy.ssrObfs ?? "", "obfs_param": upstreamProxy.ssrObfsParam ?? ""].jsonString() ?? ""
         }
         try content.writeToURL(confURL, atomically: true, encoding: NSUTF8StringEncoding)

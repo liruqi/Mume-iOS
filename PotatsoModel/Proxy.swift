@@ -11,7 +11,7 @@ import CloudKit
 
 public enum ProxyType: String {
     case Shadowsocks = "SS"
-//    case ShadowsocksR = "SSR"
+    case ShadowsocksR = "SSR"
     case Https = "HTTPS"
     case Socks5 = "SOCKS5"
     case None = "NONE"
@@ -24,7 +24,7 @@ extension ProxyType: CustomStringConvertible {
     }
 
     public var isShadowsocks: Bool {
-        return self == .Shadowsocks
+        return self == .Shadowsocks || self == .ShadowsocksR
     }
     
 }
@@ -135,7 +135,7 @@ public class Proxy: BaseModel {
             throw ProxyError.InvalidPort
         }
         switch type {
-        case .Shadowsocks:
+        case .Shadowsocks, .ShadowsocksR:
             guard let _ = authscheme else {
                 throw ProxyError.InvalidAuthScheme
             }
@@ -218,6 +218,48 @@ extension Proxy {
                 }
                 self.port = p
                 self.type = .Shadowsocks
+            }else if uriString.lowercaseString.hasPrefix(Proxy.ssrUriPrefix) {
+                let undecodedString = uriString.substringFromIndex(uriString.startIndex.advancedBy(Proxy.ssrUriPrefix.characters.count))
+                guard let proxyString = base64DecodeIfNeeded(undecodedString), _ = proxyString.rangeOfString(":")?.startIndex else {
+                    throw ProxyError.InvalidUri
+                }
+                var hostString: String = proxyString
+                var queryString: String = ""
+                if let queryMarkIndex = proxyString.rangeOfString("?", options: .BackwardsSearch)?.startIndex {
+                    hostString = proxyString.substringToIndex(queryMarkIndex)
+                    queryString = proxyString.substringFromIndex(queryMarkIndex.successor())
+                }
+                if let hostSlashIndex = hostString.rangeOfString("/", options: .BackwardsSearch)?.startIndex {
+                    hostString = hostString.substringToIndex(hostSlashIndex)
+                }
+                let hostComps = hostString.componentsSeparatedByString(":")
+                guard hostComps.count == 6 else {
+                    throw ProxyError.InvalidUri
+                }
+                self.host = hostComps[0]
+                guard let p = Int(hostComps[1]) else {
+                    throw ProxyError.InvalidPort
+                }
+                self.port = p
+                self.ssrProtocol = hostComps[2]
+                self.authscheme = hostComps[3]
+                self.ssrObfs = hostComps[4]
+                self.password = base64DecodeIfNeeded(hostComps[5])
+                for queryComp in queryString.componentsSeparatedByString("&") {
+                    let comps = queryComp.componentsSeparatedByString("=")
+                    guard comps.count == 2 else {
+                        continue
+                    }
+                    switch comps[0] {
+                    case "obfsparam":
+                        self.ssrObfsParam = comps[1]
+                    case "remarks":
+                        self.name = comps[1]
+                    default:
+                        continue
+                    }
+                }
+                self.type = .ShadowsocksR
             }else {
                 // Not supported yet
                 throw ProxyError.InvalidUri
