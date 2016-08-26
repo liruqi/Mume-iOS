@@ -99,7 +99,7 @@ extern uint64_t rx;
 #endif
 
 static int packet_size                               = DEFAULT_PACKET_SIZE;
-static int buf_size                                  = DEFAULT_PACKET_SIZE * 2;
+static int BUF_SIZE                                  = DEFAULT_PACKET_SIZE * 2;
 static int server_num                                = 0;
 static server_ctx_t *server_ctx_list[MAX_REMOTE_NUM] = { NULL };
 
@@ -650,10 +650,10 @@ static void remote_recv_cb(EV_P_ ev_io *w, int revents)
     memset(&src_addr, 0, src_addr_len);
 
     buffer_t *buf = ss_malloc(sizeof(buffer_t));
-    balloc(buf, buf_size);
+    balloc(buf, BUF_SIZE);
 
     // recv
-    r = recvfrom(remote_ctx->fd, buf->array, buf_size, 0, (struct sockaddr *)&src_addr, &src_addr_len);
+    r = recvfrom(remote_ctx->fd, buf->array, BUF_SIZE, 0, (struct sockaddr *)&src_addr, &src_addr_len);
 
     if (r == -1) {
         // error on recv
@@ -668,7 +668,7 @@ static void remote_recv_cb(EV_P_ ev_io *w, int revents)
     buf->len = r;
 
 #ifdef MODULE_LOCAL
-    int err = ss_decrypt_all(buf, server_ctx->method, 0, buf_size);
+    int err = ss_decrypt_all(buf, server_ctx->method, 0, BUF_SIZE);
     if (err) {
         // drop the packet silently
         goto CLEAN_UP;
@@ -710,7 +710,7 @@ static void remote_recv_cb(EV_P_ ev_io *w, int revents)
     memmove(buf->array, buf->array + len, buf->len);
 #else
     // Construct packet
-    brealloc(buf, buf->len + 3, buf_size);
+    brealloc(buf, buf->len + 3, BUF_SIZE);
     memmove(buf->array + 3, buf->array, buf->len);
     memset(buf->array, 0, 3);
     buf->len += 3;
@@ -731,12 +731,12 @@ static void remote_recv_cb(EV_P_ ev_io *w, int revents)
     }
 
     // Construct packet
-    brealloc(buf, buf->len + addr_header_len, buf_size);
+    brealloc(buf, buf->len + addr_header_len, BUF_SIZE);
     memmove(buf->array + addr_header_len, buf->array, buf->len);
     memcpy(buf->array, addr_header, addr_header_len);
     buf->len += addr_header_len;
 
-    int err = ss_encrypt_all(buf, server_ctx->method, 0, buf_size);
+    int err = ss_encrypt_all(buf, server_ctx->method, 0, BUF_SIZE);
     if (err) {
         // drop the packet silently
         goto CLEAN_UP;
@@ -815,7 +815,7 @@ static void server_recv_cb(EV_P_ ev_io *w, int revents)
     memset(&src_addr, 0, sizeof(struct sockaddr_storage));
 
     buffer_t *buf = ss_malloc(sizeof(buffer_t));
-    balloc(buf, buf_size);
+    balloc(buf, BUF_SIZE);
 
     socklen_t src_addr_len = sizeof(struct sockaddr_storage);
     unsigned int offset    = 0;
@@ -833,7 +833,7 @@ static void server_recv_cb(EV_P_ ev_io *w, int revents)
     msg.msg_controllen = sizeof(control_buffer);
 
     iov[0].iov_base = buf->array;
-    iov[0].iov_len  = buf_size;
+    iov[0].iov_len  = BUF_SIZE;
     msg.msg_iov     = iov;
     msg.msg_iovlen  = 1;
 
@@ -854,7 +854,7 @@ static void server_recv_cb(EV_P_ ev_io *w, int revents)
     src_addr_len = msg.msg_namelen;
 #else
     ssize_t r;
-    r = recvfrom(server_ctx->fd, buf->array, buf_size,
+    r = recvfrom(server_ctx->fd, buf->array, BUF_SIZE,
                  0, (struct sockaddr *)&src_addr, &src_addr_len);
 
     if (r == -1) {
@@ -874,7 +874,7 @@ static void server_recv_cb(EV_P_ ev_io *w, int revents)
 
     tx += buf->len;
 
-    int err = ss_decrypt_all(buf, server_ctx->method, server_ctx->auth, buf_size);
+    int err = ss_decrypt_all(buf, server_ctx->method, server_ctx->auth, BUF_SIZE);
     if (err) {
         // drop the packet silently
         goto CLEAN_UP;
@@ -950,7 +950,7 @@ static void server_recv_cb(EV_P_ ev_io *w, int revents)
     }
 
     // reconstruct the buffer
-    brealloc(buf, buf->len + addr_header_len, buf_size);
+    brealloc(buf, buf->len + addr_header_len, BUF_SIZE);
     memmove(buf->array + addr_header_len, buf->array, buf->len);
     memcpy(buf->array, addr_header, addr_header_len);
     buf->len += addr_header_len;
@@ -1004,7 +1004,7 @@ static void server_recv_cb(EV_P_ ev_io *w, int revents)
     addr_header_len += 2;
 
     // reconstruct the buffer
-    brealloc(buf, buf->len + addr_header_len, buf_size);
+    brealloc(buf, buf->len + addr_header_len, BUF_SIZE);
     memmove(buf->array + addr_header_len, buf->array, buf->len);
     memcpy(buf->array, addr_header, addr_header_len);
     buf->len += addr_header_len;
@@ -1147,7 +1147,7 @@ static void server_recv_cb(EV_P_ ev_io *w, int revents)
         buf->array[0] |= ONETIMEAUTH_FLAG;
     }
 
-    int err = ss_encrypt_all(buf, server_ctx->method, server_ctx->auth, buf_size);
+    int err = ss_encrypt_all(buf, server_ctx->method, server_ctx->auth, BUF_SIZE);
 
     if (err) {
         // drop the packet silently
@@ -1303,7 +1303,7 @@ int init_udprelay(const char *server_host, const char *server_port,
     // Initialize MTU
     if (mtu > 0) {
         packet_size = mtu - 1 - 28 - 2 - 64;
-        buf_size    = packet_size * 2;
+        BUF_SIZE    = packet_size * 2;
     }
 
     // Initialize cache

@@ -105,6 +105,15 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
     func generateAboutSection() -> Section {
         let section = Section()
         section
+            <<< LabelRow() {
+                $0.title = "Logs".localized()
+                }.cellSetup({ (cell, row) -> () in
+                    cell.accessoryType = .DisclosureIndicator
+                    cell.selectionStyle = .Default
+                }).onCellSelection({ [unowned self](cell, row) -> () in
+                    cell.setSelected(false, animated: true)
+                    self.navigationController?.pushViewController(LogDetailViewController(), animated: true)
+                    })
             /*
             <<< ActionRow() {
                 $0.title = "Follow on Twitter".localized()
@@ -117,14 +126,14 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
                 $0.value = "@Potatso"
             }.onCellSelection({ [unowned self] (cell, row) -> () in
                 self.followWeibo()
-            })
+             })
+             */
             <<< ActionRow() {
                 $0.title = "Join Telegram Group".localized()
-                $0.value = "@Potatso"
+                $0.value = "@Mume"
             }.onCellSelection({ [unowned self] (cell, row) -> () in
                 self.joinTelegramGroup()
             })
-             */
             <<< LabelRow() {
                 $0.title = "Version".localized()
                 $0.value = AppEnv.fullVersion
@@ -148,7 +157,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
     }
 
     func joinTelegramGroup() {
-        UIApplication.sharedApplication().openURL(NSURL(string: "https://telegram.me/joinchat/BT0c4z49OGNZXwl9VsO0uQ")!)
+        UIApplication.sharedApplication().openURL(NSURL(string: "https://telegram.me/mumevpn")!)
     }
 
     func shareWithFriends() {
