@@ -449,7 +449,7 @@ extension Manager {
                 manager.protocolConfiguration?.serverAddress = AppEnv.appName
                 manager.onDemandEnabled = true
                 let quickStartRule = NEOnDemandRuleEvaluateConnection()
-                quickStartRule.connectionRules = [NEEvaluateConnectionRule(matchDomains: ["connect.potatso.com"], andAction: NEEvaluateConnectionRuleAction.ConnectIfNeeded)]
+                quickStartRule.connectionRules = [NEEvaluateConnectionRule(matchDomains: ["connect.mume.vpn"], andAction: NEEvaluateConnectionRuleAction.ConnectIfNeeded)]
                 manager.onDemandRules = [quickStartRule]
                 manager.saveToPreferencesWithCompletionHandler({ (error) -> Void in
                     if let error = error {
