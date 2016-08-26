@@ -21,6 +21,8 @@ private let kFormDefaultToProxy = "defaultToProxy"
 class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterProtocol, UITextFieldDelegate {
 
     let presenter = HomePresenter()
+    var proxies: [Proxy?] = []
+    let allowNone: Bool = true
 
     var ruleSetSection: Section!
 
@@ -77,6 +79,38 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     func updateForm() {
         form.delegate = nil
         form.removeAll()
+
+        proxies = DBUtils.allNotDeleted(Proxy.self, sorted: "createAt").map({ $0 })
+        if allowNone {
+            proxies.insert(nil, atIndex: 0)
+        }
+        form.delegate = nil
+        form.removeAll()
+        let section = Section("Proxy".localized())
+        for proxy in proxies {
+            section
+                <<< ProxyRow () {
+                    $0.value = proxy
+                    }.cellSetup({ (cell, row) -> () in
+                        cell.selectionStyle = .None
+                        if (self.presenter.proxy?.uuid == proxy?.uuid) {
+                            cell.accessoryType = .Checkmark
+                        } else {
+                            cell.accessoryType = .None
+                        }
+                    }).onCellSelection({ [unowned self] (cell, row) in
+                        let proxy = row.value
+                        do {
+                            try ConfigurationGroup.changeProxy(forGroupId: self.presenter.group.uuid, proxyId: proxy?.uuid)
+                            self.handleRefreshUI()
+                            //TODO: reconnect here
+                        }catch {
+                            self.showTextHUD("\("Fail to change proxy".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
+                        }
+                        })
+        }
+        form +++ section
+        
         form +++ generateProxySection()
         form +++ generateRuleSetSection()
         form.delegate = self
@@ -99,34 +133,12 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     // MARK: - Form
 
     func generateProxySection() -> Section {
-        let proxySection = Section()
-        if let proxy = presenter.proxy {
-            proxySection <<< ProxyRow(kFormProxies) {
-                $0.value = proxy
-            }.cellSetup({ (cell, row) -> () in
-                cell.accessoryType = .DisclosureIndicator
-                cell.selectionStyle = .Default
-            }).onCellSelection({ [unowned self](cell, row) -> () in
-                cell.setSelected(false, animated: true)
-                self.presenter.chooseProxy()
-            })
-        }else {
-            proxySection <<< LabelRow() {
-                $0.title = "Proxy".localized()
-                $0.value = "None".localized()
-            }.cellSetup({ (cell, row) -> () in
-                cell.accessoryType = .DisclosureIndicator
-                cell.selectionStyle = .Default
-            }).onCellSelection({ [unowned self](cell, row) -> () in
-                cell.setSelected(false, animated: true)
-                self.presenter.chooseProxy()
-            })
-        }
+        let proxySection = Section("Connect".localized())
 
         proxySection <<< SwitchRow(kFormDefaultToProxy) {
             $0.title = "Default To Proxy".localized()
             $0.value = presenter.group.defaultToProxy
-            $0.hidden = Condition.Function([kFormProxies]) { [unowned self] form in
+            $0.disabled = Condition.Function([kFormProxies]) { [unowned self] form in
                 return self.presenter.proxy == nil
             }
         }.onChange({ [unowned self] (row) in
