@@ -12,7 +12,6 @@ import PotatsoLibrary
 import PotatsoModel
 
 private let kProxyFormType = "type"
-private let kProxyFormName = "name"
 private let kProxyFormHost = "host"
 private let kProxyFormPort = "port"
 private let kProxyFormEncryption = "encryption"
@@ -70,12 +69,6 @@ class ProxyConfigurationViewController: FormViewController {
                 $0.options = [ProxyType.Shadowsocks, ProxyType.ShadowsocksR]
                 $0.value = self.upstreamProxy.type
                 $0.selectorTitle = "Choose Proxy Type".localized()
-            }
-            <<< TextRow(kProxyFormName) {
-                $0.title = "Name".localized()
-                $0.value = self.upstreamProxy.name
-            }.cellSetup { cell, row in
-                cell.textField.placeholder = "Proxy Name".localized()
             }
             <<< TextRow(kProxyFormHost) {
                 $0.title = "Host".localized()
@@ -174,16 +167,13 @@ class ProxyConfigurationViewController: FormViewController {
             guard let type = values[kProxyFormType] as? ProxyType else {
                 throw "You must choose a proxy type".localized()
             }
-            guard let name = (values[kProxyFormName] as? String)?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()) where name.characters.count > 0 else {
-                throw "Name can't be empty".localized()
-            }
-            if !self.isEdit {
-                if let _ = defaultRealm.objects(Proxy).filter("name = '\(name)'").first {
-                    throw "Name already exists".localized()
-                }
-            }
             guard let host = (values[kProxyFormHost] as? String)?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()) where host.characters.count > 0 else {
                 throw "Host can't be empty".localized()
+            }
+            if !self.isEdit {
+                if let _ = defaultRealm.objects(Proxy).filter("host = '\(host)'").first {
+                    throw "Server already exists".localized()
+                }
             }
             guard let port = values[kProxyFormPort] as? Int else {
                 throw "Port can't be empty".localized()
@@ -209,7 +199,6 @@ class ProxyConfigurationViewController: FormViewController {
             }
             let ota = values[kProxyFormOta] as? Bool ?? false
             upstreamProxy.type = type
-            upstreamProxy.name = name
             upstreamProxy.host = host
             upstreamProxy.port = port
             upstreamProxy.authscheme = authscheme

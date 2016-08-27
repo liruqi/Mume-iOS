@@ -58,39 +58,16 @@ struct Importer {
     
     func importSS(source: String) {
         do {
-            let defaultName = "___scanresult"
-            let proxy = try Proxy(dictionary: ["name": defaultName, "uri": source], inRealm: defaultRealm)
-            var urlTextField: UITextField?
-            let alert = UIAlertController(title: "Add a new proxy".localized(), message: "Please set name for the new proxy".localized(), preferredStyle: .Alert)
-            alert.addTextFieldWithConfigurationHandler { (textField) in
-                textField.placeholder = "Input name".localized()
-                if proxy.name != defaultName {
-                    textField.text = proxy.name
-                }
-                urlTextField = textField
+            let proxy = try Proxy(dictionary: ["uri": source], inRealm: defaultRealm)
+            do {
+                try proxy.validate(inRealm: defaultRealm)
+                try DBUtils.add(proxy)
+                self.onConfigSaveCallback(true, error: nil)
+            } catch {
+                self.onConfigSaveCallback(false, error: error)
             }
-            alert.addAction(UIAlertAction(title: "OK".localized(), style: .Default){ (action) in
-                guard let text = urlTextField?.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()) else {
-                    self.onConfigSaveCallback(false, error: "Name can't be empty".localized())
-                    return
-                }
-                proxy.name = text
-                do {
-                    try proxy.validate(inRealm: defaultRealm)
-                    try DBUtils.add(proxy)
-                    self.onConfigSaveCallback(true, error: nil)
-                }catch {
-                    self.onConfigSaveCallback(false, error: error)
-                }
-                })
-            alert.addAction(UIAlertAction(title: "CANCEL".localized(), style: .Cancel) { action in
-                })
-            viewController?.presentViewController(alert, animated: true, completion: nil)
-        }catch {
+        } catch {
             self.onConfigSaveCallback(false, error: error)
-        }
-        if let vc = viewController {
-            Alert.show(vc, message: "Fail to parse proxy config".localized())
         }
     }
     

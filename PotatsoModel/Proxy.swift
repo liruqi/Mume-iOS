@@ -10,8 +10,8 @@ import RealmSwift
 import CloudKit
 
 public enum ProxyType: String {
-    case Shadowsocks = "SS"
-    case ShadowsocksR = "SSR"
+    case Shadowsocks = "Shadowsocks"
+    case ShadowsocksR = "ShadowsocksR"
     case Https = "HTTPS"
     case Socks5 = "SOCKS5"
     case None = "NONE"
@@ -67,7 +67,6 @@ extension ProxyError: CustomStringConvertible {
 
 public class Proxy: BaseModel {
     public dynamic var typeRaw = ProxyType.Shadowsocks.rawValue
-    public dynamic var name = ""
     public dynamic var host = ""
     public dynamic var port = 0
     public dynamic var authscheme: String?  // method in SS
@@ -118,15 +117,12 @@ public class Proxy: BaseModel {
     ]
 
     public override static func indexedProperties() -> [String] {
-        return ["name"]
+        return ["host","port"]
     }
 
     public override func validate(inRealm realm: Realm) throws {
         guard let _ = ProxyType(rawValue: typeRaw)else {
             throw ProxyError.InvalidType
-        }
-        guard name.characters.count > 0 else{
-            throw ProxyError.InvalidName
         }
         guard host.characters.count > 0 else {
             throw ProxyError.InvalidHost
@@ -170,7 +166,7 @@ extension Proxy {
         return ""
     }
     public override var description: String {
-        return name
+        return String.init(format: "%@:%d", host, port)
     }
     
 }
@@ -188,10 +184,6 @@ extension Proxy {
     public convenience init(dictionary: [String: AnyObject], inRealm realm: Realm) throws {
         self.init()
         if let uriString = dictionary["uri"] as? String {
-            guard let name = dictionary["name"] as? String else{
-                throw ProxyError.InvalidName
-            }
-            self.name = name
             if uriString.lowercaseString.hasPrefix(Proxy.ssUriPrefix) {
                 // Shadowsocks
                 let undecodedString = uriString.substringFromIndex(uriString.startIndex.advancedBy(Proxy.ssUriPrefix.characters.count))
@@ -253,8 +245,6 @@ extension Proxy {
                     switch comps[0] {
                     case "obfsparam":
                         self.ssrObfsParam = comps[1]
-                    case "remarks":
-                        self.name = comps[1]
                     default:
                         continue
                     }
@@ -265,9 +255,6 @@ extension Proxy {
                 throw ProxyError.InvalidUri
             }
         }else {
-            guard let name = dictionary["name"] as? String else{
-                throw ProxyError.InvalidName
-            }
             guard let host = dictionary["host"] as? String else{
                 throw ProxyError.InvalidHost
             }
@@ -287,11 +274,7 @@ extension Proxy {
             self.port = port
             self.password = password
             self.authscheme = encryption
-            self.name = name
             self.type = type
-        }
-        if realm.objects(Proxy).filter("name = '\(name)'").first != nil {
-            self.name = "\(name) \(Proxy.dateFormatter.stringFromDate(NSDate()))"
         }
         try validate(inRealm: realm)
     }

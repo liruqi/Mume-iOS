@@ -28,7 +28,7 @@ class ConfigGroupCell: UITableViewCell {
     func config(group: ConfigurationGroup, hintColor: UIColor) {
         nameLabel.text = group.name
         proxyHintLabel.text = "Proxy".localized()
-        proxyLabel.text = group.proxies.first?.name ?? "None".localized()
+        proxyLabel.text = group.proxies.first?.description ?? "None".localized()
         ruleSetsHintLabel.text = "Rule Set".localized()
         let desc = group.ruleSets.map { (set) -> String in
             return set.name

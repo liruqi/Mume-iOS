@@ -41,7 +41,7 @@ class ProxyRowCell: Cell<Proxy>, CellType {
     override func update() {
         super.update()
         if let proxy = row.value {
-            titleLabel.text = proxy.name
+            titleLabel.text = proxy.description
             iconImageView.hidden = false
             iconImageView.image = UIImage(named: "Shadowsocks")
         }else {

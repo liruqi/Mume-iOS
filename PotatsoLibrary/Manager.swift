@@ -256,7 +256,7 @@ extension Manager {
         
         let filter = NSXMLElement.elementWithName("filter") as! NSXMLElement
         if let upstreamProxy = upstreamProxy {
-            let chain = NSXMLElement.elementWithName("chain", children: nil, attributes: [NSXMLNode.attributeWithName("name", stringValue: upstreamProxy.name) as! DDXMLNode]) as! NSXMLElement
+            let chain = NSXMLElement.elementWithName("chain", children: nil, attributes: [NSXMLNode.attributeWithName("name", stringValue: upstreamProxy.description) as! DDXMLNode]) as! NSXMLElement
             switch upstreamProxy.type {
             case .Shadowsocks:
                 let uriString = "socks5://127.0.0.1:${ssport}"
