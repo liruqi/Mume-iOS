@@ -27,7 +27,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>potatso</string>
+				<string>mume</string>
 			</array>
 		</dict>
 	</array>

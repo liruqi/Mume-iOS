@@ -112,7 +112,7 @@ public class Manager {
     }
     
     public func switchVPNFromTodayWidget(context: NSExtensionContext) {
-        if let url = NSURL(string: "potatso://switch") {
+        if let url = NSURL(string: "mume://switch") {
             context.openURL(url, completionHandler: nil)
         }
     }
