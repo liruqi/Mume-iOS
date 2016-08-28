@@ -9,7 +9,7 @@
 import Foundation
 import PotatsoModel
 import Cartography
-import ICSPullToRefresh
+import SVPullToRefresh
 import Async
 
 private let rowHeight: CGFloat = 120
@@ -47,10 +47,10 @@ class CloudViewController: UIViewController, UITableViewDataSource, UITableViewD
                 guard let result = response.result.value else {
                     return
                 }
-                self.tableView.addInfiniteScrollingWithHandler({ [weak self] in
+                self.tableView.addInfiniteScrollingWithActionHandler({ [weak self] in
                     self?.loadData(isLoadMore: true)
                 })
-                self.tableView.setShowsInfiniteScrolling(result.count >= pageSize)
+                self.tableView.showsInfiniteScrolling = (result.count >= pageSize);
                 if result.count > 0 {
                     self.page += 1
                 }
@@ -91,7 +91,7 @@ class CloudViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        tableView.addPullToRefreshHandler { [weak self] in
+        tableView.addPullToRefreshWithActionHandler { [weak self] in
             self?.loadData()
         }
     }

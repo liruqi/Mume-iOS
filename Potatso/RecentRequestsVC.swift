@@ -12,6 +12,7 @@ import PotatsoModel
 import RealmSwift
 import PotatsoLibrary
 import PotatsoBase
+import SVPullToRefresh
 
 private let kRecentRequestCellIdentifier = "recentRequests"
 private let kRecentRequestCachedIdentifier = "requestsCached"
@@ -30,6 +31,7 @@ class RecentRequestsVC: UIViewController, UITableViewDataSource, UITableViewDele
         navigationItem.title = "Recent Requests".localized()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(onVPNStatusChanged), name: kProxyServiceVPNStatusNotification, object: nil)
         wormhole.listenForMessageWithIdentifier("tunnelConnectionRecords") { [unowned self](response) in
+            self.tableView.pullToRefreshView?.stopAnimating()
             self.updateUI(response as? String)
             Potatso.sharedUserDefaults().setObject(response as? String, forKey: kRecentRequestCachedIdentifier)
             Potatso.sharedUserDefaults().synchronize()
@@ -45,10 +47,20 @@ class RecentRequestsVC: UIViewController, UITableViewDataSource, UITableViewDele
         super.viewWillAppear(animated)
         appear = true
         onVPNStatusChanged()
+        tableView.addPullToRefreshWithActionHandler( { [weak self] in
+            self?.refresh()
+            })
+        tableView.triggerPullToRefresh()
     }
     
     func refresh() {
-        wormhole.passMessageObject("", identifier: "getTunnelConnectionRecords")
+        let on = [VPNStatus.On, VPNStatus.Connecting].contains(Manager.sharedManager.vpnStatus)
+        if on {
+            wormhole.passMessageObject("", identifier: "getTunnelConnectionRecords")
+        } else {
+            self.tableView.pullToRefreshView?.stopAnimating()
+            tableView.showsPullToRefresh = false;
+        }
     }
     
     func updateUI(requestString: String?) {
@@ -64,9 +76,10 @@ class RecentRequestsVC: UIViewController, UITableViewDataSource, UITableViewDele
         let on = [VPNStatus.On, VPNStatus.Connecting].contains(Manager.sharedManager.vpnStatus)
         hintLabel.hidden = on
         if on {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: #selector(refresh))
-        }else {
-            navigationItem.rightBarButtonItem = nil
+            tableView.triggerPullToRefresh()
+            tableView.showsPullToRefresh = true;
+        } else {
+            tableView.showsPullToRefresh = false;
         }
         if on && showingCache {
             updateUI(nil)

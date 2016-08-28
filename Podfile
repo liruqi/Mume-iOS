@@ -38,7 +38,7 @@ target "Potatso" do
     pod 'MBProgressHUD'
     pod 'CallbackURLKit'
     pod 'ICDMaterialActivityIndicatorView', '~> 0.1.0'
-    pod 'ICSPullToRefresh', '~> 0.4'
+    pod 'SVPullToRefresh'
     pod 'ISO8601DateFormatter', '~> 0.8'
     pod 'Alamofire'
     pod 'ObjectMapper'
