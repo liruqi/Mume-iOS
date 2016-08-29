@@ -135,9 +135,15 @@ public class Manager {
         guard let fromURL = NSBundle.mainBundle().URLForResource("GeoLite2-Country", withExtension: "mmdb") else {
             return
         }
+        let fromSize = try! NSFileManager.defaultManager().attributesOfItemAtPath(fromURL.path!)[NSFileSize]!.longLongValue
         let toURL = Potatso.sharedUrl().URLByAppendingPathComponent("GeoLite2-Country.mmdb")
         if NSFileManager.defaultManager().fileExistsAtPath(fromURL.path!) {
             if NSFileManager.defaultManager().fileExistsAtPath(toURL.path!) {
+                let toSize = try! NSFileManager.defaultManager().attributesOfItemAtPath(toURL.path!)[NSFileSize]!.longLongValue
+                if fromSize == toSize {
+                    print("copyGEOIPData skipped, already exists")
+                    return
+                }
                 try NSFileManager.defaultManager().removeItemAtURL(toURL)
             }
             try NSFileManager.defaultManager().copyItemAtURL(fromURL, toURL: toURL)

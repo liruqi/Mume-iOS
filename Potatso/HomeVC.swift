@@ -144,7 +144,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         proxySection <<< SwitchRow(kFormDefaultToProxy) {
             $0.title = "Default To Proxy".localized()
             $0.value = presenter.group.defaultToProxy
-            $0.disabled = Condition.Function([kFormProxies]) { [unowned self] form in
+            $0.hidden = Condition.Function([kFormProxies]) { [unowned self] form in
                 return self.presenter.proxy == nil
             }
         }.onChange({ [unowned self] (row) in
