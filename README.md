@@ -1,39 +1,19 @@
-# Potatso ![GPLv3 License](https://img.shields.io/badge/License-GPLv3-blue.svg)
+# Mume ![GPLv3 License](https://img.shields.io/badge/License-GPLv3-blue.svg)
 
-<a href="https://itunes.apple.com/app/apple-store/id1070901416?pt=2305194&ct=potatso.github&mt=8">![](https://cdn.rawgit.com/shadowsocks/Potatso/master/Download.svg)</a>
+<a href="https://itunes.apple.com/cn/app/mume-vpn/id1144787928?l=en&mt=8">![](https://cdn.rawgit.com/shadowsocks/Potatso/master/Download.svg)</a>
 
-Potatso is an iOS client that implements custom proxies with the leverage of Network Extension framework introduced by Apple since iOS 9.
+Mume is an iOS client that implements custom proxies with the leverage of Network Extension framework introduced by Apple since iOS 9.
 
-Currently, Potatso is compatible with following proxies:
+Currently, Mume is compatible with following proxies:
 
 - [Shadowsocks](https://shadowsocks.org)
 - [ShadowsocksR](https://github.com/breakwa11/shadowsocks-rss)
 
-[Subscribe Telegram Channel](https://telegram.me/potatso) to get updates of Potatso. 
-
-[Join Telegram Group](https://telegram.me/joinchat/BT0c4z49OGNZXwl9VsO0uQ) to chat with users.
-
-Author: [icodesign](https://twitter.com/icodesign_me)
+[Join Telegram Group](https://telegram.me/mumevpn) to chat with users.
 
 ## Guide
 
 See [Setup Guide](../../wiki/Setup-Guide) for details.
-
-
-## How To Contribute
-
-// TODO
-
-
-## Support Us
-
-The development covers a lot of complicated work, costing not only money but also time.
-
-There're two ways you can support us:
-
-- [Download Potatso from Apple Store](https://itunes.apple.com/app/apple-store/id1070901416?pt=2305194&ct=potatso.github&mt=8). (**Recommended**) 
-
-- Donate with Alipay. (Account: **leewongstudio.com@gmail.com**)
 
 ## Acknowlegements
 
@@ -42,12 +22,11 @@ We use the following services or open-source libraries. So we'd like show them h
 Services:
 
 - [Fabric](https://get.fabric.io/)
-- [Reveal](http://revealapp.com/)
 - [realm](https://realm.io/)
 - [HelpShift](https://www.helpshift.com)
 
-Open-source Libraries:
-
+Open-source Projects:
+- [Potatso](https://github.com/shadowsocks/Potatso)
 - [KissXML](https://github.com/robbiehanson/KissXML)
 - [MMWormhole](https://github.com/mutualmobile/MMWormhole)
 - [CocoaAsyncSocket](https://github.com/robbiehanson/CocoaAsyncSocket)
@@ -68,19 +47,7 @@ Open-source Libraries:
 - [Antinat](http://antinat.sourceforge.net/)
 - [Privoxy](https://www.privoxy.org/)
 
-Also we'd like to thank people that helped with the project:
-
-- [@Blankwonder](https://twitter.com/Blankwonder)
-- [@龙七](#)
-
-or donated us:
-- [@liqianyu](https://twitter.com/liqianyu)
-- [@anonymous](#) x2
-
-And also thank all TestFlight Users and [Telegram Group](https://telegram.me/joinchat/BT0c4z49OGNZXwl9VsO0uQ) Users.
-
-
-Thanks again!
+And also thank all TestFlight Users.
 
 ## License
 
