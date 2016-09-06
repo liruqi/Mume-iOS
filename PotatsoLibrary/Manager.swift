@@ -132,20 +132,34 @@ public class Manager {
     }
 
     func copyGEOIPData() throws {
+        let toURL = Potatso.sharedUrl().URLByAppendingPathComponent("GeoLite2-Country.mmdb")
+        if NSFileManager.defaultManager().fileExistsAtPath(toURL.path!) {
+            let toSize = try! NSFileManager.defaultManager().attributesOfItemAtPath(toURL.path!)[NSFileSize]!.longLongValue
+            if 19267424 == toSize {
+                print("copy GEOIPData skipped, already exists")
+                return
+            }
+            try NSFileManager.defaultManager().removeItemAtURL(toURL)
+        }
+        
         guard let fromURL = NSBundle.mainBundle().URLForResource("GeoLite2-Country", withExtension: "mmdb") else {
+            let url = NSURL(string: "http://vpn.liruqi.info/ios/GeoLite2-Country.mmdb")
+            let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {data, reponse, error in
+                if (error != nil) {
+                    print("Download GeoLite2-Country.mmdb error: " + error!.description)
+                } else {
+                    let result = data?.writeToURL(toURL, atomically: true)
+                    if result != nil {
+                        print("writeToFile GeoLite2-Country.mmdb: OK")
+                    } else {
+                        print("writeToFile GeoLite2-Country.mmdb: failed")
+                    }
+                }
+            }
+            task.resume()
             return
         }
-        let fromSize = try! NSFileManager.defaultManager().attributesOfItemAtPath(fromURL.path!)[NSFileSize]!.longLongValue
-        let toURL = Potatso.sharedUrl().URLByAppendingPathComponent("GeoLite2-Country.mmdb")
         if NSFileManager.defaultManager().fileExistsAtPath(fromURL.path!) {
-            if NSFileManager.defaultManager().fileExistsAtPath(toURL.path!) {
-                let toSize = try! NSFileManager.defaultManager().attributesOfItemAtPath(toURL.path!)[NSFileSize]!.longLongValue
-                if fromSize == toSize {
-                    print("copyGEOIPData skipped, already exists")
-                    return
-                }
-                try NSFileManager.defaultManager().removeItemAtURL(toURL)
-            }
             try NSFileManager.defaultManager().copyItemAtURL(fromURL, toURL: toURL)
         }
     }

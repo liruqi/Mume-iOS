@@ -22,13 +22,14 @@ class CurrentGroupCell: UITableViewCell {
     }
     
     func onSwitchValueChanged() {
+        switchButton.hidden = true
         switchVPN?()
     }
     
     func config(name: String?, status: Bool, switchVPN: (() -> Void)?) {
         nameLabel.text = name ?? "None".localized()
         switchButton.setBackgroundImage("FF6959".color.alpha(0.76).toImage(), forState: .Normal)
-        
+        switchButton.hidden = false
         switchButton.addTarget(self, action: #selector(self.onSwitchValueChanged), forControlEvents: .TouchUpInside)
         switchButton.setTitle((status ? "Disconnect" : "Connect").localized(), forState: .Normal)
         switchButton.setBackgroundImage((status ? "FF6959" : "1ABC9C").color.alpha(0.76).toImage(), forState: .Normal)

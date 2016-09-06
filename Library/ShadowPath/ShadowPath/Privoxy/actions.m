@@ -1628,13 +1628,14 @@ static int load_one_actions_file(struct client_state *csp, int fileid)
           if (!strcmpic(vec[0], "GEOIP") || !strcmpic(vec[0], "IP-CIDR") || !strcmpic(vec[0], "DNS-IP-CIDR")) {
               if (!strcmpic(vec[0], "GEOIP")) {
                   perm->geoip = strdup_or_die(vec[1]);
-                  MMDB_open(csp->config->mmdbpath, 0, &mmdb);
-                  if (po_ip_rules_tail) {
-                      po_ip_rules_tail->next = perm;
-                      po_ip_rules_tail = perm;
-                  }else {
-                      po_ip_rules = perm;
-                      po_ip_rules_tail = po_ip_rules;
+                  if (MMDB_SUCCESS == MMDB_open(csp->config->mmdbpath, 0, &mmdb)) {
+                      if (po_ip_rules_tail) {
+                          po_ip_rules_tail->next = perm;
+                          po_ip_rules_tail = perm;
+                      } else {
+                          po_ip_rules = perm;
+                          po_ip_rules_tail = po_ip_rules;
+                      }
                   }
               } else {
                   if (!perm->tree) {

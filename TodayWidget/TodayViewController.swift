@@ -111,8 +111,17 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDataS
     func switchVPN() {
         if status {
             wormhole.passMessageObject("", identifier: "stopTunnel")
-        }else {
-            NSURLSession.sharedSession().dataTaskWithURL(NSURL(string: "https://on-demand.connect.mume.vpn/start/")!).resume()
+        } else {
+            let url = NSURL(string: "mume://on")
+            self.extensionContext?.openURL(url!, completionHandler:nil)
+//TODO: try on-demand first
+//            let url = NSURL(string: "https://on-demand.connect.mume.vpn/start/")
+//            let task = NSURLSession.sharedSession().dataTaskWithURL(url) {data, reponse, error in
+//                if (error) {
+//                    
+//                }
+//            }
+//            task.resume()
         }
     }
     

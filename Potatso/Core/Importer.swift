@@ -104,6 +104,9 @@ struct Importer {
                 }
             }else {
                 self.viewController?.showTextHUD("Import Success".localized(), dismissAfterDelay: 1.5)
+                let keyWindow = UIApplication.sharedApplication().keyWindow
+                let tabBarVC:UITabBarController = (keyWindow?.rootViewController) as! UITabBarController
+                tabBarVC.selectedIndex = 0
             }
         }
     }
