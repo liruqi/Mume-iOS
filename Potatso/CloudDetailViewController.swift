@@ -71,7 +71,7 @@ class CloudDetailViewController: UIViewController, UITableViewDataSource, UITabl
         let uuid = ruleSet.uuid
         if isExist(uuid) {
             do {
-                try DBUtils.softDelete([uuid], type: RuleSet.self)
+                try DBUtils.hardDelete([uuid], type: RuleSet.self)
             }catch {
                 self.showTextHUD("Fail to unsubscribe".localized(), dismissAfterDelay: 1.0)
                 return

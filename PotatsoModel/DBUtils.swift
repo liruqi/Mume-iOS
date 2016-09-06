@@ -42,23 +42,6 @@ public class DBUtils {
         try mRealm.commitWrite()
     }
 
-    public static func softDelete<T: BaseModel>(id: String, type: T.Type, inRealm realm: Realm? = nil) throws {
-        let mRealm = currentRealm(realm)
-        guard let object: T = DBUtils.get(id, type: type, inRealm: mRealm) else {
-            return
-        }
-        mRealm.beginWrite()
-        object.deleted = true
-        object.setModified()
-        try mRealm.commitWrite()
-    }
-
-    public static func softDelete<T: BaseModel>(ids: [String], type: T.Type, inRealm realm: Realm? = nil) throws {
-        for id in ids {
-            try softDelete(id, type: type, inRealm: realm)
-        }
-    }
-
     public static func hardDelete<T: BaseModel>(id: String, type: T.Type, inRealm realm: Realm? = nil) throws {
         let mRealm = currentRealm(realm)
         guard let object: T = DBUtils.get(id, type: type, inRealm: mRealm) else {
@@ -81,22 +64,6 @@ public class DBUtils {
             return
         }
         mRealm.beginWrite()
-        object.synced = synced
-        try mRealm.commitWrite()
-    }
-
-    public static func markAll(syncd syncd: Bool) throws {
-        let mRealm = try! Realm()
-        mRealm.beginWrite()
-        for proxy in mRealm.objects(Proxy) {
-            proxy.synced = false
-        }
-        for ruleset in mRealm.objects(RuleSet) {
-            ruleset.synced = false
-        }
-        for group in mRealm.objects(ConfigurationGroup) {
-            group.synced = false
-        }
         try mRealm.commitWrite()
     }
 }
@@ -165,7 +132,7 @@ extension DBUtils {
 
     public static func allObjectsToSyncModified() -> [BaseModel] {
         let mRealm = currentRealm(nil)
-        let filter = "synced == false && deleted == false"
+        let filter = "deleted == false"
         let proxies = mRealm.objects(Proxy.self).filter(filter).map({ $0 })
         let rulesets = mRealm.objects(RuleSet.self).filter(filter).map({ $0 })
         let groups = mRealm.objects(ConfigurationGroup.self).filter(filter).map({ $0 })
@@ -178,7 +145,7 @@ extension DBUtils {
 
     public static func allObjectsToSyncDeleted() -> [BaseModel] {
         let mRealm = currentRealm(nil)
-        let filter = "synced == false && deleted == true"
+        let filter = "deleted == true"
         let proxies = mRealm.objects(Proxy.self).filter(filter).map({ $0 })
         let rulesets = mRealm.objects(RuleSet.self).filter(filter).map({ $0 })
         let groups = mRealm.objects(ConfigurationGroup.self).filter(filter).map({ $0 })
@@ -195,7 +162,6 @@ extension BaseModel {
 
     func setModified() {
         updatedAt = NSDate().timeIntervalSince1970
-        synced = false
     }
 
 }

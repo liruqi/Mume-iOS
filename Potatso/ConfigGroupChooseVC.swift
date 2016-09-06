@@ -175,7 +175,7 @@ class ConfigGroupChooseVC: UIViewController, UITableViewDataSource, UITableViewD
             }
             item = groups[indexPath.row]
             do {
-                try DBUtils.softDelete(item.uuid, type: ConfigurationGroup.self)
+                try DBUtils.hardDelete(item.uuid, type: ConfigurationGroup.self)
             }catch {
                 self.showTextHUD("\("Fail to delete item".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
             }

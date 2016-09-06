@@ -180,7 +180,6 @@ func changeLocalRecord(record: CKRecord) throws {
     default:
         return
     }
-    realmObject.synced = true
     if let local = local, type = record.realmClassType {
         if local.updatedAt > realmObject.updatedAt {
             try DBUtils.mark(local.uuid, type: type, synced: false)

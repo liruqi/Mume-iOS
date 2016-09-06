@@ -125,7 +125,7 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
             }
             item = ruleSets[indexPath.row]
             do {
-                try DBUtils.softDelete(item.uuid, type: RuleSet.self)
+                try DBUtils.hardDelete(item.uuid, type: RuleSet.self)
             }catch {
                 self.showTextHUD("\("Fail to delete item".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
             }

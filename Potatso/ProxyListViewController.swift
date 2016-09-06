@@ -96,7 +96,7 @@ class ProxyListViewController: FormViewController {
                 return
             }
             do {
-                try DBUtils.softDelete(item.uuid, type: Proxy.self)
+                try DBUtils.hardDelete(item.uuid, type: Proxy.self)
                 proxies.removeAtIndex(indexPath.row)
                 form[indexPath].hidden = true
                 form[indexPath].evaluateHidden()

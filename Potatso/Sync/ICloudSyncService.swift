@@ -36,11 +36,6 @@ class ICloudSyncService: SyncServiceProtocol {
 
     func sync(manually: Bool = false, completion: (ErrorType? -> Void)?) {
         DDLogInfo(">>>>>>>>>> iCloud sync start")
-        if manually {
-            DDLogWarn("Manually sync: clear token and mark all as not synced")
-            setZoneChangeToken(potatsoZoneId, changeToken: nil)
-            _ = try? DBUtils.markAll(syncd: false)
-        }
 
         let pushLocalChangesOperation = PushLocalChangesOperation(zoneID: potatsoZoneId)
         let pushLocalChangesObserver = BlockObserver { [weak self] operation, error in
