@@ -17,7 +17,7 @@ import CocoaAsyncSocket
 
 private let kCurrentGroupCellIndentifier = "kCurrentGroupIndentifier"
 
-class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDataSource, UITableViewDelegate, GCDAsyncSocketDelegate {
+class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDelegate {
     
     let constrainGroup = ConstraintGroup()
     
@@ -46,7 +46,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDataS
         super.viewDidLoad()
         let port = Potatso.sharedUserDefaults().integerForKey("tunnelStatusPort")
         status = port > 0
-        tableView.registerClass(CurrentGroupCell.self, forCellReuseIdentifier: kCurrentGroupCellIndentifier)
+        
         view.addSubview(tableView)
         updateLayout()
     }
@@ -54,7 +54,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDataS
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         startTimer()
-        tableView.reloadData()
+        self.reload()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -103,7 +103,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDataS
         if status != current {
             status = current
             dispatch_async(dispatch_get_main_queue(), { 
-                self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .None)
+                self.reload()
             })
         }
     }
@@ -141,34 +141,6 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDataS
         completionHandler(NCUpdateResult.NewData)
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return rowCount
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell: UITableViewCell!
-        if indexPath.row == 0 {
-            cell = tableView.dequeueReusableCellWithIdentifier(kCurrentGroupCellIndentifier, forIndexPath: indexPath)
-            let name = Potatso.sharedUserDefaults().objectForKey(kDefaultGroupName) as? String
-            (cell as? CurrentGroupCell)?.config(name ?? "Default".localized(), status: status, switchVPN: switchVPN)
-        }
-        cell.preservesSuperviewLayoutMargins = false
-        cell.layoutMargins = UIEdgeInsetsZero
-        cell.separatorInset = UIEdgeInsetsZero
-        cell.selectionStyle = .None
-        if indexPath.row == rowCount - 1 {
-            cell.separatorInset = UIEdgeInsetsMake(0, cell.bounds.size.width, 0, 0)
-        }else {
-            cell.separatorInset = UIEdgeInsetsZero
-        }
-        
-        return cell
-    }
-    
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 60
-    }
-    
     func updateLayout() {
         constrain(tableView, view, replace: constrainGroup) { tableView, superView in
             tableView.leading == superView.leading
@@ -179,15 +151,14 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDataS
         }
     }
     
-    lazy var tableView: UITableView = {
-        let v = UITableView(frame: CGRectZero, style: .Plain)
-        v.tableFooterView = UIView()
-        v.tableHeaderView = UIView()
-        v.dataSource = self
-        v.delegate = self
+    lazy var tableView: CurrentGroupCell = {
+        let v = CurrentGroupCell(frame: CGRectZero)
         return v
     }()
     
-    
+    func reload() {
+        let name = Potatso.sharedUserDefaults().objectForKey(kDefaultGroupName) as? String
+        tableView.config(name ?? "Default".localized(), status: status, switchVPN: switchVPN)
+    }
     
 }

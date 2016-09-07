@@ -10,14 +10,14 @@ import UIKit
 import Cartography
 import PotatsoLibrary
 
-class CurrentGroupCell: UITableViewCell {
+class CurrentGroupCell: UIView {
     
     var switchVPN: (()->Void)?
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(nameLabel)
-        contentView.addSubview(switchButton)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.addSubview(nameLabel)
+        self.addSubview(switchButton)
         setupLayout()
     }
     
@@ -39,7 +39,7 @@ class CurrentGroupCell: UITableViewCell {
     }
     
     func setupLayout() {
-        constrain(nameLabel, switchButton, contentView) { nameLabel, switchButton, superView in
+        constrain(nameLabel, switchButton, self) { nameLabel, switchButton, superView in
             nameLabel.leading == superView.leading
             nameLabel.centerY == superView.centerY
             nameLabel.trailing == switchButton.leading - 15
