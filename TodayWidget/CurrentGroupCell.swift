@@ -47,7 +47,6 @@ class CurrentGroupCell: UITableViewCell {
             switchButton.centerY == superView.centerY
             switchButton.trailing == superView.trailing - 10
             switchButton.width == 60
-            switchButton.height == 40
         }
     }
     
