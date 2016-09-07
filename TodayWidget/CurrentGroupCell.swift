@@ -28,12 +28,9 @@ class CurrentGroupCell: UITableViewCell {
     
     func config(name: String?, status: Bool, switchVPN: (() -> Void)?) {
         nameLabel.text = name ?? "None".localized()
-        switchButton.setBackgroundImage("FF6959".color.alpha(0.76).toImage(), forState: .Normal)
         switchButton.hidden = false
         switchButton.addTarget(self, action: #selector(self.onSwitchValueChanged), forControlEvents: .TouchUpInside)
-        switchButton.setTitle((status ? "Disconnect" : "Connect").localized(), forState: .Normal)
-        switchButton.setBackgroundImage((status ? "FF6959" : "1ABC9C").color.alpha(0.76).toImage(), forState: .Normal)
-        
+        switchButton.setOn(status, animated: false)
         self.switchVPN = switchVPN
     }
     
@@ -49,8 +46,8 @@ class CurrentGroupCell: UITableViewCell {
             
             switchButton.centerY == superView.centerY
             switchButton.trailing == superView.trailing - 10
-            switchButton.width == 70
-            switchButton.height == 27
+            switchButton.width == 60
+            switchButton.height == 40
         }
     }
     
@@ -61,12 +58,8 @@ class CurrentGroupCell: UITableViewCell {
         return v
     }()
     
-    lazy var switchButton: UIButton = {
-        let v = UIButton(type: .Custom)
-        v.titleLabel?.font = UIFont.systemFontOfSize(11)
-        v.layer.cornerRadius = 4
-        v.layer.masksToBounds = true
-        v.clipsToBounds = true
+    lazy var switchButton: UISwitch = {
+        let v = UISwitch()
         return v
     }()
 

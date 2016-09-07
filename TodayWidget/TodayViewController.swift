@@ -127,7 +127,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDataS
     
     func widgetMarginInsetsForProposedMarginInsets(defaultMarginInsets: UIEdgeInsets) -> UIEdgeInsets {
         var inset = defaultMarginInsets
-        inset.bottom = 0
+        inset.bottom = inset.top
         return inset
     }
 
