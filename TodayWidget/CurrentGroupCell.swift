@@ -45,7 +45,7 @@ class CurrentGroupCell: UITableViewCell {
             nameLabel.trailing == switchButton.leading - 15
             
             switchButton.centerY == superView.centerY
-            switchButton.trailing == superView.trailing - 10
+            switchButton.trailing == superView.trailing - 8
             switchButton.width == 60
         }
     }

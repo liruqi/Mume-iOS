@@ -175,7 +175,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDataS
             tableView.top == superView.top
             tableView.trailing == superView.trailing
             tableView.bottom == superView.bottom
-            tableView.height == CGFloat(44 * rowCount)
+            tableView.height == CGFloat(60 * rowCount)
         }
     }
     
