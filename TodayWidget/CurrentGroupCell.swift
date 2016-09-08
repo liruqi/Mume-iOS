@@ -12,7 +12,7 @@ import PotatsoLibrary
 
 class CurrentGroupCell: UIView {
     
-    var switchVPN: (()->Void)?
+    var switchVPN: ((on: Bool)->Void)?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -21,12 +21,12 @@ class CurrentGroupCell: UIView {
         setupLayout()
     }
     
-    func onSwitchValueChanged() {
+    func onSwitchValueChanged(sender: UISwitch) {
         switchButton.hidden = true
-        switchVPN?()
+        switchVPN?(on: sender.on)
     }
     
-    func config(name: String?, status: Bool, switchVPN: (() -> Void)?) {
+    func config(name: String?, status: Bool, switchVPN: ((on: Bool) -> Void)?) {
         nameLabel.text = name ?? "None".localized()
         switchButton.hidden = false
         switchButton.addTarget(self, action: #selector(self.onSwitchValueChanged), forControlEvents: .TouchUpInside)

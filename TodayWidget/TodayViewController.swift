@@ -25,6 +25,8 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
     
     var timer: NSTimer?
     
+    var thresholdRetry = 0
+
     var rowCount: Int {
         return 1
     }
@@ -65,13 +67,15 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
         let port = Potatso.sharedUserDefaults().integerForKey("tunnelStatusPort")
         guard port > 0 else {
             updateStatus(false)
+            openAppIfNeeded()
             return
         }
         do {
             socket.delegate = self
-            try socket.connectToHost("127.0.0.1", onPort: UInt16(port))
-        }catch {
+            try socket.connectToHost("127.0.0.1", onPort: UInt16(port), withTimeout: 0.9)
+        } catch {
             updateStatus(false)
+            openAppIfNeeded()
         }
     }
 
@@ -96,10 +100,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
 
     func socketDidDisconnect(sock: GCDAsyncSocket!, withError err: NSError!) {
         updateStatus(false)
-        if (statusExpected) {
-            let url = NSURL(string: "mume://on")
-            self.extensionContext?.openURL(url!, completionHandler:nil)
-        }
+        openAppIfNeeded()
     }
 
     func updateStatus(current: Bool) {
@@ -111,8 +112,21 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
         }
     }
     
-    func switchVPN() {
-        if status {
+    func openAppIfNeeded() {
+        if !statusExpected {
+            return
+        }
+        if thresholdRetry >= 1 {
+            thresholdRetry = 0
+            statusExpected = false
+            let url = NSURL(string: "mume://on")
+            self.extensionContext?.openURL(url!, completionHandler:nil)
+        }
+        thresholdRetry += 1
+    }
+    
+    func switchVPN(on: Bool) {
+        if !on {
             wormhole.passMessageObject("", identifier: "stopTunnel")
         } else {
             // try on-demand first
@@ -124,7 +138,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
             }
             task.resume()
         }
-        statusExpected = !status
+        statusExpected = on
     }
     
     func widgetMarginInsetsForProposedMarginInsets(defaultMarginInsets: UIEdgeInsets) -> UIEdgeInsets {
