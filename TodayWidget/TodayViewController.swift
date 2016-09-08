@@ -30,6 +30,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
     }
     
     var status: Bool = false
+    var statusExpected: Bool = false
 
     var socket: GCDAsyncSocket!
 
@@ -44,8 +45,6 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let port = Potatso.sharedUserDefaults().integerForKey("tunnelStatusPort")
-        status = port > 0
         
         view.addSubview(tableView)
         updateLayout()
@@ -97,6 +96,10 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
 
     func socketDidDisconnect(sock: GCDAsyncSocket!, withError err: NSError!) {
         updateStatus(false)
+        if (statusExpected) {
+            let url = NSURL(string: "mume://on")
+            self.extensionContext?.openURL(url!, completionHandler:nil)
+        }
     }
 
     func updateStatus(current: Bool) {
@@ -112,17 +115,16 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
         if status {
             wormhole.passMessageObject("", identifier: "stopTunnel")
         } else {
-            let url = NSURL(string: "mume://on")
-            self.extensionContext?.openURL(url!, completionHandler:nil)
-//TODO: try on-demand first
-//            let url = NSURL(string: "https://on-demand.connect.mume.vpn/start/")
-//            let task = NSURLSession.sharedSession().dataTaskWithURL(url) {data, reponse, error in
-//                if (error) {
-//                    
-//                }
-//            }
-//            task.resume()
+            // try on-demand first
+            let url = NSURL(string: "https://on-demand.connect.mume.vpn/start/")
+            let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {data, reponse, error in
+                if (error != nil) {
+                    print(error.debugDescription)
+                }
+            }
+            task.resume()
         }
+        statusExpected = !status
     }
     
     func widgetMarginInsetsForProposedMarginInsets(defaultMarginInsets: UIEdgeInsets) -> UIEdgeInsets {
