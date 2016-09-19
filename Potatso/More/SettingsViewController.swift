@@ -161,8 +161,8 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
     }
 
     func shareWithFriends() {
-        var shareItems: [AnyObject] = []
-        shareItems.append("Mume VPN: https://itunes.apple.com/us/app/id1144787928")
+        var shareItems: [AnyObject] = [self]
+        shareItems.append("Mume: https://itunes.apple.com/app/id1144787928")
         shareItems.append(UIImage(named: "AppIcon60x60")!)
         let shareVC = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
         self.presentViewController(shareVC, animated: true, completion: nil)
@@ -172,4 +172,23 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
         controller.dismissViewControllerAnimated(true, completion: nil)
     }
     
+// UIActivityItemSource
+    @objc func activityViewControllerPlaceholderItem(activityViewController: UIActivityViewController) -> AnyObject {
+        return ""
+    }
+    
+    @objc func activityViewController(activityViewController: UIActivityViewController, itemForActivityType activityType: String) -> AnyObject? {
+        if activityType.containsString("com.tencent") {
+            return "Mume iOS: https://liruqi.github.io/Mume-iOS/"
+        }
+        return "Mume: https://itunes.apple.com/app/id1144787928"
+    }
+    
+    func activityViewController(activityViewController: UIActivityViewController, subjectForActivityType activityType: String?) -> String {
+        return "Mume"
+    }
+    
+    func activityViewController(activityViewController: UIActivityViewController, thumbnailImageForActivityType activityType: String!, suggestedSize size: CGSize) -> UIImage! {
+        return UIImage(named: "AppIcon60x60")
+    }
 }

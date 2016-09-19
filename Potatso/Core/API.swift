@@ -25,7 +25,7 @@ struct API {
             let path: String
             switch self {
             case .RuleSets:
-                path = "mume-rulesets.json"
+                path = "mume-rulesets.php"
             case .RuleSet(let uuid):
                 path = "ruleset/\(uuid).json"
             case .RuleSetListDetail():
@@ -44,7 +44,13 @@ struct API {
         DDLogVerbose("API.getRuleSetDetail ===> uuid: \(uuid)")
         Alamofire.request(.GET, Path.RuleSet(uuid).url).responseObject(completionHandler: callback)
     }
-
+    
+    static func getRuleSets(callback: Alamofire.Response<[RuleSet], NSError> -> Void) {
+        let lang = NSLocale.preferredLanguages()[0]
+        let versionCode: AnyObject? = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"]
+        DDLogVerbose("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
+        Alamofire.request(.GET, Path.RuleSets.url, parameters: ["lang": lang, "version": versionCode!]).responseArray(completionHandler: callback)
+    }
 }
 
 extension RuleSet: Mappable {

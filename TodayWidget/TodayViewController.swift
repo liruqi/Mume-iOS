@@ -116,7 +116,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
         if !statusExpected {
             return
         }
-        if thresholdRetry >= 1 {
+        if thresholdRetry >= 2 {
             thresholdRetry = 0
             statusExpected = false
             let url = NSURL(string: "mume://on")
