@@ -22,9 +22,9 @@ class ICloudSetupOperation: GroupOperation {
 
         let finishObserver = BlockObserver { operation, error in
             if let _ = error.first {
-                DDLogError("ICloudSetupOperation finished with error: \(error)")
+                NSLog("ICloudSetupOperation finished with error: \(error)")
             } else {
-                DDLogInfo("ICloudSetupOperation finished with success")
+                NSLog("ICloudSetupOperation finished with success")
             }
             Async.main {
                 completion?(error.first)

@@ -25,7 +25,7 @@ class PushLocalChangesOperation: Operation {
     }
 
     override func execute() {
-        DDLogInfo(">>>>>> Start Push Local Changes...")
+        NSLog(">>>>>> Start Push Local Changes...")
         let toSaveObjects = DBUtils.allObjectsToSyncModified()
         let toDeleteObjects = DBUtils.allObjectsToSyncDeleted()
         toSaveRecords = toSaveObjects.map {
@@ -34,7 +34,7 @@ class PushLocalChangesOperation: Operation {
         toDeleteRecordIDs = toDeleteObjects.map {
             ($0 as! CloudKitRecord).recordId
         }
-        DDLogInfo("toSaveRecords: \(toSaveRecords.count), toDeleteRecordIDs: \(toDeleteRecordIDs.count)")
+        NSLog("toSaveRecords: \(toSaveRecords.count), toDeleteRecordIDs: \(toDeleteRecordIDs.count)")
         let finishObserver = BlockObserver { operation, errors in
             self.finish(errors)
             return

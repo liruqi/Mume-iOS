@@ -16,7 +16,7 @@ class PrepareZoneOperation: Operation {
     }
     
     override func execute() {
-        DDLogInfo("\(self.name!) started")
+        NSLog("\(self.name!) started")
         prepareCKRecordZone(self.zoneID) { (nsError) in
             self.finishWithError(nsError)
         }
@@ -27,7 +27,7 @@ class PrepareZoneOperation: Operation {
         potatsoDB.fetchAllRecordZonesWithCompletionHandler {
             (zones, nsError) in
             if let nsError = nsError {
-                DDLogError("prepareCKRecordZone error: \(nsError)")
+                NSLog("prepareCKRecordZone error: \(nsError)")
                 completionHandler(nsError)
                 return
             }
@@ -39,10 +39,10 @@ class PrepareZoneOperation: Operation {
                     }
                 }
                 if foundZone {
-                    DDLogInfo("prepareCKRecordZone: Zone \(zoneID.zoneName) exists, nothing to do here.")
+                    NSLog("prepareCKRecordZone: Zone \(zoneID.zoneName) exists, nothing to do here.")
                     completionHandler(nsError)
                 } else {
-                    DDLogWarn("prepareCKRecordZone: Zone \(zoneID.zoneName) does not exist. Creating it now.")
+                    NSLog("prepareCKRecordZone: Zone \(zoneID.zoneName) does not exist. Creating it now.")
                     // TODO: check NSUserDefault boolean value for the zoneName.
                     // If it exists and we are here then the user must have deleted their
                     // cloud data. If so we need to recreate that zone and reupload
@@ -57,7 +57,7 @@ class PrepareZoneOperation: Operation {
                     }
                 }
             } else {
-                DDLogError("prepareCKRecordZone: unknown error")
+                NSLog("prepareCKRecordZone: unknown error")
                 completionHandler(nil)
             }
         }

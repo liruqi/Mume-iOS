@@ -21,12 +21,12 @@ class ICloudSyncService: SyncServiceProtocol {
     }
 
     func setup(completion: (ErrorType? -> Void)?) {
-        DDLogInfo(">>>>>> Setuping iCloud sync service")
+        NSLog(">>>>>> Setuping iCloud sync service")
         let setupOp = ICloudSetupOperation { [weak self] (error) in
             if let e = error {
-                DDLogError(">>>>>> Setuping iCloud sync service with error: \(e)")
+                NSLog(">>>>>> Setuping iCloud sync service with error: \(e)")
             } else {
-                DDLogInfo(">>>>>> Setuping iCloud sync service with success")
+                NSLog(">>>>>> Setuping iCloud sync service with success")
                 self?.subscribeNotification()
             }
             completion?(error)
@@ -35,14 +35,14 @@ class ICloudSyncService: SyncServiceProtocol {
     }
 
     func sync(manually: Bool = false, completion: (ErrorType? -> Void)?) {
-        DDLogInfo(">>>>>>>>>> iCloud sync start")
+        NSLog(">>>>>>>>>> iCloud sync start")
 
         let pushLocalChangesOperation = PushLocalChangesOperation(zoneID: potatsoZoneId)
         let pushLocalChangesObserver = BlockObserver { [weak self] operation, error in
             if let _ = error.first {
-                DDLogError("<<< pushLocalChangesOperation finished with error: \(error)")
+                NSLog("<<< pushLocalChangesOperation finished with error: \(error)")
             } else {
-                DDLogInfo("<<< pushLocalChangesOperation finished with success")
+                NSLog("<<< pushLocalChangesOperation finished with success")
             }
             self?.finishSync(error.first, completion: completion)
         }
@@ -51,11 +51,11 @@ class ICloudSyncService: SyncServiceProtocol {
         let fetchCloudChangesOperation = FetchCloudChangesOperation(zoneID: potatsoZoneId)
         let fetchCloudChangesObserver = BlockObserver { [weak self] operation, error in
             if let error = error.first {
-                DDLogError("<<< fetchCloudChangesOperation finished with error: \(error)")
+                NSLog("<<< fetchCloudChangesOperation finished with error: \(error)")
                 self?.finishSync(error, completion: completion)
                 return
             } else {
-                DDLogInfo("<<< fetchCloudChangesOperation finished with success")
+                NSLog("<<< fetchCloudChangesOperation finished with success")
             }
             self?.operationQueue.addOperation(pushLocalChangesOperation)
         }
@@ -73,9 +73,9 @@ class ICloudSyncService: SyncServiceProtocol {
 
     func finishSync(error: ErrorType?, completion: (ErrorType? -> Void)?) {
         if let error = error {
-            DDLogInfo("<<<<<<<<<< iCloud sync finished with error: \(error)")
+            NSLog("<<<<<<<<<< iCloud sync finished with error: \(error)")
         } else {
-            DDLogInfo("<<<<<<<<<< iCloud sync finished with success")
+            NSLog("<<<<<<<<<< iCloud sync finished with success")
         }
         Async.main {
             completion?(error)
@@ -83,27 +83,27 @@ class ICloudSyncService: SyncServiceProtocol {
     }
 
     func subscribeNotification() {
-        DDLogInfo("subscribing cloudkit database changes...")
+        NSLog("subscribing cloudkit database changes...")
         let subscription = CKSubscription(zoneID: potatsoZoneId, subscriptionID: potatsoSubscriptionId, options: CKSubscriptionOptions(rawValue: 0))
         let info = CKNotificationInfo()
         info.shouldSendContentAvailable = true
         subscription.notificationInfo = info
         potatsoDB.saveSubscription(subscription) { (sub, error) in
             if let error = error {
-                DDLogError("subscribe cloudkit database changes error: \(error.localizedDescription)")
+                NSLog("subscribe cloudkit database changes error: \(error.localizedDescription)")
             } else {
-                DDLogInfo("subscribe cloudkit database changes success")
+                NSLog("subscribe cloudkit database changes success")
             }
         }
     }
 
     func unsubscribeNotification() {
-        DDLogInfo("unsubscribing cloudkit database changes...")
+        NSLog("unsubscribing cloudkit database changes...")
         potatsoDB.deleteSubscriptionWithID(potatsoSubscriptionId) { (id, error) in
             if let error = error {
-                DDLogError("unsubscribe cloudkit database changes error: \(error.localizedDescription)")
+                NSLog("unsubscribe cloudkit database changes error: \(error.localizedDescription)")
             } else {
-                DDLogInfo("unsubscribe cloudkit database changes success")
+                NSLog("unsubscribe cloudkit database changes success")
             }
         }
     }

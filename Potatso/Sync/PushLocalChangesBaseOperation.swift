@@ -19,9 +19,9 @@ class PushLocalChangesBaseOperation: Operation {
         self.name = "Push Local Changes"
         self.finishObserver = BlockObserver { [unowned self] operation, errors in
             if let error = errors.first {
-                DDLogError("<<<<<< \(self.name!) finished with error: \(error)")
+                NSLog("<<<<<< \(self.name!) finished with error: \(error)")
             } else {
-                DDLogInfo("<<<<<< \(self.name!) finished")
+                NSLog("<<<<<< \(self.name!) finished")
             }
             return
         }
@@ -29,7 +29,7 @@ class PushLocalChangesBaseOperation: Operation {
     }
     
     override func execute() {
-        DDLogInfo(">>>>>> \(self.name!) starting...")
+        NSLog(">>>>>> \(self.name!) starting...")
         pushRecords { [weak self] (error) in
             self?.finishWithError(error)
             return
@@ -46,7 +46,7 @@ class PushLocalChangesBaseOperation: Operation {
         modifyOperation.modifyRecordsCompletionBlock = {
             (savedRecords, deletedRecordIDs, nsError) -> Void in
             if let error = nsError {
-                DDLogError("\(self.name!) error: \(error)")
+                NSLog("\(self.name!) error: \(error)")
                 self.handleCloudKitPushError(savedRecords, deletedRecordIDs: deletedRecordIDs, error: error, completionHandler: completionHandler)
             } else {
                 do {

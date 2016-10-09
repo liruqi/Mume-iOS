@@ -13,7 +13,6 @@ def library
     pod 'KissXML/libxml_module'
     pod 'ICSMainFramework', :path => "./Library/ICSMainFramework/"
     pod 'MMWormhole', '~> 2.0.0'
-    pod 'KeychainAccess'
 end
 
 def tunnel
@@ -25,27 +24,25 @@ def socket
 end
 
 def model
-    pod 'RealmSwift'
+    pod 'RealmSwift', '~> 1.0.2'
 end
 
 target "Potatso" do
     pod 'Aspects', :path => "./Library/Aspects/"
-    pod 'Cartography'
-    pod 'AsyncSwift'
-    pod 'SwiftColor', '~> 0.3.7'
+    pod 'Cartography', '~> 0.7'
+    pod 'AsyncSwift', '~> 1.7'
+    pod 'SwiftColor'
     pod 'Appirater'
     pod 'Eureka', '~> 1.6.0'
     pod 'MBProgressHUD'
-    pod 'CallbackURLKit'
+    pod 'CallbackURLKit', '~> 0.2'
     pod 'ICDMaterialActivityIndicatorView', '~> 0.1.0'
     pod 'SVPullToRefresh'
     pod 'ISO8601DateFormatter', '~> 0.8'
-    pod 'Alamofire'
-    pod 'ObjectMapper'
-    pod 'CocoaLumberjack/Swift'
+    pod 'Alamofire', '~> 3.4'
+    pod 'ObjectMapper', '~> 1.5.0'
     pod 'Helpshift', '5.6.1'
     pod 'PSOperations', '~> 2.3'
-    pod 'LogglyLogger-CocoaLumberjack', '~> 2.0'
     tunnel
     library
     fabric

@@ -10,14 +10,12 @@ import Foundation
 import ICSMainFramework
 import Appirater
 import Fabric
-import LogglyLogger_CocoaLumberjack
 
 let appID = "1144787928"
 
 class AppInitializer: NSObject, AppLifeCycleProtocol {
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
-        configLogging()
         configAppirater()
         #if !DEBUG
             Fabric.with([Answers.self, Crashlytics.self])
@@ -28,32 +26,6 @@ class AppInitializer: NSObject, AppLifeCycleProtocol {
 
     func configAppirater() {
         Appirater.setAppId(appID)
-    }
-
-    func configLogging() {
-        let fileLogger = DDFileLogger() // File Logger
-        fileLogger.rollingFrequency = 60*60*24*3  // 24 hours
-        fileLogger.logFileManager.maximumNumberOfLogFiles = 7
-        DDLog.addLogger(fileLogger)
-
-        let logglyLogger = LogglyLogger() // Loggy Logger
-        logglyLogger.logglyKey = LOGGY_KEY
-        let fields = LogglyFields()
-        fields.userid = User.currentUser.id
-        fields.appversion = AppEnv.fullVersion
-        let formatter = LogglyFormatter(logglyFieldsDelegate: fields)
-        formatter.alwaysIncludeRawMessage = false
-        logglyLogger.logFormatter = formatter
-        DDLog.addLogger(logglyLogger)
-
-        #if DEBUG
-            DDLog.addLogger(DDTTYLogger.sharedInstance()) // TTY = Xcode console
-            DDLog.addLogger(DDASLLogger.sharedInstance()) // ASL = Apple System Logs
-            DDLog.setLevel(DDLogLevel.All, forClass: DDTTYLogger.self)
-            DDLog.setLevel(DDLogLevel.All, forClass: DDASLLogger.self)
-        #else
-
-        #endif
     }
 
     func configHelpShift() {

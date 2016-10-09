@@ -295,7 +295,7 @@ extension Manager {
         root.addChild(filter)
         
         let socksConf = root.XMLString
-        try socksConf().writeToURL(Potatso.sharedSocksConfUrl(), atomically: true, encoding: NSUTF8StringEncoding)
+        try socksConf.writeToURL(Potatso.sharedSocksConfUrl(), atomically: true, encoding: NSUTF8StringEncoding)
     }
     
     func generateShadowsocksConfig() throws {

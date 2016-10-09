@@ -30,7 +30,7 @@ class FetchCloudChangesOperation: Operation {
     
     override func execute() {
         changeToken = getZoneChangeToken(zoneID)
-        DDLogInfo(">>> \(self.name!) started with token: \(changeToken)")
+        NSLog(">>> \(self.name!) started with token: \(changeToken)")
         fetchCloudChanges(changeToken) {
             (nsError) in
             self.finishWithError(nsError)
@@ -79,7 +79,7 @@ class FetchCloudChangesOperation: Operation {
                     self.changeToken = serverChangeToken
                     
                     if fetchOperation.moreComing {
-                        DDLogInfo("\(self.name!) more coming...")
+                        NSLog("\(self.name!) more coming...")
                         self.fetchCloudChanges(self.changeToken,
                                                completionHandler: completionHandler)
                     } else {
@@ -95,18 +95,18 @@ class FetchCloudChangesOperation: Operation {
         var error: NSError?
         
         do {
-            DDLogInfo("****** \(self.name!) processFetchResults changedRecords: \(results.changedRecords.count)")
+            NSLog("****** \(self.name!) processFetchResults changedRecords: \(results.changedRecords.count)")
             for record in results.changedRecords {
                 try changeLocalRecord(record)
             }
 
-            DDLogInfo("****** \(self.name!) processFetchResults deletedRecordIDs: \(results.deletedRecordIDs.count)")
+            NSLog("****** \(self.name!) processFetchResults deletedRecordIDs: \(results.deletedRecordIDs.count)")
             for recordID in results.deletedRecordIDs {
                 try deleteLocalRecord(recordID)
             }
         } catch let realmError as NSError {
             error = realmError
-            DDLogError("****** \(self.name!) processFetchResults error: \(error)")
+            NSLog("****** \(self.name!) processFetchResults error: \(error)")
         }
 
         return error

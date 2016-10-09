@@ -36,19 +36,19 @@ struct API {
     }
 
     static func getRuleSets(page: Int = 1, count: Int = 20, callback: Alamofire.Response<[RuleSet], NSError> -> Void) {
-        DDLogVerbose("API.getRuleSets ===> page: \(page), count: \(count)")
+        NSLog("API.getRuleSets ===> page: \(page), count: \(count)")
         Alamofire.request(.GET, Path.RuleSets.url, parameters: ["page": page, "count": count]).responseArray(completionHandler: callback)
     }
 
     static func getRuleSetDetail(uuid: String, callback: Alamofire.Response<RuleSet, NSError> -> Void) {
-        DDLogVerbose("API.getRuleSetDetail ===> uuid: \(uuid)")
+        NSLog("API.getRuleSetDetail ===> uuid: \(uuid)")
         Alamofire.request(.GET, Path.RuleSet(uuid).url).responseObject(completionHandler: callback)
     }
     
     static func getRuleSets(callback: Alamofire.Response<[RuleSet], NSError> -> Void) {
         let lang = NSLocale.preferredLanguages()[0]
         let versionCode: AnyObject? = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"]
-        DDLogVerbose("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
+        NSLog("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
         Alamofire.request(.GET, Path.RuleSets.url, parameters: ["lang": lang, "version": versionCode!]).responseArray(completionHandler: callback)
     }
 }
@@ -149,7 +149,7 @@ extension Alamofire.Request {
 
     public static func ObjectMapperSerializer<T: Mappable>(keyPath: String?, mapToObject object: T? = nil) -> ResponseSerializer<T, NSError> {
         return ResponseSerializer { request, response, data, error in
-            DDLogVerbose("Alamofire response ===> request: \(request.debugDescription), response: \(response.debugDescription)")
+            NSLog("Alamofire response ===> request: \(request.debugDescription), response: \(response.debugDescription)")
             guard error == nil else {
                 logError(error!, request: request, response: response)
                 return .Failure(error!)
@@ -209,7 +209,7 @@ extension Alamofire.Request {
 
     public static func ObjectMapperArraySerializer<T: Mappable>(keyPath: String?) -> ResponseSerializer<[T], NSError> {
         return ResponseSerializer { request, response, data, error in
-            DDLogVerbose("Alamofire response ===> request: \(request.debugDescription), response: \(response.debugDescription)")
+            NSLog("Alamofire response ===> request: \(request.debugDescription), response: \(response.debugDescription)")
             guard error == nil else {
                 logError(error!, request: request, response: response)
                 return .Failure(error!)
@@ -263,6 +263,6 @@ extension Alamofire.Request {
     }
 
     private static func logError(error: NSError, request: NSURLRequest?, response: NSURLResponse?) {
-        DDLogError("ObjectMapperSerializer failure: \(error), request: \(request?.debugDescription), response: \(response.debugDescription)")
+        NSLog("ObjectMapperSerializer failure: \(error), request: \(request?.debugDescription), response: \(response.debugDescription)")
     }
 }

@@ -35,14 +35,14 @@ class NotificationHandler: NSObject, AppLifeCycleProtocol {
     }
 
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-        DDLogInfo("didRegisterForRemoteNotificationsWithDeviceToken: \(deviceToken.hexString())")
+        NSLog("didRegisterForRemoteNotificationsWithDeviceToken: \(deviceToken.hexString())")
         HelpshiftCore.registerDeviceToken(deviceToken)
     }
 
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         if let origin = userInfo["origin"] as? String {
             if origin == "helpshift" {
-                DDLogInfo("received a helpshift notification")
+                NSLog("received a helpshift notification")
                 if let rootVC = application.keyWindow?.rootViewController {
                     HelpshiftCore.handleRemoteNotification(userInfo, withController: rootVC)
                 }
@@ -53,7 +53,7 @@ class NotificationHandler: NSObject, AppLifeCycleProtocol {
         if let dict = userInfo as? [String: NSObject] {
             let ckNotification = CKNotification(fromRemoteNotificationDictionary: dict)
             if ckNotification.subscriptionID == potatsoSubscriptionId {
-                DDLogInfo("received a CKNotification")
+                NSLog("received a CKNotification")
                 SyncManager.shared.sync()
             }
         }

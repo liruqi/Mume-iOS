@@ -1,0 +1,113 @@
+PODS:
+  - Alamofire (3.5.1)
+  - Appirater (2.0.5)
+  - Aspects (0.0.1)
+  - AsyncSwift (1.7.4)
+  - CallbackURLKit (0.2.0):
+    - CallbackURLKit/Core (= 0.2.0)
+  - CallbackURLKit/Core (0.2.0)
+  - Cartography (0.7.0)
+  - CocoaAsyncSocket (7.4.3):
+    - CocoaAsyncSocket/All (= 7.4.3)
+  - CocoaAsyncSocket/All (7.4.3):
+    - CocoaAsyncSocket/GCD
+    - CocoaAsyncSocket/RunLoop
+  - CocoaAsyncSocket/GCD (7.4.3)
+  - CocoaAsyncSocket/RunLoop (7.4.3)
+  - Crashlytics (3.8.2):
+    - Fabric (~> 1.6.3)
+  - Eureka (1.6.0)
+  - Fabric (1.6.9)
+  - Helpshift (5.6.1)
+  - ICDMaterialActivityIndicatorView (0.1.2)
+  - ICSMainFramework (0.0.1)
+  - ISO8601DateFormatter (0.8)
+  - KissXML (5.1.2):
+    - KissXML/Core (= 5.1.2)
+  - KissXML/Core (5.1.2)
+  - KissXML/libxml_module (5.1.2):
+    - KissXML/SwiftNSXML
+  - KissXML/SwiftNSXML (5.1.2):
+    - KissXML/Core
+  - MBProgressHUD (1.0.0)
+  - MMWormhole (2.0.0):
+    - MMWormhole/Core (= 2.0.0)
+  - MMWormhole/Core (2.0.0)
+  - ObjectMapper (1.5.0)
+  - PSOperations (2.3.0):
+    - PSOperations/Core (= 2.3.0)
+    - PSOperations/Health (= 2.3.0)
+    - PSOperations/Passbook (= 2.3.0)
+  - PSOperations/Core (2.3.0)
+  - PSOperations/Health (2.3.0):
+    - PSOperations/Core
+  - PSOperations/Passbook (2.3.0):
+    - PSOperations/Core
+  - Realm (1.0.2):
+    - Realm/Headers (= 1.0.2)
+  - Realm/Headers (1.0.2)
+  - RealmSwift (1.0.2):
+    - Realm (= 1.0.2)
+  - SVPullToRefresh (0.4.1)
+  - SwiftColor (0.3.8)
+
+DEPENDENCIES:
+  - Alamofire (~> 3.4)
+  - Appirater
+  - Aspects (from `./Library/Aspects/`)
+  - AsyncSwift (~> 1.7)
+  - CallbackURLKit (~> 0.2)
+  - Cartography
+  - Cartography (~> 0.7)
+  - CocoaAsyncSocket (~> 7.4.3)
+  - Crashlytics
+  - Eureka (~> 1.6.0)
+  - Fabric
+  - Helpshift (= 5.6.1)
+  - ICDMaterialActivityIndicatorView (~> 0.1.0)
+  - ICSMainFramework (from `./Library/ICSMainFramework/`)
+  - ISO8601DateFormatter (~> 0.8)
+  - KissXML
+  - KissXML/libxml_module
+  - MBProgressHUD
+  - MMWormhole (~> 2.0.0)
+  - ObjectMapper (~> 1.5.0)
+  - PSOperations (~> 2.3)
+  - RealmSwift (~> 1.0.2)
+  - SVPullToRefresh
+  - SwiftColor
+
+EXTERNAL SOURCES:
+  Aspects:
+    :path: ./Library/Aspects/
+  ICSMainFramework:
+    :path: ./Library/ICSMainFramework/
+
+SPEC CHECKSUMS:
+  Alamofire: 0dfba1184a543e2aa160f4e39cac4e8aba48d223
+  Appirater: e7c0a47fb67ee5041ce8479e6ba960927fb40264
+  Aspects: 35254a4a73948e7bc1118ce0554674f77467a80b
+  AsyncSwift: cecffe40af6e09558ed25dd71fabf04836b5eaf4
+  CallbackURLKit: bd9fd6769e34fdd226923a2ff8b47326d5c6299e
+  Cartography: dd6044b6fe352252f68b648df5bff47841e591cc
+  CocoaAsyncSocket: a18c75dca4b08723628a0bacca6e94803d90be91
+  Crashlytics: 27acca95a01b042a8294291dd6dff27f8f6af6d7
+  Eureka: ef5b9ac93aedeecfe50d98b1ac7678bf09a1fc62
+  Fabric: bc5bec42cef4bcf1ee3ce0e218fc518e4b44dfbb
+  Helpshift: b48366299844f119acf5e91d02a2e89288494fe6
+  ICDMaterialActivityIndicatorView: 3f02a9dc9e52417023a98385d631c93d3f95c465
+  ICSMainFramework: 56240e9556d3b0755fc9c934a91ee8ebd09cb753
+  ISO8601DateFormatter: 4551b6ce4f83185425f583b0b3feb3c7b59b942c
+  KissXML: 246c842586bb77110e04fb88e19376d96245c856
+  MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
+  MMWormhole: 0cd3fd35a9118b2e2d762b499f54eeaace0be791
+  ObjectMapper: 386645adca9d9d23b95eda43090b09d66444cf14
+  PSOperations: 81a4d50a4efe96f6d090dc0e7eb45d9fef79ff45
+  Realm: 9d5c46a4d7d27958530a8dfc58f63a99e5c2cba3
+  RealmSwift: 82f3ac5e24530143dddfde2033acc0d308f27d96
+  SVPullToRefresh: ba2e718695a43253d8bea6852d2960097dc15d8c
+  SwiftColor: 491ce84c6f6eb09bf5b0a00630f5db927306dca5
+
+PODFILE CHECKSUM: 29e1fd8df2356746638797d2a7e868cb539e6cc8
+
+COCOAPODS: 1.1.0.rc.2

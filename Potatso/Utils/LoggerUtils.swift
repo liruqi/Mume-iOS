@@ -12,9 +12,9 @@ extension ErrorType {
 
     func log(message: String?) {
         if let message = message {
-            DDLogError("\(message): \(self)")
+            NSLog("\(message): \(self)")
         }else {
-            DDLogError("\(self)")
+            NSLog("\(self)")
         }
     }
 
