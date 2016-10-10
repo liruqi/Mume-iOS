@@ -42,7 +42,7 @@ class SyncVC: FormViewController {
         section
             <<< PushRow<SyncServiceType>() {
                 $0.title = "Sync Service".localized()
-                $0.options = [.None, .iCloud]
+                $0.options = [.None]
                 $0.value = SyncManager.shared.currentSyncServiceType
                 $0.selectorTitle = "Choose Sync Service".localized()
             }.onChange({ [weak self] (row) in

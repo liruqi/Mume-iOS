@@ -133,13 +133,13 @@ public class Manager {
 
     func copyGEOIPData() throws {
         let toURL = Potatso.sharedUrl().URLByAppendingPathComponent("GeoLite2-Country.mmdb")
-        if NSFileManager.defaultManager().fileExistsAtPath(toURL.path!) {
-            let toSize = try! NSFileManager.defaultManager().attributesOfItemAtPath(toURL.path!)[NSFileSize]!.longLongValue
+        if NSFileManager.defaultManager().fileExistsAtPath(toURL!.path!) {
+            let toSize = try! NSFileManager.defaultManager().attributesOfItemAtPath(toURL!.path!)[NSFileSize]!.longLongValue
             if 19267424 == toSize {
                 print("copy GEOIPData skipped, already exists")
                 return
             }
-            try NSFileManager.defaultManager().removeItemAtURL(toURL)
+            try NSFileManager.defaultManager().removeItemAtURL(toURL!)
         }
         
         guard let fromURL = NSBundle.mainBundle().URLForResource("GeoLite2-Country", withExtension: "mmdb") else {
@@ -148,7 +148,7 @@ public class Manager {
                 if (error != nil) {
                     print("Download GeoLite2-Country.mmdb error: " + error!.description)
                 } else {
-                    let result = data?.writeToURL(toURL, atomically: true)
+                    let result = data?.writeToURL(toURL!, atomically: true)
                     if result != nil {
                         print("writeToFile GeoLite2-Country.mmdb: OK")
                     } else {
@@ -160,7 +160,7 @@ public class Manager {
             return
         }
         if NSFileManager.defaultManager().fileExistsAtPath(fromURL.path!) {
-            try NSFileManager.defaultManager().copyItemAtURL(fromURL, toURL: toURL)
+            try NSFileManager.defaultManager().copyItemAtURL(fromURL, toURL: toURL!)
         }
     }
 
@@ -170,23 +170,23 @@ public class Manager {
         }
         let fm = NSFileManager.defaultManager()
         let toDirectoryURL = Potatso.sharedUrl().URLByAppendingPathComponent("httptemplate")
-        if !fm.fileExistsAtPath(toDirectoryURL.path!) {
-            try fm.createDirectoryAtURL(toDirectoryURL, withIntermediateDirectories: true, attributes: nil)
+        if !fm.fileExistsAtPath(toDirectoryURL!.path!) {
+            try fm.createDirectoryAtURL(toDirectoryURL!, withIntermediateDirectories: true, attributes: nil)
         }
         for file in try fm.contentsOfDirectoryAtPath(bundleURL.path!) {
-            let destURL = toDirectoryURL.URLByAppendingPathComponent(file)
+            let destURL = toDirectoryURL!.URLByAppendingPathComponent(file)
             let dataURL = bundleURL.URLByAppendingPathComponent(file)
-            if NSFileManager.defaultManager().fileExistsAtPath(dataURL.path!) {
-                if NSFileManager.defaultManager().fileExistsAtPath(destURL.path!) {
-                    try NSFileManager.defaultManager().removeItemAtURL(destURL)
+            if NSFileManager.defaultManager().fileExistsAtPath(dataURL!.path!) {
+                if NSFileManager.defaultManager().fileExistsAtPath(destURL!.path!) {
+                    try NSFileManager.defaultManager().removeItemAtURL(destURL!)
                 }
-                try fm.copyItemAtURL(dataURL, toURL: destURL)
+                try fm.copyItemAtURL(dataURL!, toURL: destURL!)
             }
         }
     }
 
     private func getDefaultConfigGroup() -> ConfigurationGroup {
-        if let groupUUID = Potatso.sharedUserDefaults().stringForKey(kDefaultGroupIdentifier), group = DBUtils.get(groupUUID, type: ConfigurationGroup.self) where !group.deleted {
+        if let groupUUID = Potatso.sharedUserDefaults().stringForKey(kDefaultGroupIdentifier), let group = DBUtils.get(groupUUID, type: ConfigurationGroup.self)  where !group.deleted {
             return group
         }else {
             var group: ConfigurationGroup
@@ -301,7 +301,7 @@ extension Manager {
     func generateShadowsocksConfig() throws {
         let confURL = Potatso.sharedProxyConfUrl()
         var content = ""
-        if let upstreamProxy = upstreamProxy where upstreamProxy.type == .Shadowsocks || upstreamProxy.type == .ShadowsocksR {
+        if let upstreamProxy = upstreamProxy  where upstreamProxy.type == .Shadowsocks || upstreamProxy.type == .ShadowsocksR {
             content = ["host": upstreamProxy.host, "port": upstreamProxy.port, "password": upstreamProxy.password ?? "", "authscheme": upstreamProxy.authscheme ?? "", "ota": upstreamProxy.ota, "protocol": upstreamProxy.ssrProtocol ?? "", "obfs": upstreamProxy.ssrObfs ?? "", "obfs_param": upstreamProxy.ssrObfsParam ?? ""].jsonString() ?? ""
         }
         try content.writeToURL(confURL, atomically: true, encoding: NSUTF8StringEncoding)
@@ -310,21 +310,21 @@ extension Manager {
     func generateHttpProxyConfig() throws {
         let rootUrl = Potatso.sharedUrl()
         let confDirUrl = rootUrl.URLByAppendingPathComponent("httpconf")
-        let templateDirPath = rootUrl.URLByAppendingPathComponent("httptemplate").path!
-        let temporaryDirPath = rootUrl.URLByAppendingPathComponent("httptemporary").path!
-        let logDir = rootUrl.URLByAppendingPathComponent("log").path!
-        let maxminddbPath = Potatso.sharedUrl().URLByAppendingPathComponent("GeoLite2-Country.mmdb").path!
-        let userActionUrl = confDirUrl.URLByAppendingPathComponent("potatso.action")
-        for p in [confDirUrl.path!, templateDirPath, temporaryDirPath, logDir] {
+        let templateDirPath = rootUrl.URLByAppendingPathComponent("httptemplate")!.path!
+        let temporaryDirPath = rootUrl.URLByAppendingPathComponent("httptemporary")!.path!
+        let logDir = rootUrl.URLByAppendingPathComponent("log")!.path!
+        let maxminddbPath = Potatso.sharedUrl().URLByAppendingPathComponent("GeoLite2-Country.mmdb")!.path!
+        let userActionUrl = confDirUrl!.URLByAppendingPathComponent("potatso.action")
+        for p in [confDirUrl!.path!, templateDirPath, temporaryDirPath, logDir] {
             if !NSFileManager.defaultManager().fileExistsAtPath(p) {
                 _ = try? NSFileManager.defaultManager().createDirectoryAtPath(p, withIntermediateDirectories: true, attributes: nil)
             }
         }
         var mainConf: [String: AnyObject] = [:]
-        if let path = NSBundle.mainBundle().pathForResource("proxy", ofType: "plist"), defaultConf = NSDictionary(contentsOfFile: path) as? [String: AnyObject] {
+        if let path = NSBundle.mainBundle().pathForResource("proxy", ofType: "plist"), let defaultConf = NSDictionary(contentsOfFile: path) as? [String: AnyObject] {
             mainConf = defaultConf
         }
-        mainConf["confdir"] = confDirUrl.path!
+        mainConf["confdir"] = confDirUrl!.path!
         mainConf["templdir"] = templateDirPath
         mainConf["logdir"] = logDir
         mainConf["mmdbpath"] = maxminddbPath
@@ -332,7 +332,7 @@ extension Manager {
 //        mainConf["debug"] = 1024+65536+1
         mainConf["debug"] = 131071
 //        mainConf["debug"] = mainConf["debug"] as! Int + 4096
-        mainConf["actionsfile"] = userActionUrl.path!
+        mainConf["actionsfile"] = userActionUrl!.path!
 
         let mainContent = mainConf.map { "\($0) \($1)"}.joinWithSeparator("\n")
         try mainContent.writeToURL(Potatso.sharedHttpProxyConfUrl(), atomically: true, encoding: NSUTF8StringEncoding)
@@ -374,7 +374,7 @@ extension Manager {
         actionContent.appendContentsOf(Pollution.dnsList.map({ "DNS-IP-CIDR, \($0)/32, PROXY" }))
 
         let userActionString = actionContent.joinWithSeparator("\n")
-        try userActionString.writeToFile(userActionUrl.path!, atomically: true, encoding: NSUTF8StringEncoding)
+        try userActionString.writeToFile(userActionUrl!.path!, atomically: true, encoding: NSUTF8StringEncoding)
     }
 
 }
@@ -441,8 +441,8 @@ extension Manager {
     public func postMessage() {
         loadProviderManager { (manager) -> Void in
             if let session = manager?.connection as? NETunnelProviderSession,
-                message = "Hello".dataUsingEncoding(NSUTF8StringEncoding)
-                where manager?.connection.status != .Invalid
+                let message = "Hello".dataUsingEncoding(NSUTF8StringEncoding)
+                 where manager?.connection.status != .Invalid
             {
                 do {
                     try session.sendProviderMessage(message) { response in

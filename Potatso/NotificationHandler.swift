@@ -50,13 +50,7 @@ class NotificationHandler: NSObject, AppLifeCycleProtocol {
                 return
             }
         }
-        if let dict = userInfo as? [String: NSObject] {
-            let ckNotification = CKNotification(fromRemoteNotificationDictionary: dict)
-            if ckNotification.subscriptionID == potatsoSubscriptionId {
-                NSLog("received a CKNotification")
-                SyncManager.shared.sync()
-            }
-        }
+        
         completionHandler(.NoData)
     }
 

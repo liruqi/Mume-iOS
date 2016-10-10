@@ -33,7 +33,7 @@ target "Potatso" do
     pod 'AsyncSwift', '~> 1.7'
     pod 'SwiftColor'
     pod 'Appirater'
-    pod 'Eureka', '~> 1.6.0'
+    pod 'Eureka', :git => 'https://github.com/xmartlabs/Eureka.git', :branch => 'swift2.3'
     pod 'MBProgressHUD'
     pod 'CallbackURLKit', '~> 0.2'
     pod 'ICDMaterialActivityIndicatorView', '~> 0.1.0'
@@ -60,7 +60,7 @@ target "PacketProcessor" do
 end
 
 target "TodayWidget" do
-    pod 'Cartography'
+    pod 'Cartography', '~> 0.7'
     pod 'SwiftColor'
     library
     socket
@@ -74,10 +74,6 @@ end
 
 target "PotatsoModel" do
     model
-end
-
-target "PotatsoLibraryTests" do
-    library
 end
 
 post_install do |installer|

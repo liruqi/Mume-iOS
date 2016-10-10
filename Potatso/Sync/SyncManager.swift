@@ -11,7 +11,6 @@ import CloudKit
 
 public enum SyncServiceType: String {
     case None
-    case iCloud
 }
 
 public protocol SyncServiceProtocol {
@@ -61,8 +60,6 @@ public class SyncManager {
         }
         let s: SyncServiceProtocol
         switch type {
-        case .iCloud:
-            s = ICloudSyncService()
         default:
             return nil
         }

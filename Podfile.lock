@@ -16,7 +16,7 @@ PODS:
   - CocoaAsyncSocket/RunLoop (7.4.3)
   - Crashlytics (3.8.2):
     - Fabric (~> 1.6.3)
-  - Eureka (1.6.0)
+  - Eureka (1.7.0)
   - Fabric (1.6.9)
   - Helpshift (5.6.1)
   - ICDMaterialActivityIndicatorView (0.1.2)
@@ -57,11 +57,10 @@ DEPENDENCIES:
   - Aspects (from `./Library/Aspects/`)
   - AsyncSwift (~> 1.7)
   - CallbackURLKit (~> 0.2)
-  - Cartography
   - Cartography (~> 0.7)
   - CocoaAsyncSocket (~> 7.4.3)
   - Crashlytics
-  - Eureka (~> 1.6.0)
+  - Eureka (from `https://github.com/xmartlabs/Eureka.git`, branch `swift2.3`)
   - Fabric
   - Helpshift (= 5.6.1)
   - ICDMaterialActivityIndicatorView (~> 0.1.0)
@@ -80,8 +79,16 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   Aspects:
     :path: ./Library/Aspects/
+  Eureka:
+    :branch: swift2.3
+    :git: https://github.com/xmartlabs/Eureka.git
   ICSMainFramework:
     :path: ./Library/ICSMainFramework/
+
+CHECKOUT OPTIONS:
+  Eureka:
+    :commit: be9e11baaba4092c36373e8c8ba774fddd6788cc
+    :git: https://github.com/xmartlabs/Eureka.git
 
 SPEC CHECKSUMS:
   Alamofire: 0dfba1184a543e2aa160f4e39cac4e8aba48d223
@@ -92,7 +99,7 @@ SPEC CHECKSUMS:
   Cartography: dd6044b6fe352252f68b648df5bff47841e591cc
   CocoaAsyncSocket: a18c75dca4b08723628a0bacca6e94803d90be91
   Crashlytics: 27acca95a01b042a8294291dd6dff27f8f6af6d7
-  Eureka: ef5b9ac93aedeecfe50d98b1ac7678bf09a1fc62
+  Eureka: 2020d9faeef7b7e9adeb9e3d8af779e5931c1897
   Fabric: bc5bec42cef4bcf1ee3ce0e218fc518e4b44dfbb
   Helpshift: b48366299844f119acf5e91d02a2e89288494fe6
   ICDMaterialActivityIndicatorView: 3f02a9dc9e52417023a98385d631c93d3f95c465
@@ -108,6 +115,6 @@ SPEC CHECKSUMS:
   SVPullToRefresh: ba2e718695a43253d8bea6852d2960097dc15d8c
   SwiftColor: 491ce84c6f6eb09bf5b0a00630f5db927306dca5
 
-PODFILE CHECKSUM: 29e1fd8df2356746638797d2a7e868cb539e6cc8
+PODFILE CHECKSUM: 55517823cde0b6cf49afbd34b2e6adfe6bfbf522
 
 COCOAPODS: 1.0.1

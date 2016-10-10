@@ -12,7 +12,7 @@ import PotatsoBase
 private let ruleValueKey = "value";
 private let ruleActionKey = "action";
 
-public enum RuleType: String {
+public enum MMRuleType: String {
     case URLMatch = "URL-MATCH"
     case URL = "URL"
     case Domain = "DOMAIN"
@@ -20,11 +20,8 @@ public enum RuleType: String {
     case DomainSuffix = "DOMAIN-SUFFIX"
     case GeoIP = "GEOIP"
     case IPCIDR = "IP-CIDR"
-}
-
-extension RuleType {
     
-    public static func fromInt(intValue: Int) -> RuleType? {
+    public static func fromInt(intValue: Int) -> MMRuleType? {
         switch intValue {
         case 1:
             return .Domain
@@ -47,7 +44,7 @@ extension RuleType {
     
 }
 
-extension RuleType: CustomStringConvertible {
+extension MMRuleType: CustomStringConvertible {
     
     public var description: String {
         return rawValue
@@ -138,7 +135,7 @@ public enum RuleError: ErrorType {
 //
 public final class Rule {
 
-    public var type: RuleType
+    public var type: MMRuleType
     public var value: String
     public var action: RuleAction
     
@@ -152,20 +149,20 @@ public final class Rule {
         let actionStr = parts[2].uppercaseString
         let typeStr = parts[0].uppercaseString
         let value = parts[1]
-        guard let type = RuleType(rawValue: typeStr), action = RuleAction(rawValue: actionStr) where value.characters.count > 0 else {
+        guard let type = MMRuleType(rawValue: typeStr), action = RuleAction(rawValue: actionStr) where value.characters.count > 0 else {
             throw RuleError.InvalidRule(str)
         }
         self.init(type: type, action: action, value: value)
     }
     
-    public init(type: RuleType, action: RuleAction, value: String) {
+    public init(type: MMRuleType, action: RuleAction, value: String) {
         self.type = type
         self.value = value
         self.action = action
     }
 
     public convenience init?(json: [String: AnyObject]) {
-        guard let typeRaw = json["type"] as? String, type = RuleType(rawValue: typeRaw) else {
+        guard let typeRaw = json["type"] as? String, type = MMRuleType(rawValue: typeRaw) else {
             return nil
         }
         guard let actionRaw = json["action"] as? String, action = RuleAction(rawValue: actionRaw) else {
