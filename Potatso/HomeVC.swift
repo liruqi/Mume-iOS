@@ -56,7 +56,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         Manager.sharedManager.postMessage()
         handleRefreshUI()
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: "List".templateImage, style: .Plain, target: presenter, action: #selector(HomePresenter.chooseConfigGroups))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: presenter, action: #selector(HomePresenter.showAddConfigGroup))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addProxy))
         startTimer()
     }
     
@@ -65,12 +65,26 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         stopTimer()
     }
     
+    func addProxy() {
+        let alert = UIAlertController(title: "Add Proxy".localized(), message: nil, preferredStyle: .ActionSheet)
+        alert.addAction(UIAlertAction(title: "Import From QRCode".localized(), style: .Default, handler: { (action) in
+            let importer = Importer(vc: self)
+            importer.importConfigFromQRCode()
+        }))
+        alert.addAction(UIAlertAction(title: "Manual Settings".localized(), style: .Default, handler: { (action) in
+            let vc = ProxyConfigurationViewController()
+            self.navigationController?.pushViewController(vc, animated: true)
+        }))
+        alert.addAction(UIAlertAction(title: "CANCEL".localized(), style: .Cancel, handler: nil))
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
     // MARK: - HomePresenter Protocol
 
     func handleRefreshUI() {
         if presenter.group.isDefault {
             status = Manager.sharedManager.vpnStatus
-        }else {
+        } else {
             status = .Off
         }
         updateTitle()

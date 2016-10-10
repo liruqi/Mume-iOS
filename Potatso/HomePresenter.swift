@@ -14,6 +14,8 @@ protocol HomePresenterProtocol: class {
 
 class HomePresenter: NSObject {
 
+    static var kAddConfigGroup = "AddConfigGroup"
+    
     var vc: UIViewController!
 
     var group: ConfigurationGroup {
@@ -29,6 +31,7 @@ class HomePresenter: NSObject {
     override init() {
         super.init()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(onVPNStatusChanged), name: kProxyServiceVPNStatusNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(showAddConfigGroup), name: HomePresenter.kAddConfigGroup, object: nil)
         CurrentGroupManager.shared.onChange = { group in
             self.delegate?.handleRefreshUI()
         }

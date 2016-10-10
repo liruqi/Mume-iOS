@@ -142,20 +142,33 @@ class ConfigGroupChooseVC: UIViewController, UITableViewDataSource, UITableViewD
 
     // MARK: - TableView DataSource & Delegate
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return groups.count
+        return groups.count + 1
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        if indexPath.row >= groups.count {
+            let cell = UITableViewCell(style: .Default, reuseIdentifier: HomePresenter.kAddConfigGroup)
+            cell.textLabel?.text = "Add Config Group".localized()
+            return cell;
+        }
         let cell = tableView.dequeueReusableCellWithIdentifier(kGroupCellIdentifier, forIndexPath: indexPath) as! ConfigGroupCell
         cell.config(groups[indexPath.row], hintColor: colors[indexPath.row % colors.count].color )
         return cell
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        showConfigGroup(groups[indexPath.row])
+        if indexPath.row >= groups.count {
+            ConfigGroupChooseManager.shared.hide()
+            NSNotificationCenter.defaultCenter().postNotificationName(HomePresenter.kAddConfigGroup, object: nil)
+        } else {
+            showConfigGroup(groups[indexPath.row])
+        }
     }
 
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        if indexPath.row >= groups.count {
+            return false
+        }
         let group = groups[indexPath.row]
         if group.isDefault && Manager.sharedManager.vpnStatus != .Off {
             return false
@@ -184,7 +197,7 @@ class ConfigGroupChooseVC: UIViewController, UITableViewDataSource, UITableViewD
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let tableRowHeight = CGFloat(groups.count) * rowHeight
+        let tableRowHeight = CGFloat(groups.count + 1) * rowHeight
         let maxHeight = view.bounds.size.height * 0.7
         let height = min(tableRowHeight, maxHeight)
         let originY = view.bounds.size.height - height
