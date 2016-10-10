@@ -41,26 +41,7 @@ class CloudDetailViewController: UIViewController, UITableViewDataSource, UITabl
     }
 
     func loadData() {
-        activityIndicator.startAnimating()
-        activityIndicator.hidden = false
-        subscribeButton.hidden = true
-        API.getRuleSetDetail(ruleSet.uuid) { (response) in
-            defer {
-                self.activityIndicator.stopAnimating()
-            }
-            if response.result.isFailure {
-                // Fail
-                let errDesc = response.result.error?.localizedDescription ?? ""
-                self.showTextHUD((errDesc.characters.count > 0 ? "\(errDesc)" : "Unkown error".localized()), dismissAfterDelay: 1.5)
-            }else {
-                guard let result = response.result.value else {
-                    return
-                }
-                self.ruleSet = result
-                self.tableView.reloadData()
-                self.subscribeButton.hidden = false
-            }
-        }
+        self.subscribeButton.hidden = false
     }
 
     func isExist(uuid: String) -> Bool {
@@ -150,14 +131,12 @@ class CloudDetailViewController: UIViewController, UITableViewDataSource, UITabl
         view.addSubview(tableView)
         tableView.registerClass(RuleSetCell.self, forCellReuseIdentifier: kRuleSetCellIdentifier)
         tableView.registerClass(RuleCell.self, forCellReuseIdentifier: kRuleCellIdentifier)
-        view.addSubview(activityIndicator)
         view.addSubview(subscribeButton)
 
         let buttonHeight: CGFloat = 49
 
-        constrain(tableView, activityIndicator, subscribeButton, view) { tableView, activityIndicator, subscribeButton,  view in
+        constrain(tableView, subscribeButton, view) { tableView, subscribeButton,  view in
             tableView.edges == inset(view.edges, 0, 0, buttonHeight, 0)
-            activityIndicator.center == view.center
             subscribeButton.leading == view.leading
             subscribeButton.trailing == view.trailing
             subscribeButton.bottom == view.bottom
@@ -174,12 +153,6 @@ class CloudDetailViewController: UIViewController, UITableViewDataSource, UITabl
         v.separatorStyle = .SingleLine
         v.rowHeight = UITableViewAutomaticDimension
         v.estimatedRowHeight = rowHeight
-        return v
-    }()
-
-    lazy var activityIndicator: UIActivityIndicatorView = {
-        let v = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
-        v.hidesWhenStopped = true
         return v
     }()
 

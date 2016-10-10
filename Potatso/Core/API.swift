@@ -19,7 +19,6 @@ struct API {
     enum Path {
         case RuleSets
         case RuleSet(String)
-        case RuleSetListDetail()
 
         var url: String {
             let path: String
@@ -28,8 +27,6 @@ struct API {
                 path = "mume-rulesets.php"
             case .RuleSet(let uuid):
                 path = "ruleset/\(uuid).json"
-            case .RuleSetListDetail():
-                path = "rulesets/detail"
             }
             return API.URL + path
         }
@@ -38,11 +35,6 @@ struct API {
     static func getRuleSets(page: Int = 1, count: Int = 20, callback: Alamofire.Response<[RuleSet], NSError> -> Void) {
         NSLog("API.getRuleSets ===> page: \(page), count: \(count)")
         Alamofire.request(.GET, Path.RuleSets.url, parameters: ["page": page, "count": count]).responseArray(completionHandler: callback)
-    }
-
-    static func getRuleSetDetail(uuid: String, callback: Alamofire.Response<RuleSet, NSError> -> Void) {
-        NSLog("API.getRuleSetDetail ===> uuid: \(uuid)")
-        Alamofire.request(.GET, Path.RuleSet(uuid).url).responseObject(completionHandler: callback)
     }
     
     static func getRuleSets(callback: Alamofire.Response<[RuleSet], NSError> -> Void) {
