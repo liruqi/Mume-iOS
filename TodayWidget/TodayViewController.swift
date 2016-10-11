@@ -140,6 +140,12 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
         }
         statusExpected = on
     }
+    
+    func widgetMarginInsetsForProposedMarginInsets(defaultMarginInsets: UIEdgeInsets) -> UIEdgeInsets {
+        var inset = defaultMarginInsets
+        inset.bottom = inset.top
+        return inset
+    }
 
     func widgetPerformUpdateWithCompletionHandler(completionHandler: ((NCUpdateResult) -> Void)) {
         // Perform any setup necessary in order to update the view.
