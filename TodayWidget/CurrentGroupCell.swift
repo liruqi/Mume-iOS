@@ -40,7 +40,7 @@ class CurrentGroupCell: UIView {
     
     func setupLayout() {
         constrain(nameLabel, switchButton, self) { nameLabel, switchButton, superView in
-            nameLabel.leading == superView.leading
+            nameLabel.leading == superView.leading + 15
             nameLabel.centerY == superView.centerY
             nameLabel.trailing == switchButton.leading - 15
             

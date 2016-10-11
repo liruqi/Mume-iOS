@@ -116,7 +116,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
         if !statusExpected {
             return
         }
-        if thresholdRetry >= 2 {
+        if thresholdRetry > 3 {
             thresholdRetry = 0
             statusExpected = false
             let url = NSURL(string: "mume://on")
@@ -139,12 +139,6 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
             task.resume()
         }
         statusExpected = on
-    }
-    
-    func widgetMarginInsetsForProposedMarginInsets(defaultMarginInsets: UIEdgeInsets) -> UIEdgeInsets {
-        var inset = defaultMarginInsets
-        inset.bottom = inset.top
-        return inset
     }
 
     func widgetPerformUpdateWithCompletionHandler(completionHandler: ((NCUpdateResult) -> Void)) {
