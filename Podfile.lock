@@ -43,11 +43,11 @@ PODS:
     - PSOperations/Core
   - PSOperations/Passbook (2.3.0):
     - PSOperations/Core
-  - Realm (1.0.2):
-    - Realm/Headers (= 1.0.2)
-  - Realm/Headers (1.0.2)
-  - RealmSwift (1.0.2):
-    - Realm (= 1.0.2)
+  - Realm (1.1.0):
+    - Realm/Headers (= 1.1.0)
+  - Realm/Headers (1.1.0)
+  - RealmSwift (1.1.0):
+    - Realm (= 1.1.0)
   - SVPullToRefresh (0.4.1)
   - SwiftColor (0.3.8)
 
@@ -72,9 +72,9 @@ DEPENDENCIES:
   - MMWormhole (~> 2.0.0)
   - ObjectMapper (~> 1.5.0)
   - PSOperations (~> 2.3)
-  - RealmSwift (~> 1.0.2)
+  - RealmSwift (~> 1.1.0)
   - SVPullToRefresh
-  - SwiftColor
+  - SwiftColor (from `https://github.com/liruqi/SwiftColor.git`)
 
 EXTERNAL SOURCES:
   Aspects:
@@ -84,11 +84,16 @@ EXTERNAL SOURCES:
     :git: https://github.com/xmartlabs/Eureka.git
   ICSMainFramework:
     :path: ./Library/ICSMainFramework/
+  SwiftColor:
+    :git: https://github.com/liruqi/SwiftColor.git
 
 CHECKOUT OPTIONS:
   Eureka:
     :commit: be9e11baaba4092c36373e8c8ba774fddd6788cc
     :git: https://github.com/xmartlabs/Eureka.git
+  SwiftColor:
+    :commit: e5b416c3a8e71aae3057a7e1da4acd1c954adeed
+    :git: https://github.com/liruqi/SwiftColor.git
 
 SPEC CHECKSUMS:
   Alamofire: 0dfba1184a543e2aa160f4e39cac4e8aba48d223
@@ -110,11 +115,11 @@ SPEC CHECKSUMS:
   MMWormhole: 0cd3fd35a9118b2e2d762b499f54eeaace0be791
   ObjectMapper: 386645adca9d9d23b95eda43090b09d66444cf14
   PSOperations: 81a4d50a4efe96f6d090dc0e7eb45d9fef79ff45
-  Realm: 9d5c46a4d7d27958530a8dfc58f63a99e5c2cba3
-  RealmSwift: 82f3ac5e24530143dddfde2033acc0d308f27d96
+  Realm: ceecf1a4540c4ce9efe196fe73fa9855bce05bd8
+  RealmSwift: 838058b2db95b12cb86bd0cf209df642c33fb60a
   SVPullToRefresh: ba2e718695a43253d8bea6852d2960097dc15d8c
   SwiftColor: 491ce84c6f6eb09bf5b0a00630f5db927306dca5
 
-PODFILE CHECKSUM: 6ce259bca421d1fd8db1cdf6ce1b079abdd1f6df
+PODFILE CHECKSUM: d2e15674aa83f92e40b3507629678fe90e0da175
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.0.rc.2

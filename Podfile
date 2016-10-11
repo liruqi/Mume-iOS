@@ -24,14 +24,14 @@ def socket
 end
 
 def model
-    pod 'RealmSwift', '~> 1.0.2'
+    pod 'RealmSwift', '~> 1.1.0'
 end
 
 target "Potatso" do
     pod 'Aspects', :path => "./Library/Aspects/"
     pod 'Cartography', '~> 0.7'
     pod 'AsyncSwift', '~> 1.7'
-    pod 'SwiftColor'
+    pod 'SwiftColor', :git => 'https://github.com/liruqi/SwiftColor.git'
     pod 'Appirater'
     pod 'Eureka', :git => 'https://github.com/xmartlabs/Eureka.git', :branch => 'swift2.3'
     pod 'MBProgressHUD'
@@ -61,7 +61,7 @@ end
 
 target "TodayWidget" do
     pod 'Cartography', '~> 0.7'
-    pod 'SwiftColor'
+    pod 'SwiftColor', :git => 'https://github.com/liruqi/SwiftColor.git'
     library
     socket
     model
