@@ -71,6 +71,7 @@ struct _BTime_global {
 
 #ifdef __MACH__
 #define CLOCK_MONOTONIC 1
+int t2s_clock_gettime(int clk_id, struct timespec* t);
 #endif
 
 extern struct _BTime_global btime_global;
@@ -90,7 +91,7 @@ static void BTime_Init (void)
     #else
     
     struct timespec ts;
-    if (clock_gettime(CLOCK_MONOTONIC, &ts) < 0) {
+    if (t2s_clock_gettime(CLOCK_MONOTONIC, &ts) < 0) {
         BLog(BLOG_WARNING, "CLOCK_MONOTONIC is not available. Timers will be confused by clock changes.");
         
         struct timeval tv;
@@ -134,7 +135,7 @@ static btime_t btime_gettime (void)
         return ((int64_t)tv.tv_sec * 1000 + (int64_t)tv.tv_usec/1000);
     } else {
         struct timespec ts;
-        ASSERT_FORCE(clock_gettime(CLOCK_MONOTONIC, &ts) == 0)
+        ASSERT_FORCE(t2s_clock_gettime(CLOCK_MONOTONIC, &ts) == 0)
         return (((int64_t)ts.tv_sec * 1000 + (int64_t)ts.tv_nsec/1000000) - btime_global.start_time);
     }
     

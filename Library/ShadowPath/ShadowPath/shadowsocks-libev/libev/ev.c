@@ -1724,7 +1724,7 @@ ev_time (void) EV_THROW
   if (expect_true (have_realtime))
     {
       struct timespec ts;
-      clock_gettime (CLOCK_REALTIME, &ts);
+      t2s_clock_gettime (CLOCK_REALTIME, &ts);
       return ts.tv_sec + ts.tv_nsec * 1e-9;
     }
 #endif
@@ -1742,7 +1742,7 @@ get_clock (void)
   if (expect_true (have_monotonic))
     {
       struct timespec ts;
-      clock_gettime (CLOCK_MONOTONIC, &ts);
+      t2s_clock_gettime (CLOCK_MONOTONIC, &ts);
       return ts.tv_sec + ts.tv_nsec * 1e-9;
     }
 #endif
@@ -2702,7 +2702,7 @@ loop_init (EV_P_ unsigned int flags) EV_THROW
         {
           struct timespec ts;
 
-          if (!clock_gettime (CLOCK_REALTIME, &ts))
+          if (!t2s_clock_gettime (CLOCK_REALTIME, &ts))
             have_realtime = 1;
         }
 #endif
@@ -2712,7 +2712,7 @@ loop_init (EV_P_ unsigned int flags) EV_THROW
         {
           struct timespec ts;
 
-          if (!clock_gettime (CLOCK_MONOTONIC, &ts))
+          if (!t2s_clock_gettime (CLOCK_MONOTONIC, &ts))
             have_monotonic = 1;
         }
 #endif

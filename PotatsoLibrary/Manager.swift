@@ -464,8 +464,7 @@ extension Manager {
             if let managers = managers {
                 let manager: NETunnelProviderManager
                 if managers.count > 0 {
-                    complete(managers[0], nil)
-                    return
+                    manager = managers[0]
                 }else{
                     manager = self.createProviderManager()
                 }
