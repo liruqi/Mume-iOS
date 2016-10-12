@@ -14,7 +14,6 @@
 @interface ProxyManager ()
 @property (nonatomic) BOOL socksProxyRunning;
 @property (nonatomic) int socksProxyPort;
-@property (nonatomic) BOOL httpProxyRunning;
 @property (nonatomic) int httpProxyPort;
 @property (nonatomic) BOOL shadowsocksProxyRunning;
 @property (nonatomic) int shadowsocksProxyPort;
@@ -78,7 +77,7 @@ int sock_port (int fd) {
         self.socksProxyPort = sock_port(fd);
         self.socksProxyRunning = YES;
     }else {
-        error = [NSError errorWithDomain:@"com.touchingapp.potatso" code:100 userInfo:@{NSLocalizedDescriptionKey: @"Fail to start socks proxy"}];
+        error = [NSError errorWithDomain:@"info.liruqi.mume" code:100 userInfo:@{NSLocalizedDescriptionKey: @"Fail to start socks proxy"}];
     }
     if (self.socksCompletion) {
         self.socksCompletion(self.socksProxyPort, error);
@@ -142,7 +141,7 @@ int sock_port (int fd) {
         self.shadowsocksProxyPort = sock_port(fd);
         self.shadowsocksProxyRunning = YES;
     }else {
-        error = [NSError errorWithDomain:@"com.touchingapp.potatso" code:100 userInfo:@{NSLocalizedDescriptionKey: @"Fail to start http proxy"}];
+        error = [NSError errorWithDomain:@"info.liruqi.mume" code:100 userInfo:@{NSLocalizedDescriptionKey: @"Fail to start http proxy"}];
     }
     if (self.shadowsocksCompletion) {
         self.shadowsocksCompletion(self.shadowsocksProxyPort, error);
@@ -170,16 +169,14 @@ int sock_port (int fd) {
 
 - (void)stopHttpProxy {
 //    polipoExit();
-//    self.httpProxyRunning = NO;
 }
 
 - (void)onHttpProxyCallback:(int)fd {
     NSError *error;
     if (fd > 0) {
         self.httpProxyPort = sock_port(fd);
-        self.httpProxyRunning = YES;
     }else {
-        error = [NSError errorWithDomain:@"com.touchingapp.potatso" code:100 userInfo:@{NSLocalizedDescriptionKey: @"Fail to start http proxy"}];
+        error = [NSError errorWithDomain:@"info.liruqi.mume" code:100 userInfo:@{NSLocalizedDescriptionKey: @"Fail to start http proxy"}];
     }
     if (self.httpCompletion) {
         self.httpCompletion(self.httpProxyPort, error);

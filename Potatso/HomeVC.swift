@@ -265,7 +265,10 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     // MARK: - TextRow
 
     override func textInputDidEndEditing<T>(textInput: UITextInput, cell: Cell<T>) {
-        guard let textField = textInput as? UITextField, dnsString = textField.text where cell.row.tag == kFormDNS else {
+        guard let textField = textInput as? UITextField else {
+            return
+        }
+        guard let dnsString = textField.text where cell.row.tag == kFormDNS else {
             return
         }
         presenter.updateDNS(dnsString)

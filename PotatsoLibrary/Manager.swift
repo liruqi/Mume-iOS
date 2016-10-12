@@ -253,7 +253,11 @@ extension Manager {
     func generateGeneralConfig() throws {
         let confURL = Potatso.sharedGeneralConfUrl()
         let json: NSDictionary = ["dns": defaultConfigGroup.dns ?? ""]
-        try json.jsonString()?.writeToURL(confURL, atomically: true, encoding: NSUTF8StringEncoding)
+        do {
+            try json.jsonString()?.writeToURL(confURL, atomically: true, encoding: NSUTF8StringEncoding)
+        } catch {
+            print("generateGeneralConfig error")
+        }
     }
     
     func generateSocksConfig() throws {
@@ -460,7 +464,8 @@ extension Manager {
             if let managers = managers {
                 let manager: NETunnelProviderManager
                 if managers.count > 0 {
-                    manager = managers[0]
+                    complete(managers[0], nil)
+                    return
                 }else{
                     manager = self.createProviderManager()
                 }
