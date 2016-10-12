@@ -77,8 +77,13 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         }))
         alert.addAction(UIAlertAction(title: "CANCEL".localized(), style: .Cancel, handler: nil))
         if let presenter = alert.popoverPresentationController {
-            presenter.sourceView = titleButton
-            presenter.sourceRect = titleButton.bounds
+            if let rightBtn : View = navigationItem.rightBarButtonItem?.valueForKey("view") as! View {
+                presenter.sourceView = rightBtn
+                presenter.sourceRect = rightBtn.bounds
+            } else {
+                presenter.sourceView = titleButton
+                presenter.sourceRect = titleButton.bounds
+            }
         }
         self.presentViewController(alert, animated: true, completion: nil)
     }
