@@ -87,7 +87,7 @@ class RuleSetCell: UITableViewCell {
                 bottomView = countLabel
             }
         }
-        subscribeFlagLabel.text = "Subscribe".localized()
+        subscribeFlagLabel.text = "Default".localized()
         constrain(bottomView, contentView, replace: group) { bottom, contentView in
             bottom.bottom == contentView.bottom - 15
         }

@@ -114,13 +114,14 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
                     cell.setSelected(false, animated: true)
                     self.navigationController?.pushViewController(LogDetailViewController(), animated: true)
                     })
-            /*
             <<< ActionRow() {
                 $0.title = "Follow on Twitter".localized()
-                $0.value = "@PotatsoApp"
+                $0.value = "@mumevpn"
             }.onCellSelection({ [unowned self] (cell, row) -> () in
                 self.followTwitter()
             })
+            /*
+
             <<< ActionRow() {
                 $0.title = "Follow on Weibo".localized()
                 $0.value = "@Potatso"
@@ -130,7 +131,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
              */
             <<< ActionRow() {
                 $0.title = "Join Telegram Group".localized()
-                $0.value = "@Mume"
+                $0.value = "telegram.me/mumevpn"
             }.onCellSelection({ [unowned self] (cell, row) -> () in
                 self.joinTelegramGroup()
             })
@@ -142,18 +143,14 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
     }
 
     func showUserManual() {
-        let url = "http://vpn.liruqi.info/ios/"
+        let url = "http://mumevpn.com/ios/"
         let vc = BaseSafariViewController(URL: NSURL(string: url)!, entersReaderIfAvailable: false)
         vc.delegate = self
         presentViewController(vc, animated: true, completion: nil)
     }
 
     func followTwitter() {
-        UIApplication.sharedApplication().openURL(NSURL(string: "https://twitter.com/intent/user?screen_name=potatsoapp")!)
-    }
-
-    func followWeibo() {
-        UIApplication.sharedApplication().openURL(NSURL(string: "http://weibo.com/potatso")!)
+        UIApplication.sharedApplication().openURL(NSURL(string: "https://twitter.com/intent/user?screen_name=mumevpn")!)
     }
 
     func joinTelegramGroup() {

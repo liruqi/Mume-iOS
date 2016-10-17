@@ -51,9 +51,7 @@
 "Fail to modify default to proxy" = "无法修改默认路由";
 "Fail to parse proxy config" = "无法解析代理配置";
 "Fail to save config." = "无法保存配置.";
-"Fail to subscribe" = "订阅失败";
 "Fail to switch VPN." = "切换 VPN 失败.";
-"Fail to unsubscribe" = "取消订阅失败";
 "Fail. (Try Proxy DNS Resolution)" = "失败. (尝试远程代理 DNS 解析)";
 "Failed to add config group" = "无法添加规则组";
 "Fallback To DIRECT" = "默认直连";
@@ -127,7 +125,6 @@
 "Start Remote Connection" = "开始服务器连接";
 "Start URL Rule Match" = "开始 URL 规则匹配";
 "Statistics" = "数据";
-"Subscribe" = "订阅";
 "Success" = "成功";
 "System DNS" = "系统 DNS";
 "Telegram Channel" = "Telegram Channel";
@@ -135,7 +132,6 @@
 "Type" = "类型";
 "URL Rules Match" = "URL 规则匹配";
 "Unkown error" = "未知错误";
-"Unsubscribe" = "退订";
 "Up Time" = "持续时间";
 "User Manual" = "使用手册";
 "Value" = "值";

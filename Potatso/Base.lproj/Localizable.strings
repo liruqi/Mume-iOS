@@ -50,9 +50,7 @@
 "Fail to modify default to proxy" = "Fail to modify default to proxy";
 "Fail to parse proxy config" = "Fail to parse proxy config";
 "Fail to save config." = "Fail to save config.";
-"Fail to subscribe" = "Fail to subscribe";
 "Fail to switch VPN." = "Fail to switch VPN.";
-"Fail to unsubscribe" = "Fail to unsubscribe";
 "Fail. (Try Proxy DNS Resolution)" = "Fail. (Try Proxy DNS Resolution)";
 "Failed to add config group" = "Failed to add config group";
 "Fallback To DIRECT" = "Fallback To DIRECT";
@@ -125,7 +123,6 @@
 "Start Remote Connection" = "Start Remote Connection";
 "Start URL Rule Match" = "Start URL Rule Match";
 "Statistics" = "Statistics";
-"Subscribe" = "Subscribe";
 "Success" = "Success";
 "System DNS" = "System DNS";
 "Telegram Channel" = "Telegram Channel";
@@ -133,7 +130,6 @@
 "Type" = "Type";
 "URL Rules Match" = "URL Rules Match";
 "Unkown error" = "Unkown error";
-"Unsubscribe" = "Unsubscribe";
 "Up Time" = "Up Time";
 "User Manual" = "User Manual";
 "Value" = "Value";
