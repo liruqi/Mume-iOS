@@ -16,13 +16,14 @@ private let rowHeight: CGFloat = 54
 private let kRuleSetCellIdentifier = "ruleset"
 
 class RuleSetListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-
     var ruleSets: Results<RuleSet>
     var chooseCallback: (RuleSet? -> Void)?
     // Observe Realm Notifications
     var token: RLMNotificationToken?
     var heightAtIndex: [Int: CGFloat] = [:]
-
+    private let pageSize = 20
+    var lastRequestTime = 0 as NSTimeInterval
+    
     init(chooseCallback: (RuleSet? -> Void)? = nil) {
         self.chooseCallback = chooseCallback
         self.ruleSets = DBUtils.allNotDeleted(RuleSet.self, sorted: "createAt")
@@ -32,12 +33,41 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
+    func loadData() {
+        if lastRequestTime > 0 {
+            return
+        }
+        lastRequestTime = NSDate().timeIntervalSince1970
+        API.getRuleSets(1, count: pageSize) { (response) in
+            if response.result.isFailure {
+                self.lastRequestTime = 0
+                // Fail
+//                let errDesc = response.result.error?.localizedDescription ?? ""
+                // self.showTextHUD((errDesc.characters.count > 0 ? "\(errDesc)" : "Unkown error".localized()), dismissAfterDelay: 1.5)
+            } else {
+                guard let result = response.result.value else {
+                    return
+                }
+                let data = result.filter({ $0.name.characters.count > 0})
+                for i in 0..<data.count {
+                    do {
+                        try RuleSet.addRemoteObject(data[i])
+                    } catch {
+                        NSLog("Fail to subscribe".localized())
+                    }
+                }
+                self.reloadData()
+            }
+        }
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         navigationItem.title = "Rule Set".localized()
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(add))
         reloadData()
+        loadData()
         token = ruleSets.addNotificationBlock { [unowned self] (changed) in
             switch changed {
             case let .Update(_, deletions: deletions, insertions: insertions, modifications: modifications):
