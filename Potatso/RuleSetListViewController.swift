@@ -19,7 +19,6 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
     var ruleSets: Results<RuleSet>
     var chooseCallback: (RuleSet? -> Void)?
     // Observe Realm Notifications
-    var token: RLMNotificationToken?
     var heightAtIndex: [Int: CGFloat] = [:]
     private let pageSize = 20
     var lastRequestTime = 0 as NSTimeInterval
@@ -68,27 +67,6 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(add))
         reloadData()
         loadData()
-        token = ruleSets.addNotificationBlock { [unowned self] (changed) in
-            switch changed {
-            case let .Update(_, deletions: deletions, insertions: insertions, modifications: modifications):
-                self.tableView.beginUpdates()
-                defer {
-                    self.tableView.endUpdates()
-                }
-                self.tableView.deleteRowsAtIndexPaths(deletions.map({ NSIndexPath(forRow: $0, inSection: 0) }), withRowAnimation: .Automatic)
-                self.tableView.insertRowsAtIndexPaths(insertions.map({ NSIndexPath(forRow: $0, inSection: 0) }), withRowAnimation: .Automatic)
-                self.tableView.reloadRowsAtIndexPaths(modifications.map({ NSIndexPath(forRow: $0, inSection: 0) }), withRowAnimation: .None)
-            case let .Error(error):
-                error.log("RuleSetListVC realm token update error")
-            default:
-                break
-            }
-        }
-    }
-
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        token?.stop()
     }
 
     func reloadData() {
