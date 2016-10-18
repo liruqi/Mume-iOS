@@ -22,59 +22,32 @@ class ProxyRow: Row<Proxy, ProxyRowCell>, RowType {
 
 class ProxyRowCell: Cell<Proxy>, CellType {
 
-    let group = ConstraintGroup()
-
     required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
     }
 
     override func setup() {
         super.setup()
-        preservesSuperviewLayoutMargins = false
-        layoutMargins = UIEdgeInsetsZero
-        separatorInset = UIEdgeInsetsZero
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(iconImageView)
+//        preservesSuperviewLayoutMargins = false
+//        layoutMargins = UIEdgeInsetsZero
+//        separatorInset = UIEdgeInsetsZero
     }
 
     override func update() {
         super.update()
         if let proxy = row.value {
-            titleLabel.text = proxy.description
-            iconImageView.hidden = false
-            iconImageView.image = UIImage(named: "Shadowsocks")
-        }else {
-            titleLabel.text = "None".localized()
-            iconImageView.hidden = true
+            self.textLabel?.text = proxy.description
+            self.detailTextLabel?.text = proxy.type.description
+            self.imageView?.hidden = false
+            self.imageView?.image = UIImage(named: "Shadowsocks")
+        } else {
+            self.textLabel?.text = "None".localized()
+            self.imageView?.hidden = true
         }
         if row.isDisabled {
-            titleLabel.textColor = "5F5F5F".color
+            self.textLabel?.textColor = "5F5F5F".color
         }else {
-            titleLabel.textColor = "000".color
-        }
-        constrain(titleLabel, iconImageView, contentView, replace: group) { titleLabel, iconImageView, contentView in
-            iconImageView.leading == contentView.leading + 16
-            iconImageView.width == 14
-            iconImageView.height == 14
-            iconImageView.centerY == contentView.centerY
-            titleLabel.centerY == iconImageView.centerY
-            titleLabel.leading == iconImageView.trailing + 10
-            titleLabel.trailing == contentView.trailing - 16
-            titleLabel.bottom == contentView.bottom - 16
+            self.textLabel?.textColor = "000".color
         }
     }
-
-    lazy var titleLabel: UILabel = {
-        let v = UILabel()
-        v.font = UIFont.systemFontOfSize(17)
-        return v
-    }()
-
-    lazy var iconImageView: UIImageView = {
-        let v = UIImageView()
-        v.contentMode = .ScaleAspectFill
-        return v
-    }()
-
 }

@@ -118,8 +118,9 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         let section = Section("Proxy".localized())
         for proxy in proxies {
             section
-                <<< ProxyRow () {
+                <<< ProxyRow() {
                     $0.value = proxy
+                    $0.cellStyle = UITableViewCellStyle.Subtitle
                     }.cellSetup({ (cell, row) -> () in
                         cell.selectionStyle = .None
                         if (self.presenter.proxy?.uuid == proxy?.uuid) {
