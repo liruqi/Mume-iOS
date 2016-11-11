@@ -114,14 +114,8 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         }
         form.delegate = nil
         form.removeAll()
-        let connSection = Section("")
-        connSection <<< SwitchRow("connection") {
-            $0.title = status.hintDescription
-            $0.value = status.onOrConnectiong
-            }.onChange({ [unowned self] (row) in
-                self.handleConnectButtonPressed()
-            })
-        form +++ connSection
+        
+        form +++ generateProxySection()
 
         let section = Section("Proxy".localized())
         for proxy in proxies {
@@ -149,7 +143,6 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         }
         form +++ section
         
-        form +++ generateProxySection()
         form +++ generateRuleSetSection()
         form.delegate = self
         tableView?.reloadData()
@@ -164,6 +157,12 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     func generateProxySection() -> Section {
         let proxySection = Section("Connect".localized())
 
+        proxySection <<< SwitchRow("connection") {
+            $0.title = status.hintDescription
+            $0.value = status.onOrConnectiong
+            }.onChange({ [unowned self] (row) in
+                self.handleConnectButtonPressed()
+                })
         proxySection <<< SwitchRow(kFormDefaultToProxy) {
             $0.title = "Default To Proxy".localized()
             $0.value = presenter.group.defaultToProxy
