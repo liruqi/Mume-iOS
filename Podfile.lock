@@ -19,7 +19,6 @@ PODS:
   - Eureka (1.7.0)
   - Fabric (1.6.9)
   - Helpshift (5.6.1)
-  - ICDMaterialActivityIndicatorView (0.1.2)
   - ICSMainFramework (0.0.1)
   - ISO8601DateFormatter (0.8)
   - KissXML (5.1.2):
@@ -63,7 +62,6 @@ DEPENDENCIES:
   - Eureka (from `https://github.com/xmartlabs/Eureka.git`, branch `swift2.3`)
   - Fabric
   - Helpshift (= 5.6.1)
-  - ICDMaterialActivityIndicatorView (~> 0.1.0)
   - ICSMainFramework (from `./Library/ICSMainFramework/`)
   - ISO8601DateFormatter (~> 0.8)
   - KissXML
@@ -107,7 +105,6 @@ SPEC CHECKSUMS:
   Eureka: 2020d9faeef7b7e9adeb9e3d8af779e5931c1897
   Fabric: bc5bec42cef4bcf1ee3ce0e218fc518e4b44dfbb
   Helpshift: b48366299844f119acf5e91d02a2e89288494fe6
-  ICDMaterialActivityIndicatorView: 3f02a9dc9e52417023a98385d631c93d3f95c465
   ICSMainFramework: 56240e9556d3b0755fc9c934a91ee8ebd09cb753
   ISO8601DateFormatter: 4551b6ce4f83185425f583b0b3feb3c7b59b942c
   KissXML: 246c842586bb77110e04fb88e19376d96245c856
@@ -120,6 +117,6 @@ SPEC CHECKSUMS:
   SVPullToRefresh: ba2e718695a43253d8bea6852d2960097dc15d8c
   SwiftColor: 491ce84c6f6eb09bf5b0a00630f5db927306dca5
 
-PODFILE CHECKSUM: d2e15674aa83f92e40b3507629678fe90e0da175
+PODFILE CHECKSUM: f2962a71f11dbf0fae3827f54fb3775249ee72b6
 
 COCOAPODS: 1.1.0.rc.2

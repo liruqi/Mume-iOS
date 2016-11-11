@@ -178,7 +178,6 @@
 		B88559F01D21371A00B1243E /* PotatsoModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BC6FFEA1CB28B4B00E5EA61 /* PotatsoModel.framework */; };
 		B88874491D18186100AEF002 /* ShadowPath.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B86B08E91D17F84900613014 /* ShadowPath.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B8AD81681D4AF9FB00C12FC1 /* YAML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88559EA1D21319D00B1243E /* YAML.framework */; };
-		B8C256AE1D1A93DA0074D3B1 /* FlatButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C256AD1D1A93DA0074D3B1 /* FlatButton.swift */; };
 		B8C256B01D1A957A0074D3B1 /* HomePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C256AF1D1A957A0074D3B1 /* HomePresenter.swift */; };
 		B8CCC6DD1CFD5D5D000E7E2E /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CCC6DC1CFD5D5D000E7E2E /* CollectionViewController.swift */; };
 		B8CCC6E11CFDCADC000E7E2E /* RuleSetListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CCC6E01CFDCADC000E7E2E /* RuleSetListViewController.swift */; };
@@ -799,7 +798,6 @@
 		9BF3034A1CCA1B060096588E /* BaseEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseEmptyView.swift; sourceTree = "<group>"; };
 		9BF3034C1CCA20D80096588E /* Logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		9E603B577575916EC652D04D /* Pods-PotatsoLibrary.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PotatsoLibrary.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PotatsoLibrary/Pods-PotatsoLibrary.debug.xcconfig"; sourceTree = "<group>"; };
-		A27A0B817AADB557908316E3 /* Pods_PotatsoLibraryTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PotatsoLibraryTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A77B9512684E7D83890CCE80 /* Pods-PotatsoLibraryTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PotatsoLibraryTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PotatsoLibraryTests/Pods-PotatsoLibraryTests.release.xcconfig"; sourceTree = "<group>"; };
 		A82D5011D8BAB2707009104B /* Pods-PacketProcessor.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PacketProcessor.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PacketProcessor/Pods-PacketProcessor.debug.xcconfig"; sourceTree = "<group>"; };
 		ABA819ED933DB4838AE71396 /* Pods-PacketProcessor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PacketProcessor.release.xcconfig"; path = "Pods/Target Support Files/Pods-PacketProcessor/Pods-PacketProcessor.release.xcconfig"; sourceTree = "<group>"; };
@@ -829,7 +827,6 @@
 		B8822CD11D2B81C400AD252C /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "Library/ShadowPath/ShadowPath/shadowsocks-libev/libopenssl/lib/libcrypto.a"; sourceTree = "<group>"; };
 		B8822CD21D2B81C400AD252C /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "Library/ShadowPath/ShadowPath/shadowsocks-libev/libopenssl/lib/libssl.a"; sourceTree = "<group>"; };
 		B88559EA1D21319D00B1243E /* YAML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YAML.framework; path = Carthage/Build/iOS/YAML.framework; sourceTree = "<group>"; };
-		B8C256AD1D1A93DA0074D3B1 /* FlatButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlatButton.swift; sourceTree = "<group>"; };
 		B8C256AF1D1A957A0074D3B1 /* HomePresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomePresenter.swift; sourceTree = "<group>"; };
 		B8CCC6DC1CFD5D5D000E7E2E /* CollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		B8CCC6E01CFDCADC000E7E2E /* RuleSetListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuleSetListViewController.swift; sourceTree = "<group>"; };
@@ -1903,7 +1900,6 @@
 		B8C256AC1D1A93CC0074D3B1 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				B8C256AD1D1A93DA0074D3B1 /* FlatButton.swift */,
 				B87B98031D3B423B00FA66BF /* PaddingLabel.swift */,
 			);
 			name = View;
@@ -1934,7 +1930,6 @@
 				DFAF05C4CA29869A03E25A65 /* Pods_PotatsoLibrary.framework */,
 				83D8D7B7274BAF6E28C980D9 /* Pods_TodayWidget.framework */,
 				972ACD00F18B9E461F9D38B1 /* Pods_PotatsoModel.framework */,
-				A27A0B817AADB557908316E3 /* Pods_PotatsoLibraryTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2634,7 +2629,6 @@
 				9B17F8F01C533BBF00679FCB /* Color.swift in Sources */,
 				B83AA5761D38E98A007905B4 /* RequestOverviewVC.swift in Sources */,
 				9B5C00261CBFB35C008DDE7A /* ConfigGroupCell.swift in Sources */,
-				B8C256AE1D1A93DA0074D3B1 /* FlatButton.swift in Sources */,
 				9B8193ED1CBE4DCA00BE320D /* UrlHandler.swift in Sources */,
 				9B1F74761C3164AD0028C1A6 /* VPN.swift in Sources */,
 				9B8750551CC761D000A11715 /* RequestModel.swift in Sources */,
@@ -2974,6 +2968,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: li ruqi (AF4AJ5CG3B)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: li ruqi (AF4AJ5CG3B)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = M54LAUT7S6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -3006,7 +3001,8 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = info.liruqi.potatso;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f2acd778-23c3-4304-80e7-e05de605797c";
+				PROVISIONING_PROFILE = "29f34951-2a40-4b4e-9787-a5a72387983b";
+				PROVISIONING_PROFILE_SPECIFIER = MumeDev;
 				SWIFT_OBJC_BRIDGING_HEADER = "Potatso/Potatso-Bridge-Header.h";
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3068,6 +3064,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: li ruqi (AF4AJ5CG3B)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: li ruqi (AF4AJ5CG3B)";
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = M54LAUT7S6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -3077,7 +3074,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = info.liruqi.potatso.TodayWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b760c79b-055a-4f91-8e0b-9dc7db506c6b";
+				PROVISIONING_PROFILE = "8f4b22c4-775b-4b81-a025-cc099b5fa188";
+				PROVISIONING_PROFILE_SPECIFIER = "Mume-TodayWidget-Dev";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};
@@ -3116,6 +3114,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: li ruqi (AF4AJ5CG3B)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: li ruqi (AF4AJ5CG3B)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = M54LAUT7S6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -3144,7 +3143,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.liruqi.potatso.tunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d5a02a27-1548-4dc6-bfff-af2020d26765";
+				PROVISIONING_PROFILE = "1da2e27f-3740-48f5-8680-8c2ceabacf7d";
+				PROVISIONING_PROFILE_SPECIFIER = Mume.tunnel.dev;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};

@@ -36,7 +36,6 @@ target "Potatso" do
     pod 'Eureka', :git => 'https://github.com/xmartlabs/Eureka.git', :branch => 'swift2.3'
     pod 'MBProgressHUD'
     pod 'CallbackURLKit', '~> 0.2'
-    pod 'ICDMaterialActivityIndicatorView', '~> 0.1.0'
     pod 'SVPullToRefresh'
     pod 'ISO8601DateFormatter', '~> 0.8'
     pod 'Alamofire', '~> 3.4'

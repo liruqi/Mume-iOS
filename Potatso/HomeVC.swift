@@ -10,7 +10,6 @@ import Foundation
 import PotatsoLibrary
 import PotatsoModel
 import Eureka
-import ICDMaterialActivityIndicatorView
 import Cartography
 
 private let kFormName = "name"
@@ -77,7 +76,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         }))
         alert.addAction(UIAlertAction(title: "CANCEL".localized(), style: .Cancel, handler: nil))
         if let presenter = alert.popoverPresentationController {
-            if let rightBtn : View = navigationItem.rightBarButtonItem?.valueForKey("view") as! View {
+            if let rightBtn : View = navigationItem.rightBarButtonItem?.valueForKey("view") as? View {
                 presenter.sourceView = rightBtn
                 presenter.sourceRect = rightBtn.bounds
             } else {
@@ -115,6 +114,15 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         }
         form.delegate = nil
         form.removeAll()
+        let connSection = Section("")
+        connSection <<< SwitchRow("connection") {
+            $0.title = status.hintDescription
+            $0.value = status.onOrConnectiong
+            }.onChange({ [unowned self] (row) in
+                self.handleConnectButtonPressed()
+            })
+        form +++ connSection
+
         let section = Section("Proxy".localized())
         for proxy in proxies {
             section
@@ -148,16 +156,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     }
 
     func updateConnectButton() {
-        connectButton.enabled = [VPNStatus.On, VPNStatus.Off].contains(status)
-        connectButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        switch status {
-        case .Connecting, .Disconnecting:
-            connectButton.animating = true
-        default:
-            connectButton.setTitle(status.hintDescription, forState: .Normal)
-            connectButton.animating = false
-        }
-        connectButton.backgroundColor = status.color
+        updateForm()
     }
 
     // MARK: - Form
@@ -283,30 +282,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     override func loadView() {
         super.loadView()
         view.backgroundColor = Color.Background
-        view.addSubview(connectButton)
-        setupLayout()
     }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        view.bringSubviewToFront(connectButton)
-        tableView?.contentInset = UIEdgeInsetsMake(0, 0, connectButtonHeight, 0)
-    }
-
-    func setupLayout() {
-        constrain(connectButton, view) { connectButton, view in
-            connectButton.trailing == view.trailing
-            connectButton.leading == view.leading
-            connectButton.height == connectButtonHeight
-            connectButton.bottom == view.bottom
-        }
-    }
-
-    lazy var connectButton: FlatButton = {
-        let v = FlatButton(frame: CGRect.zero)
-        v.addTarget(self, action: #selector(HomeVC.handleConnectButtonPressed), forControlEvents: .TouchUpInside)
-        return v
-    }()
 
     lazy var titleButton: UIButton = {
         let b = UIButton(type: .Custom)
@@ -331,7 +307,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     }
     
     func onTime() {
-        connectButton.setTitle(status.hintDescription, forState: .Normal)
+        updateConnectButton()
     }
 }
 
@@ -346,20 +322,32 @@ extension VPNStatus {
         }
     }
 
+    var onOrConnectiong: Bool {
+        switch self {
+        case .On, .Connecting:
+            return true
+        case .Off, .Disconnecting:
+            return false
+        }
+    }
+    
     var hintDescription: String {
         switch self {
-        case .On, .Disconnecting:
+        case .On:
             if let time = Settings.shared().startTime {
                 let flags = NSCalendarUnit(rawValue: UInt.max)
                 let difference = NSCalendar.currentCalendar().components(flags, fromDate: time, toDate: NSDate(), options: NSCalendarOptions.MatchFirst)
                 let f = NSDateComponentsFormatter()
                 f.unitsStyle = .Abbreviated
-                return f.stringFromDateComponents(difference)! + " - " + "Disconnect".localized()
+                return  "Connected".localized() + " - " + f.stringFromDateComponents(difference)!
             }
-            return "Disconnect".localized()
-            
-        case .Off, .Connecting:
-            return "Connect".localized()
+            return "Connected".localized()
+        case .Disconnecting:
+            return "Disconnecting...".localized()
+        case .Off:
+            return "Off".localized()
+        case .Connecting:
+            return "Connecting...".localized()
         }
     }
 }
