@@ -163,21 +163,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
             }.onChange({ [unowned self] (row) in
                 self.handleConnectButtonPressed()
                 })
-        proxySection <<< SwitchRow(kFormDefaultToProxy) {
-            $0.title = "Default To Proxy".localized()
-            $0.value = presenter.group.defaultToProxy
-            $0.hidden = Condition.Function([kFormProxies]) { [unowned self] form in
-                return self.presenter.proxy == nil
-            }
-        }.onChange({ [unowned self] (row) in
-            do {
-                try defaultRealm.write {
-                    self.presenter.group.defaultToProxy = row.value ?? true
-                }
-            }catch {
-                self.showTextHUD("\("Fail to modify default to proxy".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
-            }
-        })
+        
         <<< TextRow(kFormDNS) {
             $0.title = "DNS".localized()
             $0.value = presenter.group.dns
@@ -210,6 +196,21 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                     cell.selectionStyle = .None
                 })
         }
+        ruleSetSection <<< SwitchRow(kFormDefaultToProxy) {
+            $0.title = "Default To Proxy".localized()
+            $0.value = presenter.group.defaultToProxy
+            $0.hidden = Condition.Function([kFormProxies]) { [unowned self] form in
+                return self.presenter.proxy == nil
+            }
+            }.onChange({ [unowned self] (row) in
+                do {
+                    try defaultRealm.write {
+                        self.presenter.group.defaultToProxy = row.value ?? true
+                    }
+                }catch {
+                    self.showTextHUD("\("Fail to modify default to proxy".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
+                }
+                })
         ruleSetSection <<< BaseButtonRow () {
             $0.title = "Add Rule Set".localized()
         }.onCellSelection({ [unowned self] (cell, row) -> () in
