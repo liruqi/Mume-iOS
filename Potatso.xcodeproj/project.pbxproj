@@ -3090,6 +3090,7 @@
 				CODE_SIGN_ENTITLEMENTS = TodayWidget/TodayWidget.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: LI RUQI (M54LAUT7S6)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: LI RUQI (M54LAUT7S6)";
+				DEVELOPMENT_TEAM = M54LAUT7S6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -3100,6 +3101,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = info.liruqi.potatso.TodayWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "eb48ed48-79f1-475d-a43a-66fc77ba0586";
+				PROVISIONING_PROFILE_SPECIFIER = MumeTodayWidgetDist;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};
