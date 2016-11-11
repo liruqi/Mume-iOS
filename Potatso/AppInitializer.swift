@@ -20,17 +20,11 @@ class AppInitializer: NSObject, AppLifeCycleProtocol {
         #if !DEBUG
             Fabric.with([Answers.self, Crashlytics.self])
         #endif
-        configHelpShift()
         return true
     }
 
     func configAppirater() {
         Appirater.setAppId(appID)
-    }
-
-    func configHelpShift() {
-        HelpshiftCore.initializeWithProvider(HelpshiftAll.sharedInstance())
-        HelpshiftCore.installForApiKey(HELPSHIFT_KEY, domainName: HELPSHIFT_DOMAIN, appID: HELPSHIFT_ID)
     }
     
 }

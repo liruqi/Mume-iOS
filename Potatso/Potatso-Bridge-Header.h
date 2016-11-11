@@ -12,9 +12,6 @@
 #import "Confidential.h"
 #import <asl.h>
 #import "QRCodeScannerVC.h"
-#import "HelpshiftAll.h"
-#import "HelpshiftSupport.h"
-#import "HelpshiftCore.h"
 @import PotatsoLibrary;
 @import PotatsoModel;
 @import PotatsoBase;

@@ -40,7 +40,6 @@ target "Potatso" do
     pod 'ISO8601DateFormatter', '~> 0.8'
     pod 'Alamofire', '~> 3.4'
     pod 'ObjectMapper', '~> 1.5.0'
-    pod 'Helpshift', '5.6.1'
     pod 'PSOperations', '~> 2.3'
     tunnel
     library
@@ -80,9 +79,6 @@ post_install do |installer|
         target.build_configurations.each do |config|
             config.build_settings['ENABLE_BITCODE'] = 'NO'
             config.build_settings['SWIFT_VERSION'] = '2.3'
-            if target.name == "HelpShift"
-                config.build_settings["OTHER_LDFLAGS"] = '$(inherited) "-ObjC"'
-            end
         end
     end
 end
