@@ -87,6 +87,7 @@
 "OK" = "OK";
 "Off" = "未连接";
 "Connecting..." = "连接中...";
+"Disconnecting..." = "断开...";
 "Obfs" = "混淆插件(obfs)";
 "Obfs Param" = "混淆插件参数";
 "One Time Auth" = "一次认证";

@@ -91,7 +91,18 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
 
     func handleRefreshUI() {
         if presenter.group.isDefault {
-            status = Manager.sharedManager.vpnStatus
+            let vpnStatus = Manager.sharedManager.vpnStatus
+            if status == .Connecting {
+                if vpnStatus == .Off {
+                    return
+                }
+            }
+            if status == .Disconnecting {
+                if vpnStatus == .On {
+                    return
+                }
+            }
+            status = vpnStatus
         } else {
             status = .Off
         }
