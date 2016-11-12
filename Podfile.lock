@@ -69,7 +69,7 @@ DEPENDENCIES:
   - ObjectMapper (~> 1.5.0)
   - PSOperations (~> 2.3)
   - RealmSwift (~> 1.1.0)
-  - SVPullToRefresh
+  - SVPullToRefresh (from `https://github.com/samvermette/SVPullToRefresh`)
   - SwiftColor (from `https://github.com/liruqi/SwiftColor.git`)
 
 EXTERNAL SOURCES:
@@ -80,6 +80,8 @@ EXTERNAL SOURCES:
     :git: https://github.com/xmartlabs/Eureka.git
   ICSMainFramework:
     :path: ./Library/ICSMainFramework/
+  SVPullToRefresh:
+    :git: https://github.com/samvermette/SVPullToRefresh
   SwiftColor:
     :git: https://github.com/liruqi/SwiftColor.git
 
@@ -87,6 +89,9 @@ CHECKOUT OPTIONS:
   Eureka:
     :commit: be9e11baaba4092c36373e8c8ba774fddd6788cc
     :git: https://github.com/xmartlabs/Eureka.git
+  SVPullToRefresh:
+    :commit: a5f9dfee86a27c4e994d7edf93d0768c881d58bb
+    :git: https://github.com/samvermette/SVPullToRefresh
   SwiftColor:
     :commit: e5b416c3a8e71aae3057a7e1da4acd1c954adeed
     :git: https://github.com/liruqi/SwiftColor.git
@@ -114,6 +119,6 @@ SPEC CHECKSUMS:
   SVPullToRefresh: ba2e718695a43253d8bea6852d2960097dc15d8c
   SwiftColor: 491ce84c6f6eb09bf5b0a00630f5db927306dca5
 
-PODFILE CHECKSUM: 4622c9e844cc1ce1d91a6a61fee66709afd38081
+PODFILE CHECKSUM: 4f82f7b652ff8bb78ac214bcaa5cc2c7ab80f392
 
 COCOAPODS: 1.1.0.rc.2

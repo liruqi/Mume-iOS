@@ -21,7 +21,6 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
     // Observe Realm Notifications
     var heightAtIndex: [Int: CGFloat] = [:]
     private let pageSize = 20
-    var lastRequestTime = 0 as NSTimeInterval
     
     init(chooseCallback: (RuleSet? -> Void)? = nil) {
         self.chooseCallback = chooseCallback
@@ -34,13 +33,9 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func loadData() {
-        if lastRequestTime > 0 {
-            return
-        }
-        lastRequestTime = NSDate().timeIntervalSince1970
-        API.getRuleSets(1, count: pageSize) { (response) in
+        API.getRuleSets() { (response) in
+            self.tableView.pullToRefreshView?.stopAnimating()
             if response.result.isFailure {
-                self.lastRequestTime = 0
                 // Fail
 //                let errDesc = response.result.error?.localizedDescription ?? ""
                 // self.showTextHUD((errDesc.characters.count > 0 ? "\(errDesc)" : "Unkown error".localized()), dismissAfterDelay: 1.5)
@@ -66,7 +61,13 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
         navigationItem.title = "Rule Set".localized()
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(add))
         reloadData()
-        loadData()
+        
+        tableView.addPullToRefreshWithActionHandler( { [weak self] in
+            self?.loadData()
+            })
+        if ruleSets.count == 0 {
+            tableView.triggerPullToRefresh()
+        }
     }
 
     func reloadData() {

@@ -31,11 +31,6 @@ struct API {
             return API.URL + path
         }
     }
-
-    static func getRuleSets(page: Int = 1, count: Int = 20, callback: Alamofire.Response<[RuleSet], NSError> -> Void) {
-        NSLog("API.getRuleSets ===> page: \(page), count: \(count)")
-        Alamofire.request(.GET, Path.RuleSets.url, parameters: ["page": page, "count": count]).responseArray(completionHandler: callback)
-    }
     
     static func getRuleSets(callback: Alamofire.Response<[RuleSet], NSError> -> Void) {
         let lang = NSLocale.preferredLanguages()[0]
