@@ -160,7 +160,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     }
 
     func updateConnectButton() {
-        updateForm()
+        tableView?.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .None)
     }
 
     // MARK: - Form
@@ -174,7 +174,10 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
             }.onChange({ [unowned self] (row) in
                 self.handleConnectButtonPressed()
                 })
-        
+            .cellUpdate ({ cell, row in
+                row.title = self.status.hintDescription
+                row.value = self.status.onOrConnectiong
+            })
         <<< TextRow(kFormDNS) {
             $0.title = "DNS".localized()
             $0.value = presenter.group.dns
