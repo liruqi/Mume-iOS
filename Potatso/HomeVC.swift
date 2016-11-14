@@ -147,7 +147,8 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                         let proxy = row.value
                         do {
                             try ConfigurationGroup.changeProxy(forGroupId: self.presenter.group.uuid, proxyId: proxy?.uuid)
-                            self.handleRefreshUI(nil)
+                            self.updateTitle()
+                            self.updateForm()
                             //TODO: reconnect here
                         }catch {
                             self.showTextHUD("\("Fail to change proxy".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
