@@ -97,7 +97,13 @@ NSString * const CDZQRScanningErrorDomain = @"com.cdzombak.qrscanningviewcontrol
             }
         };
     }
-
+    
+    if (! [UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self clickAlbumButton];
+        });
+        return;
+    }
     self.avSession = [[AVCaptureSession alloc] init];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
