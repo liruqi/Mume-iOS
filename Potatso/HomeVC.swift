@@ -53,7 +53,8 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         self.navigationItem.titleView = titleButton
         // Post an empty message so we could attach to packet tunnel process
         Manager.sharedManager.postMessage()
-        handleRefreshUI()
+        handleRefreshUI(nil)
+        updateForm()
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: "List".templateImage, style: .Plain, target: presenter, action: #selector(HomePresenter.chooseConfigGroups))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addProxy(_:)))
         startTimer()
@@ -89,12 +90,14 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     
     // MARK: - HomePresenter Protocol
 
-    func handleRefreshUI() {
+    func handleRefreshUI(error: ErrorType?) {
         if presenter.group.isDefault {
             let vpnStatus = Manager.sharedManager.vpnStatus
             if status == .Connecting {
-                if vpnStatus == .Off {
-                    return
+                if nil == error {
+                    if vpnStatus == .Off {
+                        return
+                    }
                 }
             }
             if status == .Disconnecting {
@@ -107,7 +110,6 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
             status = .Off
         }
         updateTitle()
-        updateForm()
     }
 
     func updateTitle() {
@@ -145,7 +147,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                         let proxy = row.value
                         do {
                             try ConfigurationGroup.changeProxy(forGroupId: self.presenter.group.uuid, proxyId: proxy?.uuid)
-                            self.handleRefreshUI()
+                            self.handleRefreshUI(nil)
                             //TODO: reconnect here
                         }catch {
                             self.showTextHUD("\("Fail to change proxy".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
