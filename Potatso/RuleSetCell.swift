@@ -54,6 +54,9 @@ class RuleSetCell: UITableViewCell {
             subscribeFlagLabel.leading == leftHintView.leading
             subscribeFlagLabel.top == leftHintView.bottom + 8
         }
+        constrain(subscribeFlagLabel) { subscribeFlagLabel in
+            subscribeFlagLabel.height == 20
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -79,7 +82,7 @@ class RuleSetCell: UITableViewCell {
         if showSubscribe && ruleSet.isSubscribe {
             subscribeFlagLabel.hidden = false
             bottomView = subscribeFlagLabel
-        }else {
+        } else {
             subscribeFlagLabel.hidden = true
             if ruleSet.desc.characters.count > 0 {
                 bottomView = descLabel
