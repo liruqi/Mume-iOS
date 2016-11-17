@@ -17,7 +17,7 @@ NSString *sharedGroupIdentifier = @"group.info.liruqi.potatso";
 }
 
 + (NSURL *)sharedDatabaseUrl {
-    return [[self sharedUrl] URLByAppendingPathComponent:@"potatso.realm"];
+    return [[self sharedUrl] URLByAppendingPathComponent:@"potatso.realm" isDirectory:NO];
 }
 
 + (NSUserDefaults *)sharedUserDefaults {
@@ -25,23 +25,23 @@ NSString *sharedGroupIdentifier = @"group.info.liruqi.potatso";
 }
 
 + (NSURL * _Nonnull)sharedGeneralConfUrl {
-    return [[Potatso sharedUrl] URLByAppendingPathComponent:@"general.xxx"];
+    return [[Potatso sharedUrl] URLByAppendingPathComponent:@"general.xxx"  isDirectory:NO];
 }
 
 + (NSURL *)sharedSocksConfUrl {
-    return [[Potatso sharedUrl] URLByAppendingPathComponent:@"socks.xxx"];
+    return [[Potatso sharedUrl] URLByAppendingPathComponent:@"socks.xxx"  isDirectory:NO];
 }
 
 + (NSURL *)sharedProxyConfUrl {
-    return [[Potatso sharedUrl] URLByAppendingPathComponent:@"proxy.xxx"];
+    return [[Potatso sharedUrl] URLByAppendingPathComponent:@"proxy.xxx"  isDirectory:NO];
 }
 
 + (NSURL *)sharedHttpProxyConfUrl {
-    return [[Potatso sharedUrl] URLByAppendingPathComponent:@"http.xxx"];
+    return [[Potatso sharedUrl] URLByAppendingPathComponent:@"http.xxx"  isDirectory:NO];
 }
 
 + (NSURL * _Nonnull)sharedLogUrl {
-    return [[Potatso sharedUrl] URLByAppendingPathComponent:@"tunnel.log"];
+    return [[Potatso sharedUrl] URLByAppendingPathComponent:@"tunnel.log"  isDirectory:NO];
 }
 
 @end

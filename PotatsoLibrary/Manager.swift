@@ -186,9 +186,9 @@ public class Manager {
     }
 
     private func getDefaultConfigGroup() -> ConfigurationGroup {
-        if let groupUUID = Potatso.sharedUserDefaults().stringForKey(kDefaultGroupIdentifier), let group = DBUtils.get(groupUUID, type: ConfigurationGroup.self)  where !group.deleted {
+        if let groupUUID = Potatso.sharedUserDefaults().stringForKey(kDefaultGroupIdentifier), let group = DBUtils.get(groupUUID, type: ConfigurationGroup.self) {
             return group
-        }else {
+        } else {
             var group: ConfigurationGroup
             if let g = DBUtils.allNotDeleted(ConfigurationGroup.self, sorted: "createAt").first {
                 group = g

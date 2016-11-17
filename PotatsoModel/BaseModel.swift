@@ -10,7 +10,7 @@ import RealmSwift
 import PotatsoBase
 import CloudKit
 
-private let version: UInt64 = 19
+private let version: UInt64 = 20
 public var defaultRealm: Realm!
 
 public func setupDefaultReaml() {
@@ -20,7 +20,7 @@ public func setupDefaultReaml() {
     config.fileURL = sharedURL
     config.schemaVersion = version
     config.migrationBlock = { migration, oldSchemaVersion in
-        if oldSchemaVersion < 18 {
+        if oldSchemaVersion < 20 {
             // No migration yet
         }
     }
@@ -33,7 +33,6 @@ public class BaseModel: Object {
     public dynamic var uuid = NSUUID().UUIDString
     public dynamic var createAt = NSDate().timeIntervalSince1970
     public dynamic var updatedAt = NSDate().timeIntervalSince1970
-    public dynamic var deleted = false
 
     override public static func primaryKey() -> String? {
         return "uuid"

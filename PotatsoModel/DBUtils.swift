@@ -15,7 +15,7 @@ public class DBUtils {
     private static func currentRealm(realm: Realm?) -> Realm {
         var mRealm = realm
         if mRealm == nil {
-            mRealm = try! Realm()
+            mRealm = defaultRealm
         }
         return mRealm!
     }
@@ -57,15 +57,6 @@ public class DBUtils {
             try hardDelete(id, type: type, inRealm: realm)
         }
     }
-
-    public static func mark<T: BaseModel>(id: String, type: T.Type, synced: Bool, inRealm realm: Realm? = nil) throws {
-        let mRealm = currentRealm(realm)
-        guard let object: T = DBUtils.get(id, type: type, inRealm: mRealm) else {
-            return
-        }
-        mRealm.beginWrite()
-        try mRealm.commitWrite()
-    }
 }
 
 
@@ -73,12 +64,7 @@ public class DBUtils {
 extension DBUtils {
 
     public static func allNotDeleted<T: BaseModel>(type: T.Type, filter: String? = nil, sorted: String? = nil, inRealm realm: Realm? = nil) -> Results<T> {
-        let deleteFilter = "deleted = false"
-        var mFilter = deleteFilter
-        if let filter = filter {
-            mFilter += " && " + filter
-        }
-        return all(type, filter: mFilter, sorted: sorted, inRealm: realm)
+        return all(type, filter: filter, sorted: sorted, inRealm: realm)
     }
 
     public static func all<T: BaseModel>(type: T.Type, filter: String? = nil, sorted: String? = nil, inRealm realm: Realm? = nil) -> Results<T> {
@@ -132,7 +118,7 @@ extension DBUtils {
 
     public static func allObjectsToSyncModified() -> [BaseModel] {
         let mRealm = currentRealm(nil)
-        let filter = "deleted == false"
+        let filter = ""
         let proxies = mRealm.objects(Proxy.self).filter(filter).map({ $0 })
         let rulesets = mRealm.objects(RuleSet.self).filter(filter).map({ $0 })
         let groups = mRealm.objects(ConfigurationGroup.self).filter(filter).map({ $0 })
@@ -145,7 +131,7 @@ extension DBUtils {
 
     public static func allObjectsToSyncDeleted() -> [BaseModel] {
         let mRealm = currentRealm(nil)
-        let filter = "deleted == true"
+        let filter = ""
         let proxies = mRealm.objects(Proxy.self).filter(filter).map({ $0 })
         let rulesets = mRealm.objects(RuleSet.self).filter(filter).map({ $0 })
         let groups = mRealm.objects(ConfigurationGroup.self).filter(filter).map({ $0 })

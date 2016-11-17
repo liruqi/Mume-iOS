@@ -198,7 +198,7 @@ class CurrentGroupManager {
     }
 
     var group: ConfigurationGroup {
-        if let group = DBUtils.get(_groupUUID, type: ConfigurationGroup.self, filter: "deleted = false") {
+        if let group = DBUtils.get(_groupUUID, type: ConfigurationGroup.self) {
             return group
         } else {
             let defaultGroup = Manager.sharedManager.defaultConfigGroup
@@ -208,7 +208,7 @@ class CurrentGroupManager {
     }
 
     func setConfigGroupId(id: String) {
-        if let _ = DBUtils.get(id, type: ConfigurationGroup.self, filter: "deleted = false") {
+        if let _ = DBUtils.get(id, type: ConfigurationGroup.self) {
             _groupUUID = id
         } else {
             _groupUUID = Manager.sharedManager.defaultConfigGroup.uuid
