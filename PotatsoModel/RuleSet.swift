@@ -57,7 +57,7 @@ public final class RuleSet: BaseModel {
         }
     }
 
-    public override func validate(inRealm realm: Realm) throws {
+    public func validate(inRealm realm: Realm) throws {
         guard name.characters.count > 0 else {
             throw RuleSetError.EmptyName
         }

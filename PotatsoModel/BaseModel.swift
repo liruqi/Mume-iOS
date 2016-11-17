@@ -44,7 +44,7 @@ public class BaseModel: Object {
         return f
     }
 
-    public func validate(inRealm realm: Realm) throws {
+    public func validate() throws {
         //
     }
 

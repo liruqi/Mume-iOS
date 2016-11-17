@@ -42,7 +42,7 @@ public class ConfigurationGroup: BaseModel {
         return ["name"]
     }
     
-    public override func validate(inRealm realm: Realm) throws {
+    public override func validate() throws {
         guard name.characters.count > 0 else {
             throw ConfigurationGroupError.EmptyName
         }

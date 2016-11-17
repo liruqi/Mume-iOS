@@ -79,10 +79,10 @@ public class Config {
     func setupProxies() throws {
         if let proxiesConfig = configDict["proxies"] as? [[String: AnyObject]] {
             proxies = try proxiesConfig.map({ (config) -> Proxy? in
-                return try Proxy(dictionary: config, inRealm: realm)
+                return try Proxy(dictionary: config)
             }).filter { $0 != nil }.map { $0! }
             try proxies.forEach {
-                try $0.validate(inRealm: realm)
+                try $0.validate()
                 realm.add($0)
             }
         }
@@ -106,7 +106,7 @@ public class Config {
                 return try ConfigurationGroup(dictionary: config, inRealm: realm)
             }).filter { $0 != nil }.map { $0! }
             try groups.forEach {
-                try $0.validate(inRealm: realm)
+                try $0.validate()
                 realm.add($0)
             }
         }

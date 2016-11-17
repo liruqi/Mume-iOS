@@ -102,7 +102,7 @@ extension DBUtils {
             throw error
         }
         do {
-            try object.validate(inRealm: mRealm)
+            try object.validate()
         }catch {
             mRealm.cancelWrite()
             throw error

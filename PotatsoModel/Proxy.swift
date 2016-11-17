@@ -120,7 +120,7 @@ public class Proxy: BaseModel {
         return ["host","port"]
     }
 
-    public override func validate(inRealm realm: Realm) throws {
+    public override func validate() throws {
         guard let _ = ProxyType(rawValue: typeRaw)else {
             throw ProxyError.InvalidType
         }
@@ -181,7 +181,7 @@ extension Proxy {
 // Import
 extension Proxy {
     
-    public convenience init(dictionary: [String: AnyObject], inRealm realm: Realm) throws {
+    public convenience init(dictionary: [String: AnyObject]) throws {
         self.init()
         if let uriString = dictionary["uri"] as? String {
             if uriString.lowercaseString.hasPrefix(Proxy.ssUriPrefix) {
@@ -276,7 +276,7 @@ extension Proxy {
             self.authscheme = encryption
             self.type = type
         }
-        try validate(inRealm: realm)
+        try validate()
     }
 
     private func base64DecodeIfNeeded(proxyString: String) -> String? {
