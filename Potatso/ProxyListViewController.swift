@@ -17,6 +17,8 @@ private let kProxyCellIdentifier = "proxy"
 class ProxyListViewController: FormViewController {
 
     var proxies: [Proxy?] = []
+    var cloudProxies: [Proxy] = []
+
     let allowNone: Bool
     let chooseCallback: (Proxy? -> Void)?
 
@@ -30,6 +32,18 @@ class ProxyListViewController: FormViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        API.getProxySets() { (response) in
+            for dic in response {
+                if let proxy = try? Proxy(dictionary: dic) {
+                    self.cloudProxies.append(proxy)
+                }
+            }
+            self.reloadData()
+        }
+    }
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         navigationItem.title = "Proxy".localized()
@@ -49,7 +63,7 @@ class ProxyListViewController: FormViewController {
         }
         form.delegate = nil
         form.removeAll()
-        let section = Section()
+        let section = self.cloudProxies.count > 0 ? Section("Local".localized()) : Section()
         for proxy in proxies {
             section
                 <<< ProxyRow () {
@@ -70,6 +84,30 @@ class ProxyListViewController: FormViewController {
                 })
         }
         form +++ section
+        
+        if self.cloudProxies.count > 0 {
+            let cloudSection = Section("Cloud".localized())
+            for proxy in cloudProxies {
+                cloudSection
+                    <<< ProxyRow () {
+                        $0.value = proxy
+                        }.cellSetup({ (cell, row) -> () in
+                            cell.selectionStyle = .None
+                        }).onCellSelection({ [unowned self] (cell, row) in
+                            cell.setSelected(false, animated: true)
+                            let proxy = row.value
+                            if let cb = self.chooseCallback {
+                                cb(proxy)
+                                self.close()
+                            }else {
+                                if proxy?.type != .None {
+                                    self.showProxyConfiguration(proxy)
+                                }
+                            }
+                            })
+            }
+            form +++ cloudSection
+        }
         form.delegate = self
         tableView?.reloadData()
     }

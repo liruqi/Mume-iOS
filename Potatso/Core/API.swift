@@ -38,6 +38,23 @@ struct API {
         NSLog("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
         Alamofire.request(.GET, Path.RuleSets.url, parameters: ["lang": lang, "version": versionCode!]).responseArray(completionHandler: callback)
     }
+    
+    static func getProxySets(callback: [Dictionary<String, String>] -> Void) {
+        let lang = NSLocale.preferredLanguages()[0]
+        let versionCode: AnyObject? = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"]
+        NSLog("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
+        Alamofire.request(.GET, API.URL + "shadowsocks.php", parameters: ["lang": lang, "version": versionCode!])
+            .responseJSON { response in
+                print(response.request)  // original URL request
+                print(response.response) // URL response
+                print(response.data)     // server data
+                print(response.result)   // result of response serialization
+                
+                if let JSON = response.result.value as? [Dictionary<String, String>] {
+                    callback(JSON)
+                }
+        }
+    }
 }
 
 extension RuleSet: Mappable {
@@ -70,14 +87,13 @@ extension RuleSet {
 
     static func addRemoteObject(ruleset: RuleSet, update: Bool = true) throws {
         ruleset.isSubscribe = true
-        ruleset.deleted = false
         ruleset.editable = false
         let id = ruleset.uuid
         guard let local = DBUtils.get(id, type: RuleSet.self) else {
             try DBUtils.add(ruleset)
             return
         }
-        if local.remoteUpdatedAt == ruleset.remoteUpdatedAt && local.deleted == ruleset.deleted {
+        if local.remoteUpdatedAt == ruleset.remoteUpdatedAt {
             return
         }
         try DBUtils.add(ruleset)
@@ -151,12 +167,6 @@ extension Alamofire.Request {
 
             let JSONResponseSerializer = Alamofire.Request.JSONResponseSerializer(options: .AllowFragments)
             let result = JSONResponseSerializer.serializeResponse(request, response, data, error)
-
-            if let errorMessage = result.value?.valueForKeyPath("error_message") as? String {
-                let error = Error.errorWithCode(.StatusCodeValidationFailed, failureReason: errorMessage)
-                logError(error, request: request, response: response)
-                return .Failure(error)
-            }
 
             var JSONToMap: AnyObject?
             if let keyPath = keyPath where keyPath.isEmpty == false {
