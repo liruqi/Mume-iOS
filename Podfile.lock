@@ -50,7 +50,7 @@ PODS:
   - SwiftColor (0.3.8)
 
 DEPENDENCIES:
-  - Alamofire (~> 3.4)
+  - Alamofire (~> 3.5)
   - Appirater
   - Aspects (from `./Library/Aspects/`)
   - AsyncSwift (~> 1.7)
@@ -119,6 +119,6 @@ SPEC CHECKSUMS:
   SVPullToRefresh: ba2e718695a43253d8bea6852d2960097dc15d8c
   SwiftColor: 491ce84c6f6eb09bf5b0a00630f5db927306dca5
 
-PODFILE CHECKSUM: 4f82f7b652ff8bb78ac214bcaa5cc2c7ab80f392
+PODFILE CHECKSUM: 67dd659c997358db3d80ad5a10592f2e40fb5c81
 
 COCOAPODS: 1.1.0.rc.2

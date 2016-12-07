@@ -15,7 +15,7 @@ public class DBUtils {
     private static func currentRealm(realm: Realm?) -> Realm {
         var mRealm = realm
         if mRealm == nil {
-            mRealm = defaultRealm
+            mRealm = try! Realm()
         }
         return mRealm!
     }

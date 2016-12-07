@@ -38,7 +38,7 @@ target "Potatso" do
     pod 'CallbackURLKit', '~> 0.2'
     pod 'SVPullToRefresh', :git => 'https://github.com/samvermette/SVPullToRefresh'
     pod 'ISO8601DateFormatter', '~> 0.8'
-    pod 'Alamofire', '~> 3.4'
+    pod 'Alamofire', '~> 3.5'
     pod 'ObjectMapper', '~> 1.5.0'
     pod 'PSOperations', '~> 2.3'
     tunnel
