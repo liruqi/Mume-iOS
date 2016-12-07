@@ -44,6 +44,7 @@ class ProxyListViewController: FormViewController {
             self.reloadData()
         }
     }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         navigationItem.title = "Proxy".localized()
@@ -125,7 +126,10 @@ class ProxyListViewController: FormViewController {
     }
 
     func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
-        return .Delete
+        if indexPath.section == 0 {
+            return .Delete
+        }
+        return .None
     }
 
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {

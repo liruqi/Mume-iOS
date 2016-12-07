@@ -40,16 +40,27 @@ struct API {
     }
     
     static func getProxySets(callback: [Dictionary<String, String>] -> Void) {
+        let kCloudProxySets = "kCloudProxySets"
         let lang = NSLocale.preferredLanguages()[0]
         let versionCode: AnyObject? = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"]
         NSLog("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
+        
+        if let data = Potatso.sharedUserDefaults().dataForKey(kCloudProxySets) {
+            do {
+                if let JSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [Dictionary<String, String>] {
+                    return callback(JSON)
+                }
+            } catch {
+                print("Local deserialization failed")
+            }
+        }
         Alamofire.request(.GET, API.URL + "shadowsocks.php", parameters: ["lang": lang, "version": versionCode!])
             .responseJSON { response in
                 print(response.request)  // original URL request
                 print(response.response) // URL response
                 print(response.data)     // server data
                 print(response.result)   // result of response serialization
-                
+                Potatso.sharedUserDefaults().setObject(response.data, forKey: kCloudProxySets)
                 if let JSON = response.result.value as? [Dictionary<String, String>] {
                     callback(JSON)
                 }
