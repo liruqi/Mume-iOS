@@ -3019,6 +3019,7 @@
 				CODE_SIGN_ENTITLEMENTS = Potatso/Potatso.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: LI RUQI (M54LAUT7S6)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: LI RUQI (M54LAUT7S6)";
+				DEVELOPMENT_TEAM = M54LAUT7S6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -3046,7 +3047,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.liruqi.potatso;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8d0a7be2-3e15-44bd-9e20-d1ce44ed00cf";
+				PROVISIONING_PROFILE = "3d699bad-ed17-4321-b699-872b9b37a958";
+				PROVISIONING_PROFILE_SPECIFIER = MumeDist;
 				SWIFT_OBJC_BRIDGING_HEADER = "Potatso/Potatso-Bridge-Header.h";
 				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3100,7 +3102,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = info.liruqi.potatso.TodayWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "eb48ed48-79f1-475d-a43a-66fc77ba0586";
+				PROVISIONING_PROFILE = "a6e79c48-1866-4fc1-8be2-e2960769a8a3";
 				PROVISIONING_PROFILE_SPECIFIER = MumeTodayWidgetDist;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
@@ -3160,6 +3162,7 @@
 				CODE_SIGN_ENTITLEMENTS = "PacketTunnel/Supporting Files/PacketTunnel.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: LI RUQI (M54LAUT7S6)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: LI RUQI (M54LAUT7S6)";
+				DEVELOPMENT_TEAM = M54LAUT7S6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -3187,7 +3190,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.liruqi.potatso.tunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "18acd871-5989-48f6-8991-230fe75ba718";
+				PROVISIONING_PROFILE = "83429646-fe76-49a2-bb36-ed666586da19";
+				PROVISIONING_PROFILE_SPECIFIER = MumetunnelDist;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 2.3;
 			};
