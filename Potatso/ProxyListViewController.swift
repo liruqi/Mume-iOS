@@ -94,15 +94,17 @@ class ProxyListViewController: FormViewController {
                         $0.value = proxy
                         }.cellSetup({ (cell, row) -> () in
                             cell.selectionStyle = .None
-                        }).onCellSelection({ [unowned self] (cell, row) in
+                        }).onCellSelection({ [weak self] (cell, row) in
                             cell.setSelected(false, animated: true)
                             let proxy = row.value
-                            if let cb = self.chooseCallback {
+                            if let cb = self?.chooseCallback {
                                 cb(proxy)
-                                self.close()
+                                self?.close()
                             }else {
                                 if proxy?.type != .None {
-                                    self.showProxyConfiguration(proxy)
+                                    let vc = ProxyConfigurationViewController(upstreamProxy: proxy)
+                                    vc.readOnly = true
+                                    self?.navigationController?.pushViewController(vc, animated: true)
                                 }
                             }
                             })

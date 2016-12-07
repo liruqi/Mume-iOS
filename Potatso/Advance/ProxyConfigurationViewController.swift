@@ -23,7 +23,7 @@ private let kProxyFormProtocol = "protocol"
 
 
 class ProxyConfigurationViewController: FormViewController {
-    
+    var readOnly = false
     var upstreamProxy: Proxy
     let isEdit: Bool
     
@@ -49,9 +49,9 @@ class ProxyConfigurationViewController: FormViewController {
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        if isEdit {
+        if isEdit && !readOnly {
             self.navigationItem.title = "Edit Proxy".localized()
-        }else {
+        } else {
             self.navigationItem.title = "Add Proxy".localized()
         }
         generateForm()
@@ -63,12 +63,14 @@ class ProxyConfigurationViewController: FormViewController {
     }
     
     func generateForm() {
+        let canEdit = !self.readOnly
         form +++ Section()
             <<< PushRow<ProxyType>(kProxyFormType) {
                 $0.title = "Proxy Type".localized()
                 $0.options = [ProxyType.Shadowsocks, ProxyType.ShadowsocksR]
                 $0.value = self.upstreamProxy.type
                 $0.selectorTitle = "Choose Proxy Type".localized()
+                $0.baseCell.userInteractionEnabled = canEdit
             }
             <<< TextRow(kProxyFormHost) {
                 $0.title = "Host".localized()
@@ -78,6 +80,7 @@ class ProxyConfigurationViewController: FormViewController {
                 cell.textField.keyboardType = .URL
                 cell.textField.autocorrectionType = .No
                 cell.textField.autocapitalizationType = .None
+                cell.textField.enabled = canEdit
             }
             <<< IntRow(kProxyFormPort) {
                 $0.title = "Port".localized()
@@ -91,12 +94,14 @@ class ProxyConfigurationViewController: FormViewController {
                 $0.formatter = numberFormatter
                 }.cellSetup { cell, row in
                     cell.textField.placeholder = "Proxy Server Port".localized()
+                    cell.textField.enabled = canEdit
             }
             <<< PushRow<String>(kProxyFormEncryption) {
                 $0.title = "Encryption".localized()
                 $0.options = Proxy.ssSupportedEncryption
                 $0.value = self.upstreamProxy.authscheme ?? $0.options[2]
                 $0.selectorTitle = "Choose encryption method".localized()
+                $0.baseCell.userInteractionEnabled = canEdit
                 $0.hidden = Condition.Function([kProxyFormType]) { form in
                     if let r1 : PushRow<ProxyType> = form.rowByTag(kProxyFormType), isSS = r1.value?.isShadowsocks {
                         return !isSS
@@ -109,10 +114,12 @@ class ProxyConfigurationViewController: FormViewController {
                 $0.value = self.upstreamProxy.password ?? nil
             }.cellSetup { cell, row in
                 cell.textField.placeholder = "Proxy Password".localized()
+                cell.textField.enabled = canEdit
             }
             <<< SwitchRow(kProxyFormOta) {
                 $0.title = "One Time Auth".localized()
                 $0.value = self.upstreamProxy.ota
+                $0.baseCell.userInteractionEnabled = canEdit
                 $0.hidden = Condition.Function([kProxyFormType]) { form in
                     if let r1 : PushRow<ProxyType> = form.rowByTag(kProxyFormType) {
                         return r1.value != ProxyType.Shadowsocks

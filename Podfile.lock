@@ -14,7 +14,7 @@ PODS:
     - CocoaAsyncSocket/RunLoop
   - CocoaAsyncSocket/GCD (7.4.3)
   - CocoaAsyncSocket/RunLoop (7.4.3)
-  - Crashlytics (3.8.2):
+  - Crashlytics (3.8.3):
     - Fabric (~> 1.6.3)
   - Eureka (1.7.0)
   - Fabric (1.6.9)
@@ -104,7 +104,7 @@ SPEC CHECKSUMS:
   CallbackURLKit: bd9fd6769e34fdd226923a2ff8b47326d5c6299e
   Cartography: dd6044b6fe352252f68b648df5bff47841e591cc
   CocoaAsyncSocket: a18c75dca4b08723628a0bacca6e94803d90be91
-  Crashlytics: 27acca95a01b042a8294291dd6dff27f8f6af6d7
+  Crashlytics: 2b6dbe138a42395577cfa73dfa1aa7248cadf39e
   Eureka: 2020d9faeef7b7e9adeb9e3d8af779e5931c1897
   Fabric: bc5bec42cef4bcf1ee3ce0e218fc518e4b44dfbb
   ICSMainFramework: 56240e9556d3b0755fc9c934a91ee8ebd09cb753
