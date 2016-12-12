@@ -56,18 +56,6 @@ class HomePresenter: NSObject {
         }
     }
 
-    func chooseProxy() {
-        let chooseVC = ProxyListViewController(allowNone: true) { [unowned self] proxy in
-            do {
-                try ConfigurationGroup.changeProxy(forGroupId: self.group.uuid, proxyId: proxy?.uuid)
-                self.delegate?.handleRefreshUI(nil)
-            }catch {
-                self.vc.showTextHUD("\("Fail to change proxy".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
-            }
-        }
-        vc.navigationController?.pushViewController(chooseVC, animated: true)
-    }
-
     func chooseConfigGroups() {
         ConfigGroupChooseManager.shared.show()
     }

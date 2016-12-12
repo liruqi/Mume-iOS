@@ -3,11 +3,6 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '9.0'
 use_frameworks!
 
-def fabric
-    pod 'Fabric'
-    pod 'Crashlytics'
-end
-
 def library
     pod 'KissXML'
     pod 'KissXML/libxml_module'
@@ -41,9 +36,10 @@ target "Potatso" do
     pod 'Alamofire', '~> 3.5'
     pod 'ObjectMapper', '~> 1.5.0'
     pod 'PSOperations', '~> 2.3'
+    pod 'Fabric'
+    pod 'Crashlytics'
     tunnel
     library
-    fabric
     socket
     model
 end

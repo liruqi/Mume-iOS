@@ -20,8 +20,7 @@ private let kFormDefaultToProxy = "defaultToProxy"
 class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterProtocol, UITextFieldDelegate {
 
     let presenter = HomePresenter()
-    var proxies: [Proxy?] = []
-    let allowNone: Bool = true
+    var proxies: [Proxy] = []
 
     var ruleSetSection: Section!
 
@@ -121,16 +120,28 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         form.delegate = nil
         form.removeAll()
 
-        proxies = DBUtils.allNotDeleted(Proxy.self, sorted: "createAt").map({ $0 })
-        if allowNone {
-            proxies.insert(nil, atIndex: 0)
-        }
+        
         form.delegate = nil
         form.removeAll()
         
         form +++ generateProxySection()
 
         let section = Section("Proxy".localized())
+        proxies = DBUtils.allNotDeleted(Proxy.self, sorted: "createAt").map({ $0 })
+        if proxies.count == 0 {
+            section
+                <<< ProxyRow() {
+                    $0.value = nil
+                    $0.cellStyle = UITableViewCellStyle.Subtitle
+                    }.cellSetup({ (cell, row) -> () in
+                        cell.selectionStyle = .None
+                        cell.accessoryType = .Checkmark
+                    })
+        } else {
+            if nil == self.presenter.proxy {
+                try? ConfigurationGroup.changeProxy(forGroupId: self.presenter.group.uuid, proxyId: proxies[0].uuid)
+            }
+        
         for proxy in proxies {
             section
                 <<< ProxyRow() {
@@ -138,7 +149,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                     $0.cellStyle = UITableViewCellStyle.Subtitle
                     }.cellSetup({ (cell, row) -> () in
                         cell.selectionStyle = .None
-                        if (self.presenter.proxy?.uuid == proxy?.uuid) {
+                        if (self.presenter.proxy?.uuid == proxy.uuid) {
                             cell.accessoryType = .Checkmark
                         } else {
                             cell.accessoryType = .None
@@ -155,6 +166,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                         }
                         })
         }
+            }
         form +++ section
         
         form +++ generateRuleSetSection()
