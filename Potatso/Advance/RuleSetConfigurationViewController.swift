@@ -79,7 +79,7 @@ class RuleSetConfigurationViewController: FormViewController {
             })
         }
         for rule in ruleSet.rules {
-            insertRule(rule, atIndex: editSection.count - 1)
+            insertRule(rule, atIndex: editSection.count)
         }
         form +++ editSection
     }
@@ -96,7 +96,7 @@ class RuleSetConfigurationViewController: FormViewController {
                 row.title = rule.rowDescription.0 == nil ? "" : "\(rule.rowDescription.0!)"
                 row.value = rule.rowDescription.1 == nil ? "" : "\(rule.rowDescription.1!)"
             }).onCellSelection({ [unowned self] (cell, row) -> () in
-                self.showRuleConfiguration(rule, index: index)
+                self.showRuleConfiguration(rule, index: index - 1)
             }),
             atIndex: index)
     }
