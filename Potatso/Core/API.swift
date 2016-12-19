@@ -14,7 +14,7 @@ import ISO8601DateFormatter
 
 struct API {
 
-    static let URL = "http://api.liruqi.info/"
+    static let URL = "https://api.liruqi.info/"
 
     enum Path {
         case RuleSets
@@ -54,7 +54,7 @@ struct API {
                 print("Local deserialization failed")
             }
         }
-        Alamofire.request(.GET, "https://liruqi.github.io/api.liruqi.info/shadowsocks.php", parameters: ["lang": lang, "version": versionCode!])
+        Alamofire.request(.GET, API.URL + "shadowsocks.php", parameters: ["lang": lang, "version": versionCode!])
             .responseJSON { response in
                 print(response.request)  // original URL request
                 print(response.response) // URL response
