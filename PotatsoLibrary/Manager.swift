@@ -142,27 +142,27 @@ public class Manager {
             let request = NSMutableURLRequest(URL: url!)
             request.setValue(lastM, forHTTPHeaderField: "Last-Modified")
             let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {data, response, error in
-                if (error != nil) {
-                    print("Download GeoLite2-Country.mmdb error: " + error!.description)
-                } else {
-                    if let r = response as? NSHTTPURLResponse {
-                        if (r.statusCode == 200) {
-                            let result = data?.writeToURL(toURL!, atomically: true)
-                            if result != nil {
-                                let thisM = r.allHeaderFields["Last-Modified"];
-                                if let m = thisM {
-                                    Potatso.sharedUserDefaults().setObject(m, forKey: MaxmindLastModifiedKey)
-                                }
-                                print("writeToFile GeoLite2-Country.mmdb: OK")
-                            } else {
-                                print("writeToFile GeoLite2-Country.mmdb: failed")
+                guard let data = data where error == nil else {
+                    print("Download GeoLite2-Country.mmdb error: " + (error?.description ?? ""))
+                    return
+                }
+                if let r = response as? NSHTTPURLResponse {
+                    if (r.statusCode == 200 && data.length > 1024) {
+                        let result = data.writeToURL(toURL!, atomically: true)
+                        if result {
+                            let thisM = r.allHeaderFields["Last-Modified"];
+                            if let m = thisM {
+                                Potatso.sharedUserDefaults().setObject(m, forKey: MaxmindLastModifiedKey)
                             }
+                            print("writeToFile GeoLite2-Country.mmdb: OK")
                         } else {
-                            print("Download GeoLite2-Country.mmdb no update maybe: " + (r.description))
+                            print("writeToFile GeoLite2-Country.mmdb: failed")
                         }
                     } else {
-                        print("Download GeoLite2-Country.mmdb bad responese: " + (response?.description ?? ""))
+                        print("Download GeoLite2-Country.mmdb no update maybe: " + (r.description))
                     }
+                } else {
+                    print("Download GeoLite2-Country.mmdb bad responese: " + (response?.description ?? ""))
                 }
             }
             task.resume()
