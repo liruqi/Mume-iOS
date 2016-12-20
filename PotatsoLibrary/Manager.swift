@@ -133,26 +133,35 @@ public class Manager {
 
     func copyGEOIPData() throws {
         let toURL = Potatso.sharedUrl().URLByAppendingPathComponent("GeoLite2-Country.mmdb")
-        if NSFileManager.defaultManager().fileExistsAtPath(toURL!.path!) {
-            let toSize = try! NSFileManager.defaultManager().attributesOfItemAtPath(toURL!.path!)[NSFileSize]!.longLongValue
-            if 19267424 == toSize {
-                print("copy GEOIPData skipped, already exists")
-                return
-            }
-            try NSFileManager.defaultManager().removeItemAtURL(toURL!)
-        }
-        
+
         guard let fromURL = NSBundle.mainBundle().URLForResource("GeoLite2-Country", withExtension: "mmdb") else {
-            let url = NSURL(string: "http://vpn.liruqi.info/ios/GeoLite2-Country.mmdb")
-            let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {data, reponse, error in
+            let MaxmindLastModifiedKey = "MaxmindLastModifiedKey"
+            let lastM = Potatso.sharedUserDefaults().stringForKey(MaxmindLastModifiedKey) ?? "Tue, 20 Dec 2016 12:53:05 GMT"
+            
+            let url = NSURL(string: "https://mumevpn.com/ios/GeoLite2-Country.mmdb")
+            let request = NSMutableURLRequest(URL: url!)
+            request.setValue(lastM, forHTTPHeaderField: "Last-Modified")
+            let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {data, response, error in
                 if (error != nil) {
                     print("Download GeoLite2-Country.mmdb error: " + error!.description)
                 } else {
-                    let result = data?.writeToURL(toURL!, atomically: true)
-                    if result != nil {
-                        print("writeToFile GeoLite2-Country.mmdb: OK")
+                    if let r = response as? NSHTTPURLResponse {
+                        if (r.statusCode == 200) {
+                            let result = data?.writeToURL(toURL!, atomically: true)
+                            if result != nil {
+                                let thisM = r.allHeaderFields["Last-Modified"];
+                                if let m = thisM {
+                                    Potatso.sharedUserDefaults().setObject(m, forKey: MaxmindLastModifiedKey)
+                                }
+                                print("writeToFile GeoLite2-Country.mmdb: OK")
+                            } else {
+                                print("writeToFile GeoLite2-Country.mmdb: failed")
+                            }
+                        } else {
+                            print("Download GeoLite2-Country.mmdb no update maybe: " + (r.description))
+                        }
                     } else {
-                        print("writeToFile GeoLite2-Country.mmdb: failed")
+                        print("Download GeoLite2-Country.mmdb bad responese: " + (response?.description ?? ""))
                     }
                 }
             }
