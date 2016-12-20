@@ -140,7 +140,7 @@ public class Manager {
             
             let url = NSURL(string: "https://mumevpn.com/ios/GeoLite2-Country.mmdb")
             let request = NSMutableURLRequest(URL: url!)
-            request.setValue(lastM, forHTTPHeaderField: "Last-Modified")
+            request.setValue(lastM, forHTTPHeaderField: "If-Modified-Since")
             let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {data, response, error in
                 guard let data = data where error == nil else {
                     print("Download GeoLite2-Country.mmdb error: " + (error?.description ?? ""))
