@@ -232,7 +232,6 @@ public class Manager {
     
     public func regenerateConfigFiles() throws {
         try generateGeneralConfig()
-        try generateSocksConfig()
         try generateShadowsocksConfig()
         try generateHttpProxyConfig()
     }
@@ -269,53 +268,15 @@ extension Manager {
         }
     }
     
-    func generateSocksConfig() throws {
-        let root = NSXMLElement.elementWithName("antinatconfig") as! NSXMLElement
-        let interface = NSXMLElement.elementWithName("interface", children: nil, attributes: [NSXMLNode.attributeWithName("value", stringValue: "127.0.0.1") as! DDXMLNode]) as! NSXMLElement
-        root.addChild(interface)
-        
-        let port = NSXMLElement.elementWithName("port", children: nil, attributes: [NSXMLNode.attributeWithName("value", stringValue: "0") as! DDXMLNode])  as! NSXMLElement
-        root.addChild(port)
-        
-        let maxbindwait = NSXMLElement.elementWithName("maxbindwait", children: nil, attributes: [NSXMLNode.attributeWithName("value", stringValue: "10") as! DDXMLNode]) as! NSXMLElement
-        root.addChild(maxbindwait)
-        
-        
-        let authchoice = NSXMLElement.elementWithName("authchoice") as! NSXMLElement
-        let select = NSXMLElement.elementWithName("select", children: nil, attributes: [NSXMLNode.attributeWithName("mechanism", stringValue: "anonymous") as! DDXMLNode])  as! NSXMLElement
-        
-        authchoice.addChild(select)
-        root.addChild(authchoice)
-        
-        let filter = NSXMLElement.elementWithName("filter") as! NSXMLElement
-        if let upstreamProxy = upstreamProxy {
-            let chain = NSXMLElement.elementWithName("chain", children: nil, attributes: [NSXMLNode.attributeWithName("name", stringValue: upstreamProxy.description) as! DDXMLNode]) as! NSXMLElement
-            switch upstreamProxy.type {
-            case .Shadowsocks:
-                let uriString = "socks5://127.0.0.1:${ssport}"
-                let uri = NSXMLElement.elementWithName("uri", children: nil, attributes: [NSXMLNode.attributeWithName("value", stringValue: uriString) as! DDXMLNode]) as! NSXMLElement
-                chain.addChild(uri)
-                let authscheme = NSXMLElement.elementWithName("authscheme", children: nil, attributes: [NSXMLNode.attributeWithName("value", stringValue: "anonymous") as! DDXMLNode]) as! NSXMLElement
-                chain.addChild(authscheme)
-            default:
-                break
-            }
-            root.addChild(chain)
-        }
-        
-        let accept = NSXMLElement.elementWithName("accept") as! NSXMLElement
-        filter.addChild(accept)
-        root.addChild(filter)
-        
-        let socksConf = root.XMLString
-        try socksConf.writeToURL(Potatso.sharedSocksConfUrl(), atomically: true, encoding: NSUTF8StringEncoding)
-    }
-    
     func generateShadowsocksConfig() throws {
         let confURL = Potatso.sharedProxyConfUrl()
         var content = ""
-        if let upstreamProxy = upstreamProxy  where upstreamProxy.type == .Shadowsocks || upstreamProxy.type == .ShadowsocksR {
-            content = ["host": upstreamProxy.host, "port": upstreamProxy.port, "password": upstreamProxy.password ?? "", "authscheme": upstreamProxy.authscheme ?? "", "ota": upstreamProxy.ota, "protocol": upstreamProxy.ssrProtocol ?? "", "obfs": upstreamProxy.ssrObfs ?? "", "obfs_param": upstreamProxy.ssrObfsParam ?? ""].jsonString() ?? ""
+        if let upstreamProxy = upstreamProxy {
+            if upstreamProxy.type == .Shadowsocks || upstreamProxy.type == .ShadowsocksR {
+                content = ["type": upstreamProxy.type.rawValue, "host": upstreamProxy.host, "port": upstreamProxy.port, "password": upstreamProxy.password ?? "", "authscheme": upstreamProxy.authscheme ?? "", "ota": upstreamProxy.ota, "protocol": upstreamProxy.ssrProtocol ?? "", "obfs": upstreamProxy.ssrObfs ?? "", "obfs_param": upstreamProxy.ssrObfsParam ?? ""].jsonString() ?? ""
+            } else if upstreamProxy.type == .Socks5 {
+                content = ["type": upstreamProxy.type.rawValue, "host": upstreamProxy.host, "port": upstreamProxy.port, "password": upstreamProxy.password ?? "", "authscheme": upstreamProxy.authscheme ?? ""].jsonString() ?? ""
+            }
         }
         try content.writeToURL(confURL, atomically: true, encoding: NSUTF8StringEncoding)
     }

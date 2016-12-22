@@ -115,7 +115,7 @@
 - (void)startProxies {
     [self startShadowsocks];
     [self startHttpProxy];
-    [self startSocksProxy];
+//    [self startSocksProxy];
 }
 
 - (void)syncStartProxy: (NSString *)name completion: (void(^)(dispatch_group_t g, NSError **proxyError))handler {
@@ -152,14 +152,14 @@
     }];
 }
 
-- (void)startSocksProxy {
-    [self syncStartProxy: @"socks" completion:^(dispatch_group_t g, NSError *__autoreleasing *proxyError) {
-        [[ProxyManager sharedManager] startSocksProxy:^(int port, NSError *error) {
-            *proxyError = error;
-            dispatch_group_leave(g);
-        }];
-    }];
-}
+//- (void)startSocksProxy {
+//    [self syncStartProxy: @"socks" completion:^(dispatch_group_t g, NSError *__autoreleasing *proxyError) {
+//        [[ProxyManager sharedManager] startSocksProxy:^(int port, NSError *error) {
+//            *proxyError = error;
+//            dispatch_group_leave(g);
+//        }];
+//    }];
+//}
 
 - (void)startPacketForwarders {
     __weak typeof(self) weakSelf = self;
@@ -167,7 +167,7 @@
     [self startVPNWithOptions:nil completionHandler:^(NSError *error) {
         if (error == nil) {
             [weakSelf addObserver:weakSelf forKeyPath:@"defaultPath" options:NSKeyValueObservingOptionInitial context:nil];
-            [TunnelInterface startTun2Socks:[ProxyManager sharedManager].socksProxyPort];
+            [TunnelInterface startTun2Socks:[ProxyManager sharedManager].shadowsocksProxyPort];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [TunnelInterface processPackets];
             });
@@ -259,7 +259,6 @@
     [[Potatso sharedUserDefaults] setObject:@(0) forKey:@"tunnelStatusPort"];
     [[Potatso sharedUserDefaults] synchronize];
     [[ProxyManager sharedManager] stopHttpProxy];
-    [[ProxyManager sharedManager] stopSocksProxy];
     [TunnelInterface stop];
 }
 

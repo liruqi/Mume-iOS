@@ -28,10 +28,6 @@ NSString *sharedGroupIdentifier = @"group.info.liruqi.potatso";
     return [[Potatso sharedUrl] URLByAppendingPathComponent:@"general.xxx"  isDirectory:NO];
 }
 
-+ (NSURL *)sharedSocksConfUrl {
-    return [[Potatso sharedUrl] URLByAppendingPathComponent:@"socks.xxx"  isDirectory:NO];
-}
-
 + (NSURL *)sharedProxyConfUrl {
     return [[Potatso sharedUrl] URLByAppendingPathComponent:@"proxy.xxx"  isDirectory:NO];
 }

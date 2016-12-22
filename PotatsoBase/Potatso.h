@@ -16,7 +16,6 @@ extern NSString * _Nonnull sharedGroupIdentifier;
 + (NSUserDefaults * _Nonnull)sharedUserDefaults;
 
 + (NSURL * _Nonnull)sharedGeneralConfUrl;
-+ (NSURL * _Nonnull)sharedSocksConfUrl;
 + (NSURL * _Nonnull)sharedProxyConfUrl;
 + (NSURL * _Nonnull)sharedHttpProxyConfUrl;
 + (NSURL * _Nonnull)sharedLogUrl;

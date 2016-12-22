@@ -67,7 +67,7 @@ class ProxyConfigurationViewController: FormViewController {
         form +++ Section()
             <<< PushRow<ProxyType>(kProxyFormType) {
                 $0.title = "Proxy Type".localized()
-                $0.options = [ProxyType.Shadowsocks, ProxyType.ShadowsocksR]
+                $0.options = [ProxyType.Shadowsocks, ProxyType.ShadowsocksR, ProxyType.Socks5]
                 $0.value = self.upstreamProxy.type
                 $0.selectorTitle = "Choose Proxy Type".localized()
                 $0.baseCell.userInteractionEnabled = canEdit
@@ -112,6 +112,12 @@ class ProxyConfigurationViewController: FormViewController {
             <<< PasswordRow(kProxyFormPassword) {
                 $0.title = "Password".localized()
                 $0.value = self.upstreamProxy.password ?? nil
+                $0.hidden = Condition.Function([kProxyFormType]) { form in
+                    if let r1 : PushRow<ProxyType> = form.rowByTag(kProxyFormType), isSS = r1.value?.isShadowsocks {
+                        return !isSS
+                    }
+                    return false
+                }
             }.cellSetup { cell, row in
                 cell.textField.placeholder = "Proxy Password".localized()
                 cell.textField.enabled = canEdit

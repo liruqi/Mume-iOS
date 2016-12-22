@@ -160,6 +160,11 @@ extension Proxy {
             if let authscheme = authscheme, password = password {
                 return "ss://\(authscheme):\(password)@\(host):\(port)"
             }
+        case .Socks5:
+            if let user = user, password = password {
+                return "socks5://\(authscheme):\(password)@\(host):\(port)"
+            }
+            return "socks5://\(host):\(port)" // TODO: support username/password
         default:
             break
         }
@@ -169,13 +174,6 @@ extension Proxy {
         return String.init(format: "%@:%d", host, port)
     }
     
-}
-
-// API
-extension Proxy {
-
-    
-
 }
 
 // Import
