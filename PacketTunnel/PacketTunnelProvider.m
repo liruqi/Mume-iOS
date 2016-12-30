@@ -167,7 +167,7 @@
     [self startVPNWithOptions:nil completionHandler:^(NSError *error) {
         if (error == nil) {
             [weakSelf addObserver:weakSelf forKeyPath:@"defaultPath" options:NSKeyValueObservingOptionInitial context:nil];
-            [TunnelInterface startTun2Socks:[ProxyManager sharedManager].shadowsocksProxyPort];
+            [TunnelInterface startTun2Socks:[ProxyManager sharedManager].socksProxyPort];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [TunnelInterface processPackets];
             });

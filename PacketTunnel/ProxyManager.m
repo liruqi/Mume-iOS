@@ -150,7 +150,7 @@ int sock_port (int fd) {
         error = [NSError errorWithDomain:@"info.liruqi.mume" code:100 userInfo:@{NSLocalizedDescriptionKey: @"Fail to start http proxy"}];
     }
     if (self.shadowsocksCompletion) {
-        self.shadowsocksCompletion(self.shadowsocksProxyPort, error);
+        self.shadowsocksCompletion(self.socksProxyPort, error);
     }
 }
 

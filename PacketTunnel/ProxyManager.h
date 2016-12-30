@@ -17,11 +17,11 @@ extern int sock_port (int fd);
 
 + (ProxyManager *)sharedManager;
 //@property (nonatomic, readonly) BOOL socksProxyRunning;
-//@property (nonatomic, readonly) int socksProxyPort;
+@property (nonatomic, readonly) int socksProxyPort;
 @property (nonatomic, readonly) BOOL httpProxyRunning;
 @property (nonatomic, readonly) int httpProxyPort;
 @property (nonatomic, readonly) BOOL shadowsocksProxyRunning;
-@property (nonatomic, readonly) int shadowsocksProxyPort;
+
 - (void)startHttpProxy: (HttpProxyCompletion)completion;
 - (void)stopHttpProxy;
 - (void)startShadowsocks: (ShadowsocksProxyCompletion)completion;
