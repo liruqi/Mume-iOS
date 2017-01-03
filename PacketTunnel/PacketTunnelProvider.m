@@ -205,6 +205,7 @@
     proxySettings.HTTPSEnabled = YES;
     proxySettings.HTTPSServer = [[NEProxyServer alloc] initWithAddress:proxyServerName port:proxyServerPort];
     proxySettings.excludeSimpleHostnames = YES;
+    proxySettings.exceptionList = @[@"mumevpn.com", @"crashlytics.com", @"*.mumevpn.com", @"*.liruqi.info"];
     settings.proxySettings = proxySettings;
     NEDNSSettings *dnsSettings = [[NEDNSSettings alloc] initWithServers:dnsServers];
     dnsSettings.matchDomains = @[@""];
@@ -225,8 +226,10 @@
 - (void)openLog {
     NSString *logFilePath = [Potatso sharedLogUrl].path;
     [[NSFileManager defaultManager] createFileAtPath:logFilePath contents:nil attributes:nil];
-    freopen([logFilePath cStringUsingEncoding:NSASCIIStringEncoding], "w+", stdout);
     freopen([logFilePath cStringUsingEncoding:NSASCIIStringEncoding], "w+", stderr);
+    logFilePath = [logFilePath stringByAppendingString: @".stdout"];
+    [[NSFileManager defaultManager] createFileAtPath:logFilePath contents:nil attributes:nil];
+    freopen([logFilePath cStringUsingEncoding:NSASCIIStringEncoding], "w+", stdout);
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
