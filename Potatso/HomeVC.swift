@@ -326,7 +326,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     var timer: NSTimer?
     
     func startTimer() {
-        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(DashboardVC.onTime), userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(onTime), userInfo: nil, repeats: true)
         timer?.fire()
     }
     

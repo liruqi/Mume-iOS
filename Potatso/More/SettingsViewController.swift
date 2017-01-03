@@ -112,7 +112,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
                     cell.selectionStyle = .Default
                 }).onCellSelection({ [unowned self](cell, row) -> () in
                     cell.setSelected(false, animated: true)
-                    self.navigationController?.pushViewController(LogDetailViewController(), animated: true)
+                    self.navigationController?.pushViewController(DashboardVC(), animated: true)
                     })
             <<< ActionRow() {
                 $0.title = "Follow on Twitter".localized()
