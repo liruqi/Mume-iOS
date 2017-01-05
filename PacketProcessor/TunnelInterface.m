@@ -72,8 +72,8 @@
     return nil;
 }
 
-+ (void)startTun2Socks: (int)socksServerPort {
-    [NSThread detachNewThreadSelector:@selector(_startTun2Socks:) toTarget:[TunnelInterface sharedInterface] withObject:@(socksServerPort)];
++ (void)startTun2Socks: (NSString *)socksServer {
+    [NSThread detachNewThreadSelector:@selector(_startTun2Socks:) toTarget:[TunnelInterface sharedInterface] withObject:socksServer];
 }
 
 + (void)stop {
@@ -104,9 +104,10 @@
 
 }
 
-- (void)_startTun2Socks: (NSNumber *)socksServerPort {
+- (void)_startTun2Socks: (NSString *)socksServer {
     char socks_server[50];
-    sprintf(socks_server, "127.0.0.1:%d", (int)([socksServerPort integerValue]));
+    BOOL ret = [socksServer getCString:socks_server maxLength:50 encoding:NSASCIIStringEncoding];
+    NSLog(@"_startTun2Socks socks_server: %s %d", socks_server, ret);
 #if TCP_DATA_LOG_ENABLE
     char *log_lvel = "debug";
 #else

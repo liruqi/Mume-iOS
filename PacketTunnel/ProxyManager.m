@@ -197,5 +197,13 @@ int sock_port (int fd) {
     }
 }
 
+- (NSString *)socksProxy {
+    if ([self.proxyType isEqualToString: @"SOCKS5"]) {
+        return [NSString stringWithFormat:@"%@:%d", self.socksProxyHost, self.socksProxyPort];
+    } else {
+        return [NSString stringWithFormat:@"127.0.0.1:%d", self.socksProxyPort];
+    }
+}
+
 @end
 
