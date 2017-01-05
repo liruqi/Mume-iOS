@@ -63,6 +63,7 @@
         [weakSelf.wormhole passMessageObject:@"ok" identifier:@"tunnelStatus"];
     }];
     [self.wormhole listenForMessageWithIdentifier:@"stopTunnel" listener:^(id  _Nullable messageObject) {
+        NSLog(@"received message: stopTunnel");
         [weakSelf stop];
     }];
     [self.wormhole listenForMessageWithIdentifier:@"getTunnelConnectionRecords" listener:^(id  _Nullable messageObject) {

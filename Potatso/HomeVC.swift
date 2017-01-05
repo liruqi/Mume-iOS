@@ -31,7 +31,8 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     }
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
-        self.status = .Off
+        self.status = Manager.sharedManager.vpnStatus
+        print ("HomeVC.init: ", self.status.rawValue)
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         presenter.bindToVC(self)
         presenter.delegate = self
@@ -52,7 +53,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         self.navigationItem.titleView = titleButton
         // Post an empty message so we could attach to packet tunnel process
         Manager.sharedManager.postMessage()
-        handleRefreshUI(nil)
+//        handleRefreshUI(nil)
         updateForm()
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: "List".templateImage, style: .Plain, target: presenter, action: #selector(HomePresenter.chooseConfigGroups))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addProxy(_:)))
@@ -182,16 +183,24 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
 
     func generateProxySection() -> Section {
         let proxySection = Section("Connect".localized())
+        var reloading = true
 
         proxySection <<< SwitchRow("connection") {
+            reloading = true
             $0.title = status.hintDescription
             $0.value = status.onOrConnectiong
+            reloading = false
             }.onChange({ [unowned self] (row) in
+                if reloading {
+                    return
+                }
                 self.handleConnectButtonPressed()
                 })
             .cellUpdate ({ cell, row in
+                reloading = true
                 row.title = self.status.hintDescription
                 row.value = self.status.onOrConnectiong
+                reloading = false
             })
         <<< TextRow(kFormDNS) {
             $0.title = "DNS".localized()
@@ -213,7 +222,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                     var count = 0
                     if ruleSet.ruleCount > 0 {
                         count = ruleSet.ruleCount
-                    }else {
+                    } else {
                         count = ruleSet.rules.count
                     }
                     if count > 1 {

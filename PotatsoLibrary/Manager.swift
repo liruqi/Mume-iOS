@@ -19,7 +19,7 @@ public enum ManagerError: ErrorType {
     case VPNStartFail
 }
 
-public enum VPNStatus {
+public enum VPNStatus : Int {
     case Off
     case Connecting
     case On
@@ -54,9 +54,14 @@ public class Manager {
         loadProviderManager { (manager) -> Void in
             if let manager = manager {
                 self.updateVPNStatus(manager)
+                if self.vpnStatus == .On {
+                    self.observerAdded = true
+                    NSNotificationCenter.defaultCenter().addObserverForName(NEVPNStatusDidChangeNotification, object: manager.connection, queue: NSOperationQueue.mainQueue(), usingBlock: { [unowned self] (notification) -> Void in
+                        self.updateVPNStatus(manager)
+                        })
+                }
             }
         }
-        addVPNStatusObserver()
     }
     
     func addVPNStatusObserver() {
@@ -78,6 +83,7 @@ public class Manager {
     }
     
     func updateVPNStatus(manager: NEVPNManager) {
+        print("updateVPNStatus:", manager.connection.status.rawValue)
         switch manager.connection.status {
         case .Connected:
             self.vpnStatus = .On
