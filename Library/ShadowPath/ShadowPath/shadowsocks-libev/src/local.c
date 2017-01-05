@@ -78,7 +78,7 @@
 #define BUF_SIZE 2048
 #endif
 
-int verbose = 0;
+int verbose = 1;
 int keep_resolving = 1;
 
 #ifdef ANDROID
@@ -90,7 +90,7 @@ char *prefix;
 #endif
 
 static int acl = 0;
-static int mode = TCP_ONLY;
+static int mode = TCP_AND_UDP;
 
 static int fast_open = 0;
 #ifdef HAVE_SETRLIMIT
