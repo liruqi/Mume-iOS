@@ -120,7 +120,6 @@ const char jcc_rcs[] = "$Id: jcc.c,v 1.440 2016/01/16 12:33:36 fabiankeil Exp $"
 const char jcc_h_rcs[] = JCC_H_VERSION;
 const char project_h_rcs[] = PROJECT_H_VERSION;
 
-int daemon_mode = 0;
 struct client_states clients[1];
 struct log_client_states *log_clients;
 struct log_client_states *log_clients_tail;

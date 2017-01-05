@@ -53,7 +53,6 @@ extern struct file_list    files[1];
 #ifdef unix
 extern const char *pidfile;
 #endif
-extern int daemon_mode;
 
 #ifdef FEATURE_GRACEFUL_TERMINATION
 extern int g_terminate;

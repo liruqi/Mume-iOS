@@ -137,6 +137,7 @@
 - (void)startShadowsocks {
     [self syncStartProxy: @"shadowsocks" completion:^(dispatch_group_t g, NSError *__autoreleasing *proxyError) {
         [[ProxyManager sharedManager] startShadowsocks:^(int port, NSError *error) {
+            NSLog(@"startShadowsocks - port: %d error:%@", port, error);
             *proxyError = error;
             dispatch_group_leave(g);
         }];

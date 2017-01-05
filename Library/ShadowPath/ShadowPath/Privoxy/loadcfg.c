@@ -1265,14 +1265,11 @@ struct configuration_spec * load_config(void)
  * In logdir by default
  * *************************************************************************/
          case hash_logfile :
-            if (daemon_mode)
-            {
                logfile = make_path(config->logdir, arg);
                if (NULL == logfile)
                {
                   log_error(LOG_LEVEL_FATAL, "Out of memory while creating logfile path");
                }
-            }
             break;
 
 /* *************************************************************************
@@ -1653,6 +1650,10 @@ struct configuration_spec * load_config(void)
    set_debug_level(config->debug);
 
    freez(config->logfile);
+   if (NULL != logfile) {
+      config->logfile = logfile;
+      init_error_log("Privoxy", config->logfile);
+   }
 
 #ifdef FEATURE_CONNECTION_KEEP_ALIVE
    if (config->default_server_timeout > config->keep_alive_timeout)

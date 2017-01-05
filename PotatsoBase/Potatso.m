@@ -9,6 +9,8 @@
 #import "Potatso.h"
 
 NSString *sharedGroupIdentifier = @"group.info.liruqi.potatso";
+NSString *shadowsocksLogFile = @"shadowsocks.log";
+NSString *privoxyLogFile = @"privoxy.log";
 
 @implementation Potatso
 

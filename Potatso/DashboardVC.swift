@@ -40,18 +40,39 @@ class DashboardVC: FormViewController {
         
         if LoggingLevel.currentLoggingLevel != .OFF {
             section <<< LabelRow() {
-                $0.title = "Logs".localized()
+                $0.title = "stderr".localized()
                 }.cellSetup({ (cell, row) -> () in
                     cell.accessoryType = .DisclosureIndicator
                     cell.selectionStyle = .Default
                 }).onCellSelection({ [unowned self](cell, row) -> () in
                     cell.setSelected(false, animated: true)
                     self.showLogs()
-                    })
+                }) <<< LabelRow() {
+                    $0.title = "Privoxy".localized()
+                }.cellSetup({ (cell, row) -> () in
+                    cell.accessoryType = .DisclosureIndicator
+                    cell.selectionStyle = .Default
+                }).onCellSelection({ [unowned self](cell, row) -> () in
+                    cell.setSelected(false, animated: true)
+                    self.showPrivoxyLogs()
+                }) <<< LabelRow() {
+                    $0.title = "Shadowsocks".localized()
+                }.cellSetup({ (cell, row) -> () in
+                    cell.accessoryType = .DisclosureIndicator
+                    cell.selectionStyle = .Default
+                }).onCellSelection({ [unowned self](cell, row) -> () in
+                    cell.setSelected(false, animated: true)
+                    self.showShadowsocksLogs()
+                })
         } else {
             // try remove log file
             let fileManager = NSFileManager.defaultManager()
             try? fileManager.removeItemAtURL(Potatso.sharedLogUrl())
+            
+            let rootUrl = Potatso.sharedUrl()
+            let logDir = rootUrl.URLByAppendingPathComponent("log")!
+            let logPath = logDir.URLByAppendingPathComponent(privoxyLogFile)
+            try? fileManager.removeItemAtURL(logPath!)
         }
         return section
     }
@@ -62,9 +83,25 @@ class DashboardVC: FormViewController {
     }
 
     func showLogs() {
-        navigationController?.pushViewController(LogDetailViewController(), animated: true)
+        print ("stderr log: %@", Potatso.sharedLogUrl())
+        navigationController?.pushViewController(LogDetailViewController(path: Potatso.sharedLogUrl().path!), animated: true)
     }
 
+    func showShadowsocksLogs() {
+        let rootUrl = Potatso.sharedUrl()
+        let logPath = rootUrl.URLByAppendingPathComponent(shadowsocksLogFile)
+        print ("shadowsocks log: %@", logPath!)
+        navigationController?.pushViewController(LogDetailViewController(path: logPath!.path!), animated: true)
+    }
+    
+    func showPrivoxyLogs() {
+        let rootUrl = Potatso.sharedUrl()
+        let logDir = rootUrl.URLByAppendingPathComponent("log")!
+        let logPath = logDir.URLByAppendingPathComponent(privoxyLogFile)
+        print ("privoxy log: %@", logPath!)
+        navigationController?.pushViewController(LogDetailViewController(path: logPath!.path!), animated: true)
+    }
+    
     lazy var startTimeFormatter: NSDateFormatter = {
         let f = NSDateFormatter()
         f.dateStyle = .MediumStyle

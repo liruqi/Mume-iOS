@@ -8,7 +8,6 @@
 
 import Foundation
 import Cartography
-import PotatsoBase
 import PotatsoLibrary
 
 class LogDetailViewController: UIViewController {
@@ -17,9 +16,15 @@ class LogDetailViewController: UIViewController {
     var fd: Int32 = 0
     var data = NSMutableData()
     var logs = NSMutableArray()
+    var logPath = ""
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    init(path: String) {
+        self.logPath = path
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -39,11 +44,11 @@ class LogDetailViewController: UIViewController {
     }
     
     func showLog() {
-        guard LoggingLevel.currentLoggingLevel != .OFF else {
+        guard LoggingLevel.currentLoggingLevel != .OFF && self.logPath != "" else {
             emptyView.hidden = false
             return
         }
-        fd = Darwin.open(Potatso.sharedLogUrl().path!, O_RDONLY)
+        fd = Darwin.open(self.logPath, O_RDONLY)
         guard fd > 0 else {
             return
         }

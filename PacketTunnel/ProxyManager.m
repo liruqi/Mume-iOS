@@ -108,6 +108,8 @@ int sock_port (int fd) {
     NSString *obfs = json[@"obfs"];
     NSString *obfs_param = json[@"obfs_param"];
     BOOL ota = [json[@"ota"] boolValue];
+    NSURL* rootUrl = [Potatso sharedUrl];
+    NSURL* logPath = [rootUrl URLByAppendingPathComponent:shadowsocksLogFile];
     if (host && port && password && authscheme) {
         profile_t profile;
         memset(&profile, 0, sizeof(profile_t));
@@ -119,6 +121,7 @@ int sock_port (int fd) {
         profile.local_port = 0;
         profile.timeout = 600;
         profile.auth = ota;
+        profile.log = strdup([logPath.path UTF8String]);
         if (protocol.length > 0) {
             profile.protocol = strdup([protocol UTF8String]);
         }
