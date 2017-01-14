@@ -315,7 +315,7 @@ extension Manager {
             mainConf["logfile"] = privoxyLogFile
         }
         mainConf["actionsfile"] = userActionUrl!.path!
-
+        mainConf["tolerate-pipelining"] = 1
         let mainContent = mainConf.map { "\($0) \($1)"}.joinWithSeparator("\n")
         try mainContent.writeToURL(Potatso.sharedHttpProxyConfUrl(), atomically: true, encoding: NSUTF8StringEncoding)
 
