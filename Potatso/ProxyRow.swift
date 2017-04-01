@@ -38,11 +38,11 @@ class ProxyRowCell: Cell<Proxy>, CellType {
         if let proxy = row.value {
             self.textLabel?.text = proxy.description
             self.detailTextLabel?.text = proxy.type.description
-            self.imageView?.hidden = false
+            self.imageView?.isHidden = false
             self.imageView?.image = UIImage(named: "Shadowsocks")
         } else {
             self.textLabel?.text = "None".localized()
-            self.imageView?.hidden = true
+            self.imageView?.isHidden = true
         }
         if row.isDisabled {
             self.textLabel?.textColor = "5F5F5F".color

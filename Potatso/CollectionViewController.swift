@@ -26,9 +26,9 @@ class CollectionViewController: SegmentPageVC {
         return ["Rule Set".localized(), "Proxy".localized()]
     }
 
-    override func showPage(index: Int) {
+    override func showPage(_ index: Int) {
         if index < 2 {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(add))
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(add))
         }else {
             navigationItem.rightBarButtonItem = nil
         }
@@ -41,18 +41,18 @@ class CollectionViewController: SegmentPageVC {
             let vc = RuleSetConfigurationViewController(ruleSet: nil)
             navigationController?.pushViewController(vc, animated: true)
         case 1:
-            let alert = UIAlertController(title: "Add Proxy".localized(), message: nil, preferredStyle: .ActionSheet)
-            alert.addAction(UIAlertAction(title: "Import From QRCode".localized(), style: .Default, handler: { (action) in
+            let alert = UIAlertController(title: "Add Proxy".localized(), message: nil, preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Import From QRCode".localized(), style: .default, handler: { (action) in
                 let importer = Importer(vc: self)
                 importer.importConfigFromQRCode()
             }))
-            alert.addAction(UIAlertAction(title: "Manual Settings".localized(), style: .Default, handler: { (action) in
+            alert.addAction(UIAlertAction(title: "Manual Settings".localized(), style: .default, handler: { (action) in
                 let vc = ProxyConfigurationViewController()
                 self.navigationController?.pushViewController(vc, animated: true)
             }))
-            alert.addAction(UIAlertAction(title: "CANCEL".localized(), style: .Cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "CANCEL".localized(), style: .cancel, handler: nil))
             if let presenter = alert.popoverPresentationController {
-                if let rightBtn : View = navigationItem.rightBarButtonItem?.valueForKey("view") as? View {
+                if let rightBtn : View = navigationItem.rightBarButtonItem?.value(forKey: "view") as? View {
                     presenter.sourceView = rightBtn
                     presenter.sourceRect = rightBtn.bounds
                 } else {
@@ -60,7 +60,7 @@ class CollectionViewController: SegmentPageVC {
                     presenter.sourceRect = segmentedControl.bounds
                 }
             }
-            self.presentViewController(alert, animated: true, completion: nil)
+            self.present(alert, animated: true, completion: nil)
         default:
             break
         }

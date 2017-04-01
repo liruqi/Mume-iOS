@@ -21,34 +21,34 @@ struct Importer {
     
     func importConfigFromUrl() {
         var urlTextField: UITextField?
-        let alert = UIAlertController(title: "Import Config From URL".localized(), message: nil, preferredStyle: .Alert)
-        alert.addTextFieldWithConfigurationHandler { (textField) in
+        let alert = UIAlertController(title: "Import Config From URL".localized(), message: nil, preferredStyle: .alert)
+        alert.addTextField { (textField) in
             textField.placeholder = "Input URL".localized()
             urlTextField = textField
         }
-        alert.addAction(UIAlertAction(title: "OK".localized(), style: .Default, handler: { (action) in
+        alert.addAction(UIAlertAction(title: "OK".localized(), style: .default, handler: { (action) in
             if let input = urlTextField?.text {
                 self.onImportInput(input)
             }
         }))
-        alert.addAction(UIAlertAction(title: "CANCEL".localized(), style: .Cancel, handler: nil))
-        viewController?.presentViewController(alert, animated: true, completion: nil)
+        alert.addAction(UIAlertAction(title: "CANCEL".localized(), style: .cancel, handler: nil))
+        viewController?.present(alert, animated: true, completion: nil)
     }
     
     func importConfigFromQRCode() {
         let vc = QRCodeScannerVC()
         vc.resultBlock = { [weak vc] result in
-            vc?.navigationController?.popViewControllerAnimated(true)
+            vc?.navigationController?.popViewController(animated: true)
             self.onImportInput(result)
         }
         vc.errorBlock = { [weak vc] error in
-            vc?.navigationController?.popViewControllerAnimated(true)
+            vc?.navigationController?.popViewController(animated: true)
             self.viewController?.showTextHUD("\(error)", dismissAfterDelay: 1.5)
         }
         viewController?.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func onImportInput(result: String) {
+    func onImportInput(_ result: String) {
         if Proxy.uriIsShadowsocks(result) {
             importSS(result)
         }else {
@@ -56,7 +56,7 @@ struct Importer {
         }
     }
     
-    func importSS(source: String) {
+    func importSS(_ source: String) {
         do {
             let proxy = try Proxy(dictionary: ["uri": source])
             do {
@@ -71,13 +71,13 @@ struct Importer {
         }
     }
     
-    func importConfig(source: String, isURL: Bool) {
+    func importConfig(_ source: String, isURL: Bool) {
         viewController?.showProgreeHUD("Importing Config...".localized())
         Async.background(after: 1) {
             let config = Config()
             do {
                 if isURL {
-                    if let url = NSURL(string: source) {
+                    if let url = URL(string: source) {
                         try config.setup(url: url)
                     }
                 }else {
@@ -91,7 +91,7 @@ struct Importer {
         }
     }
     
-    func onConfigSaveCallback(success: Bool, error: ErrorType?) {
+    func onConfigSaveCallback(_ success: Bool, error: ErrorProtocol?) {
         Async.main(after: 0.5) {
             self.viewController?.hideHUD()
             if !success {
@@ -104,7 +104,7 @@ struct Importer {
                 }
             }else {
                 self.viewController?.showTextHUD("Import Success".localized(), dismissAfterDelay: 1.5)
-                let keyWindow = UIApplication.sharedApplication().keyWindow
+                let keyWindow = UIApplication.shared.keyWindow
                 let tabBarVC:UITabBarController = (keyWindow?.rootViewController) as! UITabBarController
                 tabBarVC.selectedIndex = 0
             }

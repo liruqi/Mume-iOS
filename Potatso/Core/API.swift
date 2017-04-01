@@ -17,37 +17,37 @@ struct API {
     static let URL = "https://api.liruqi.info/"
 
     enum Path {
-        case RuleSets
-        case RuleSet(String)
+        case ruleSets
+        case ruleSet(String)
 
         var url: String {
             let path: String
             switch self {
-            case .RuleSets:
+            case .ruleSets:
                 path = "mume-rulesets.php"
-            case .RuleSet(let uuid):
+            case .ruleSet(let uuid):
                 path = "ruleset/\(uuid).json"
             }
             return API.URL + path
         }
     }
     
-    static func getRuleSets(callback: Alamofire.Response<[RuleSet], NSError> -> Void) {
-        let lang = NSLocale.preferredLanguages()[0]
-        let versionCode: AnyObject? = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"]
+    static func getRuleSets(_ callback: (Alamofire.Response<[RuleSet], NSError>) -> Void) {
+        let lang = Locale.preferredLanguages[0]
+        let versionCode: AnyObject? = Bundle.main.infoDictionary!["CFBundleShortVersionString"]
         NSLog("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
         Alamofire.request(.GET, Path.RuleSets.url, parameters: ["lang": lang, "version": versionCode!]).responseArray(completionHandler: callback)
     }
     
-    static func getProxySets(callback: [Dictionary<String, String>] -> Void) {
+    static func getProxySets(_ callback: ([Dictionary<String, String>]) -> Void) {
         let kCloudProxySets = "kCloudProxySets"
-        let lang = NSLocale.preferredLanguages()[0]
-        let versionCode: AnyObject? = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"]
+        let lang = Locale.preferredLanguages[0]
+        let versionCode: AnyObject? = Bundle.main.infoDictionary!["CFBundleShortVersionString"]
         NSLog("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
         
-        if let data = Potatso.sharedUserDefaults().dataForKey(kCloudProxySets) {
+        if let data = Potatso.sharedUserDefaults().data(forKey: kCloudProxySets) {
             do {
-                if let JSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [Dictionary<String, String>] {
+                if let JSON = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [Dictionary<String, String>] {
                     return callback(JSON)
                 }
             } catch {
@@ -83,7 +83,7 @@ extension RuleSet: Mappable {
     }
 
     // Mappable
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
         uuid      <- map["id"]
         name      <- map["name"]
         createAt  <- (map["created_at"], DateTransform())
@@ -96,7 +96,7 @@ extension RuleSet: Mappable {
 
 extension RuleSet {
 
-    static func addRemoteObject(ruleset: RuleSet, update: Bool = true) throws {
+    static func addRemoteObject(_ ruleset: RuleSet, update: Bool = true) throws {
         ruleset.isSubscribe = true
         ruleset.editable = false
         let id = ruleset.uuid
@@ -110,7 +110,7 @@ extension RuleSet {
         try DBUtils.add(ruleset)
     }
 
-    static func addRemoteArray(rulesets: [RuleSet], update: Bool = true) throws {
+    static func addRemoteArray(_ rulesets: [RuleSet], update: Bool = true) throws {
         for ruleset in rulesets {
             try addRemoteObject(ruleset, update: update)
         }
@@ -124,7 +124,7 @@ extension Rule: Mappable {
         guard let pattern = map.JSONDictionary["pattern"] as? String else {
             return nil
         }
-        guard let actionStr = map.JSONDictionary["action"] as? String, action = RuleAction(rawValue: actionStr) else {
+        guard let actionStr = map.JSONDictionary["action"] as? String, let action = RuleAction(rawValue: actionStr) else {
             return nil
         }
         guard let typeStr = map.JSONDictionary["type"] as? String, type = MMRuleType(rawValue: typeStr) else {
@@ -134,7 +134,7 @@ extension Rule: Mappable {
     }
 
     // Mappable
-    public func mapping(map: Map) {
+    public func mapping(_ map: Map) {
     }
 }
 
@@ -142,26 +142,26 @@ extension Rule: Mappable {
 
 struct DateTransform: TransformType {
 
-    func transformFromJSON(value: AnyObject?) -> Double? {
+    func transformFromJSON(_ value: AnyObject?) -> Double? {
         guard let dateStr = value as? String else {
-            return NSDate().timeIntervalSince1970
+            return Date().timeIntervalSince1970
         }
-        return ISO8601DateFormatter().dateFromString(dateStr)?.timeIntervalSince1970
+        return ISO8601DateFormatter.ISO8601DateFormatter().date(from: dateStr)?.timeIntervalSince1970
     }
 
-    func transformToJSON(value: Double?) -> AnyObject? {
+    func transformToJSON(_ value: Double?) -> AnyObject? {
         guard let v = value else {
             return nil
         }
-        let date = NSDate(timeIntervalSince1970: v)
-        return ISO8601DateFormatter().stringFromDate(date)
+        let date = Date(timeIntervalSince1970: v)
+        return ISO8601DateFormatter.ISO8601DateFormatter().string(from: date)
     }
 
 }
 
 extension Alamofire.Request {
 
-    public static func ObjectMapperSerializer<T: Mappable>(keyPath: String?, mapToObject object: T? = nil) -> ResponseSerializer<T, NSError> {
+    public static func ObjectMapperSerializer<T: Mappable>(_ keyPath: String?, mapToObject object: T? = nil) -> ResponseSerializer<T, NSError> {
         return ResponseSerializer { request, response, data, error in
             NSLog("Alamofire response ===> request: \(request.debugDescription), response: \(response.debugDescription)")
             guard error == nil else {
@@ -211,11 +211,11 @@ extension Alamofire.Request {
      - returns: The request.
      */
 
-    public func responseObject<T: Mappable>(queue queue: dispatch_queue_t? = nil, keyPath: String? = nil, mapToObject object: T? = nil, completionHandler: Response<T, NSError> -> Void) -> Self {
+    public func responseObject<T: Mappable>(queue: dispatch_queue_t? = nil, keyPath: String? = nil, mapToObject object: T? = nil, completionHandler: (Response<T, NSError>) -> Void) -> Self {
         return response(queue: queue, responseSerializer: Alamofire.Request.ObjectMapperSerializer(keyPath, mapToObject: object), completionHandler: completionHandler)
     }
 
-    public static func ObjectMapperArraySerializer<T: Mappable>(keyPath: String?) -> ResponseSerializer<[T], NSError> {
+    public static func ObjectMapperArraySerializer<T: Mappable>(_ keyPath: String?) -> ResponseSerializer<[T], NSError> {
         return ResponseSerializer { request, response, data, error in
             NSLog("Alamofire response ===> request: \(request.debugDescription), response: \(response.debugDescription)")
             guard error == nil else {
@@ -266,11 +266,11 @@ extension Alamofire.Request {
 
      - returns: The request.
      */
-    public func responseArray<T: Mappable>(queue queue: dispatch_queue_t? = nil, keyPath: String? = nil, completionHandler: Response<[T], NSError> -> Void) -> Self {
+    public func responseArray<T: Mappable>(queue: dispatch_queue_t? = nil, keyPath: String? = nil, completionHandler: (Response<[T], NSError>) -> Void) -> Self {
         return response(queue: queue, responseSerializer: Alamofire.Request.ObjectMapperArraySerializer(keyPath), completionHandler: completionHandler)
     }
 
-    private static func logError(error: NSError, request: NSURLRequest?, response: NSURLResponse?) {
+    fileprivate static func logError(_ error: NSError, request: NSURLRequest?, response: NSURLResponse?) {
         NSLog("ObjectMapperSerializer failure: \(error), request: \(request?.debugDescription), response: \(response.debugDescription)")
     }
 }

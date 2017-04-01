@@ -11,7 +11,7 @@ import Eureka
 
 class DashboardVC: FormViewController {
 
-    var timer: NSTimer?
+    var timer: Timer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,47 +32,47 @@ class DashboardVC: FormViewController {
         
         section <<< SwitchRow("Open logging") {
             $0.title = "Logging".localized()
-            $0.value = LoggingLevel.currentLoggingLevel != .OFF 
+            $0.value = LoggingLevel.currentLoggingLevel != .off 
         }.onChange({ [unowned self] (row) in
-            LoggingLevel.currentLoggingLevel = (LoggingLevel.currentLoggingLevel == .OFF ? .DEBUG : .OFF)
+            LoggingLevel.currentLoggingLevel = (LoggingLevel.currentLoggingLevel == .off ? .debug : .off)
             self.updateForm()
         })
         
-        if LoggingLevel.currentLoggingLevel != .OFF {
+        if LoggingLevel.currentLoggingLevel != .off {
             section <<< LabelRow() {
                 $0.title = "stderr".localized()
                 }.cellSetup({ (cell, row) -> () in
-                    cell.accessoryType = .DisclosureIndicator
-                    cell.selectionStyle = .Default
+                    cell.accessoryType = .disclosureIndicator
+                    cell.selectionStyle = .default
                 }).onCellSelection({ [unowned self](cell, row) -> () in
                     cell.setSelected(false, animated: true)
                     self.showLogs()
                 }) <<< LabelRow() {
                     $0.title = "Privoxy".localized()
                 }.cellSetup({ (cell, row) -> () in
-                    cell.accessoryType = .DisclosureIndicator
-                    cell.selectionStyle = .Default
+                    cell.accessoryType = .disclosureIndicator
+                    cell.selectionStyle = .default
                 }).onCellSelection({ [unowned self](cell, row) -> () in
                     cell.setSelected(false, animated: true)
                     self.showPrivoxyLogs()
                 }) <<< LabelRow() {
                     $0.title = "Shadowsocks".localized()
                 }.cellSetup({ (cell, row) -> () in
-                    cell.accessoryType = .DisclosureIndicator
-                    cell.selectionStyle = .Default
+                    cell.accessoryType = .disclosureIndicator
+                    cell.selectionStyle = .default
                 }).onCellSelection({ [unowned self](cell, row) -> () in
                     cell.setSelected(false, animated: true)
                     self.showShadowsocksLogs()
                 })
         } else {
             // try remove log file
-            let fileManager = NSFileManager.defaultManager()
-            try? fileManager.removeItemAtURL(Potatso.sharedLogUrl())
+            let fileManager = FileManager.default
+            try? fileManager.removeItem(at: Potatso.sharedLogUrl())
             
             let rootUrl = Potatso.sharedUrl()
-            let logDir = rootUrl.URLByAppendingPathComponent("log")!
-            let logPath = logDir.URLByAppendingPathComponent(privoxyLogFile)
-            try? fileManager.removeItemAtURL(logPath!)
+            let logDir = rootUrl.appendingPathComponent("log")!
+            let logPath = logDir.appendingPathComponent(privoxyLogFile)
+            try? fileManager.removeItem(at: logPath!)
         }
         return section
     }
@@ -89,29 +89,29 @@ class DashboardVC: FormViewController {
 
     func showShadowsocksLogs() {
         let rootUrl = Potatso.sharedUrl()
-        let logPath = rootUrl.URLByAppendingPathComponent(shadowsocksLogFile)
+        let logPath = rootUrl.appendingPathComponent(shadowsocksLogFile)
         print ("shadowsocks log: %@", logPath!)
         navigationController?.pushViewController(LogDetailViewController(path: logPath!.path!), animated: true)
     }
     
     func showPrivoxyLogs() {
         let rootUrl = Potatso.sharedUrl()
-        let logDir = rootUrl.URLByAppendingPathComponent("log")!
-        let logPath = logDir.URLByAppendingPathComponent(privoxyLogFile)
+        let logDir = rootUrl.appendingPathComponent("log")!
+        let logPath = logDir.appendingPathComponent(privoxyLogFile)
         print ("privoxy log: %@", logPath!)
         navigationController?.pushViewController(LogDetailViewController(path: logPath!.path!), animated: true)
     }
     
-    lazy var startTimeFormatter: NSDateFormatter = {
-        let f = NSDateFormatter()
-        f.dateStyle = .MediumStyle
-        f.timeStyle = .MediumStyle
+    lazy var startTimeFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateStyle = .medium
+        f.timeStyle = .medium
         return f
     }()
 
-    lazy var durationFormatter: NSDateComponentsFormatter = {
-        let f = NSDateComponentsFormatter()
-        f.unitsStyle = .Abbreviated
+    lazy var durationFormatter: DateComponentsFormatter = {
+        let f = DateComponentsFormatter()
+        f.unitsStyle = .abbreviated
         return f
     }()
 

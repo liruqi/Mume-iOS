@@ -29,22 +29,22 @@ public func setupDefaultReaml() {
 }
 
 
-public class BaseModel: Object {
-    public dynamic var uuid = NSUUID().UUIDString
-    public dynamic var createAt = NSDate().timeIntervalSince1970
-    public dynamic var updatedAt = NSDate().timeIntervalSince1970
+open class BaseModel: Object {
+    open dynamic var uuid = UUID().uuidString
+    open dynamic var createAt = Date().timeIntervalSince1970
+    open dynamic var updatedAt = Date().timeIntervalSince1970
 
-    override public static func primaryKey() -> String? {
+    override open static func primaryKey() -> String? {
         return "uuid"
     }
     
-    static var dateFormatter: NSDateFormatter {
-        let f = NSDateFormatter()
+    static var dateFormatter: DateFormatter {
+        let f = DateFormatter()
         f.dateFormat = "MM-dd HH:mm:ss"
         return f
     }
 
-    public func validate() throws {
+    open func validate() throws {
         //
     }
 

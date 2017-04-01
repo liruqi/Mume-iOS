@@ -23,7 +23,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
     
     let wormhole = Manager.sharedManager.wormhole
     
-    var timer: NSTimer?
+    var timer: Timer?
     
     var thresholdRetry = 0
 
@@ -36,9 +36,9 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
 
     var socket: GCDAsyncSocket!
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        socket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0))
+        socket = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background))
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -52,19 +52,19 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
         updateLayout()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         startTimer()
         self.reload()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         stopTimer()
     }
 
     func tryConnectStatusSocket() {
-        let port = Potatso.sharedUserDefaults().integerForKey("tunnelStatusPort")
+        let port = Potatso.sharedUserDefaults().integer(forKey: "tunnelStatusPort")
         guard port > 0 else {
             updateStatus(false)
             openAppIfNeeded()
@@ -72,7 +72,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
         }
         do {
             socket.delegate = self
-            try socket.connectToHost("127.0.0.1", onPort: UInt16(port), withTimeout: 0.9)
+            try socket.connect(toHost: "127.0.0.1", onPort: UInt16(port), withTimeout: 0.9)
         } catch {
             updateStatus(false)
             openAppIfNeeded()
@@ -80,7 +80,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
     }
 
     func startTimer() {
-        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(TodayViewController.tryConnectStatusSocket), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(TodayViewController.tryConnectStatusSocket), userInfo: nil, repeats: true)
         timer?.fire()
     }
 
@@ -92,21 +92,21 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
 
     // MARK: - Socket
 
-    func socket(sock: GCDAsyncSocket!, didConnectToHost host: String!, port: UInt16) {
+    func socket(_ sock: GCDAsyncSocket!, didConnectToHost host: String!, port: UInt16) {
         updateStatus(true)
         sock.delegate = nil
         sock.disconnect()
     }
 
-    func socketDidDisconnect(sock: GCDAsyncSocket!, withError err: NSError!) {
+    func socketDidDisconnect(_ sock: GCDAsyncSocket!, withError err: NSError!) {
         updateStatus(false)
         openAppIfNeeded()
     }
 
-    func updateStatus(current: Bool) {
+    func updateStatus(_ current: Bool) {
         if status != current {
             status = current
-            dispatch_async(dispatch_get_main_queue(), { 
+            DispatchQueue.main.async(execute: { 
                 self.reload()
             })
         }
@@ -119,42 +119,42 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
         if thresholdRetry > 3 {
             thresholdRetry = 0
             statusExpected = false
-            let url = NSURL(string: "mume://on")
-            self.extensionContext?.openURL(url!, completionHandler:nil)
+            let url = URL(string: "mume://on")
+            self.extensionContext?.open(url!, completionHandler:nil)
         }
         thresholdRetry += 1
     }
     
-    func switchVPN(on: Bool) {
+    func switchVPN(_ on: Bool) {
         if !on {
             wormhole.passMessageObject("", identifier: "stopTunnel")
         } else {
             // try on-demand first
-            let url = NSURL(string: "https://on-demand.connect.mume.vpn/start/")
-            let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {data, reponse, error in
+            let url = URL(string: "https://on-demand.connect.mume.vpn/start/")
+            let task = URLSession.shared.dataTask(with: url!, completionHandler: {data, reponse, error in
                 if (error != nil) {
                     print(error.debugDescription)
                 }
-            }
+            }) 
             task.resume()
         }
         statusExpected = on
     }
     
-    func widgetMarginInsetsForProposedMarginInsets(defaultMarginInsets: UIEdgeInsets) -> UIEdgeInsets {
+    func widgetMarginInsets(forProposedMarginInsets defaultMarginInsets: UIEdgeInsets) -> UIEdgeInsets {
         var inset = defaultMarginInsets
         inset.bottom = inset.top
         return inset
     }
 
-    func widgetPerformUpdateWithCompletionHandler(completionHandler: ((NCUpdateResult) -> Void)) {
+    func widgetPerformUpdate(completionHandler: (@escaping (NCUpdateResult) -> Void)) {
         // Perform any setup necessary in order to update the view.
 
         // If an error is encountered, use NCUpdateResult.Failed
         // If there's no update required, use NCUpdateResult.NoData
         // If there's an update, use NCUpdateResult.NewData
         
-        completionHandler(NCUpdateResult.NewData)
+        completionHandler(NCUpdateResult.newData)
     }
     
     func updateLayout() {
@@ -168,12 +168,12 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
     }
     
     lazy var tableView: CurrentGroupCell = {
-        let v = CurrentGroupCell(frame: CGRectZero)
+        let v = CurrentGroupCell(frame: CGRect.zero)
         return v
     }()
     
     func reload() {
-        let name = Potatso.sharedUserDefaults().objectForKey(kDefaultGroupName) as? String
+        let name = Potatso.sharedUserDefaults().object(forKey: kDefaultGroupName) as? String
         tableView.config(name ?? "Default".localized(), status: status, switchVPN: switchVPN)
     }
     

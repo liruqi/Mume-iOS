@@ -15,7 +15,7 @@ let appID = "1144787928"
 
 class AppInitializer: NSObject, AppLifeCycleProtocol {
     
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         configAppirater()
         #if !DEBUG
             Fabric.with([Answers.self, Crashlytics.self])

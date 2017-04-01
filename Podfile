@@ -4,6 +4,7 @@ platform :ios, '9.0'
 use_frameworks!
 
 def library
+    pod 'Alamofire'
     pod 'KissXML'
     pod 'KissXML/libxml_module'
     pod 'ICSMainFramework', :path => "./Library/ICSMainFramework/"
@@ -19,23 +20,23 @@ def socket
 end
 
 def model
-    pod 'RealmSwift', '~> 1.1.0'
+    pod 'RealmSwift'
 end
 
 target "Potatso" do
+    pod 'Alamofire'
     pod 'Aspects', :path => "./Library/Aspects/"
-    pod 'Cartography', '~> 0.7'
-    pod 'AsyncSwift', '~> 1.7'
-    pod 'SwiftColor', :git => 'https://github.com/liruqi/SwiftColor.git'
+    pod 'Cartography'
+    pod 'AsyncSwift'
+    pod 'SwiftColor'
     pod 'Appirater'
-    pod 'Eureka', :git => 'https://github.com/xmartlabs/Eureka.git', :branch => 'swift2.3'
+    pod 'Eureka'
     pod 'MBProgressHUD'
-    pod 'CallbackURLKit', '~> 0.2'
+    pod 'CallbackURLKit'
     pod 'SVPullToRefresh', :git => 'https://github.com/samvermette/SVPullToRefresh'
     pod 'ISO8601DateFormatter', '~> 0.8'
-    pod 'Alamofire', '~> 3.5'
-    pod 'ObjectMapper', '~> 1.5.0'
-    pod 'PSOperations', '~> 2.3'
+    pod 'ObjectMapper'
+    pod 'PSOperations'
     pod 'Fabric'
     pod 'Crashlytics'
     tunnel
@@ -54,8 +55,8 @@ target "PacketProcessor" do
 end
 
 target "TodayWidget" do
-    pod 'Cartography', '~> 0.7'
-    pod 'SwiftColor', :git => 'https://github.com/liruqi/SwiftColor.git'
+    pod 'Cartography'
+    pod 'SwiftColor'
     library
     socket
     model
@@ -74,7 +75,6 @@ post_install do |installer|
     installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|
             config.build_settings['ENABLE_BITCODE'] = 'NO'
-            config.build_settings['SWIFT_VERSION'] = '2.3'
         end
     end
 end

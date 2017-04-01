@@ -15,9 +15,9 @@ class ProxySelectionViewController: FormViewController {
     
     var proxies: [Proxy] = []
     var selectedProxies: NSMutableSet
-    var callback: ([Proxy] -> Void)?
+    var callback: (([Proxy]) -> Void)?
     
-    init(selectedProxies: [Proxy], callback: ([Proxy] -> Void)?) {
+    init(selectedProxies: [Proxy], callback: (([Proxy]) -> Void)?) {
         self.selectedProxies = NSMutableSet(array: selectedProxies)
         self.callback = callback
         super.init(nibName: nil, bundle: nil)
@@ -32,7 +32,7 @@ class ProxySelectionViewController: FormViewController {
         navigationItem.title = "Choose Proxy".localized()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         generateForm()
     }
@@ -47,7 +47,7 @@ class ProxySelectionViewController: FormViewController {
             form[0]
                 <<< CheckRow(proxy.description) {
                     $0.title = proxy.description
-                    $0.value = selectedProxies.containsObject(proxy)
+                    $0.value = selectedProxies.contains(proxy)
             }.onChange({ [unowned self] (row) in
                 self.selectProxy(row)
             })
@@ -63,19 +63,19 @@ class ProxySelectionViewController: FormViewController {
         tableView?.reloadData()
     }
     
-    func selectProxy(selectedRow: CheckRow) {
+    func selectProxy(_ selectedRow: CheckRow) {
         selectedProxies.removeAllObjects()
         let values = form.values()
         for proxy in proxies {
-            if let checked = values[proxy.host] as? Bool where checked && proxy.description == selectedRow.title {
-                selectedProxies.addObject(proxy)
+            if let checked = values[proxy.host] as? Bool, checked && proxy.description == selectedRow.title {
+                selectedProxies.add(proxy)
             }
         }
         self.callback?(selectedProxies.allObjects as! [Proxy])
         close()
     }
     
-    func showProxyConfiguration(proxy: Proxy?) {
+    func showProxyConfiguration(_ proxy: Proxy?) {
         let vc = ProxyConfigurationViewController(upstreamProxy: proxy)
         navigationController?.pushViewController(vc, animated: true)
     }

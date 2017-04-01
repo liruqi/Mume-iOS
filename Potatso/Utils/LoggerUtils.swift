@@ -8,9 +8,9 @@
 
 import Foundation
 
-extension ErrorType {
+extension ErrorProtocol {
 
-    func log(message: String?) {
+    func log(_ message: String?) {
         if let message = message {
             NSLog("\(message): \(self)")
         }else {
