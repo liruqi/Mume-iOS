@@ -19,7 +19,6 @@
 @property (nonatomic, copy) NSString* proxyType;
 @property (nonatomic, copy) HttpProxyCompletion httpCompletion;
 @property (nonatomic, copy) ShadowsocksProxyCompletion shadowsocksCompletion;
-- (void)onSocksProxyCallback: (int)fd;
 - (void)onHttpProxyCallback: (int)fd;
 - (void)onShadowsocksCallback:(int)fd;
 @end
