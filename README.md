@@ -7,6 +7,7 @@ Mume is an iOS client that implements custom proxies with the leverage of Networ
 Currently, Mume is compatible with following proxies:
 
 - [Shadowsocks](https://shadowsocks.org)
+- [SOCKS5](https://www.ietf.org/rfc/rfc1928.txt)
 - [ShadowsocksR](https://github.com/breakwa11/shadowsocks-rss)
 
 [Join Telegram Group](https://telegram.me/mumevpn) to chat with users.
