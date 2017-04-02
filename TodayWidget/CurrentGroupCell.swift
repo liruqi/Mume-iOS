@@ -23,10 +23,10 @@ class CurrentGroupCell: UIView {
     
     func onSwitchValueChanged(_ sender: UISwitch) {
         switchButton.isHidden = true
-        switchVPN?(on: sender.isOn)
+        switchVPN?(sender.isOn)
     }
     
-    func config(_ name: String?, status: Bool, switchVPN: ((on: Bool) -> Void)?) {
+    func config(_ name: String?, status: Bool, switchVPN: ((_ on: Bool) -> Void)?) {
         nameLabel.text = name ?? "None".localized()
         switchButton.isHidden = false
         switchButton.addTarget(self, action: #selector(self.onSwitchValueChanged), for: .touchUpInside)

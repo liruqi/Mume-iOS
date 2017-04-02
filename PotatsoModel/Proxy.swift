@@ -179,7 +179,7 @@ extension Proxy {
 // Import
 extension Proxy {
     
-    public convenience init(dictionary: [String: AnyObject]) throws {
+    public convenience init(dictionary: [String: Any]) throws {
         self.init()
         if let uriString = dictionary["uri"] as? String {
             if uriString.lowercased().hasPrefix(Proxy.ssUriPrefix) {

@@ -98,7 +98,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
         sock.disconnect()
     }
 
-    func socketDidDisconnect(_ sock: GCDAsyncSocket!, withError err: NSError!) {
+    func socketDidDisconnect(_ sock: GCDAsyncSocket!, withError err: Error!) {
         updateStatus(false)
         openAppIfNeeded()
     }
@@ -127,7 +127,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
     
     func switchVPN(_ on: Bool) {
         if !on {
-            wormhole.passMessageObject("", identifier: "stopTunnel")
+            wormhole.passMessageObject(NSString(), identifier: "stopTunnel")
         } else {
             // try on-demand first
             let url = URL(string: "https://on-demand.connect.mume.vpn/start/")

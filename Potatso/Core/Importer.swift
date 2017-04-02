@@ -36,10 +36,14 @@ struct Importer {
     }
     
     func importConfigFromQRCode() {
-        let vc = QRCodeScannerVC()
+        guard let vc = QRCodeScannerVC() else {
+            return
+        }
         vc.resultBlock = { [weak vc] result in
             vc?.navigationController?.popViewController(animated: true)
-            self.onImportInput(result)
+            if let result = result {
+                self.onImportInput(result)
+            }
         }
         vc.errorBlock = { [weak vc] error in
             vc?.navigationController?.popViewController(animated: true)
@@ -91,7 +95,7 @@ struct Importer {
         }
     }
     
-    func onConfigSaveCallback(_ success: Bool, error: ErrorProtocol?) {
+    func onConfigSaveCallback(_ success: Bool, error: Error?) {
         Async.main(after: 0.5) {
             self.viewController?.hideHUD()
             if !success {

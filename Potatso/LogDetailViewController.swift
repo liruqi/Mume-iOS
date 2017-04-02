@@ -53,7 +53,7 @@ class LogDetailViewController: UIViewController {
             return
         }
         let queue = DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background)
-        source = DispatchSource.makeReadSource(fileDescriptor: UInt(fd), queue: queue) /*Migrator FIXME: Use DispatchSourceRead to avoid the cast*/ as! DispatchSource
+        source = DispatchSource.makeReadSource(fileDescriptor: fd, queue: queue) /*Migrator FIXME: Use DispatchSourceRead to avoid the cast*/ as! DispatchSource
         guard let source = source else {
             return
         }
@@ -61,7 +61,7 @@ class LogDetailViewController: UIViewController {
             self?.updateUI()
         }
         source.setCancelHandler {
-            let fd = source.handle;
+            let fd = (source as DispatchSourceProtocol).handle
             Darwin.close(Int32(fd));
         }
         source.resume();
@@ -71,15 +71,15 @@ class LogDetailViewController: UIViewController {
         guard let source = source else {
             return
         }
-        let pending = source.data
+        let pending = (source as DispatchSourceProtocol).data
         let size = Int(min(pending, 65535))
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
         defer {
-            buffer.deallocateCapacity(size)
+            buffer.deallocate(capacity: size)
         }
         let readSize = Darwin.read(fd, buffer, size)
         data.append(buffer, length: readSize)
-        if let content = String(data: data, encoding: String.Encoding.utf8) {
+        if let content = String(data: data as Data, encoding: String.Encoding.utf8) {
             logs.add(content)
             if logs.count > 16 {
                 logs.removeObject(at: 0)

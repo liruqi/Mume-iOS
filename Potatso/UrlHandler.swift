@@ -16,12 +16,12 @@ import CallbackURLKit
 class UrlHandler: NSObject, AppLifeCycleProtocol {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        let manager = Manager.sharedInstance
-        manager.callbackURLScheme = Manager.URLSchemes?.first
+        let manager = CallbackURLKit.Manager.shared
+        manager.callbackURLScheme = CallbackURLKit.Manager.urlSchemes?.first
         for action in [URLAction.ON, URLAction.OFF, URLAction.SWITCH] {
             manager[action.rawValue] = { parameters, success, failure, cancel in
                 action.perform(nil, parameters: parameters) { error in
-                    Async.main(after: 1, block: {
+                    Async.main(after: 1, {
                         if let error = error {
                             failure(error as NSError)
                         }else {
@@ -66,7 +66,7 @@ enum URLAction: String {
     case SWITCH = "switch"
     case XCALLBACK = "x-callback-url"
 
-    func perform(_ url: URL?, parameters: Parameters, completion: ((ErrorProtocol?) -> Void)? = nil) -> Bool {
+    func perform(_ url: URL?, parameters: Parameters, completion: ((Error?) -> Void)? = nil) -> Bool {
         switch self {
         case .ON:
             Manager.sharedManager.startVPN({ (manager, error) in
@@ -88,7 +88,7 @@ enum URLAction: String {
             })
         case .XCALLBACK:
             if let url = url {
-                return Manager.sharedInstance.handleOpenURL(url)
+                return CallbackURLKit.Manager.shared.handleOpen(url: url)
             }
         }
         return true
@@ -96,11 +96,11 @@ enum URLAction: String {
 
     func autoClose(_ parameters: Parameters) {
         var autoclose = false
-        if let value = parameters["autoclose"] where value.lowercased() == "true" || value.lowercased() == "1" {
+        if let value = parameters["autoclose"], value.lowercased() == "true" || value.lowercased() == "1" {
             autoclose = true
         }
         if autoclose {
-            Async.main(after: 1, block: {
+            Async.main(after: 1, {
                 UIControl().sendAction("suspend", to: UIApplication.shared, for: nil)
             })
         }

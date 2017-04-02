@@ -157,7 +157,7 @@ open class Manager {
                     return
                 }
                 if (r.statusCode == 200 && data.count > 1024) {
-                    let result = (try? data.write(to: toURL!, options: [.atomic])) != nil
+                    let result = (try? data.write(to: toURL)) != nil
                     if result {
                         let thisM = r.allHeaderFields["Last-Modified"];
                         if let m = thisM {
@@ -265,7 +265,7 @@ extension Manager {
     
     func generateGeneralConfig() throws {
         let confURL = Potatso.sharedGeneralConfUrl()
-        let json: NSDictionary = ["dns": defaultConfigGroup.dns ?? ""]
+        let json: NSDictionary = ["dns": defaultConfigGroup.dns]
         do {
             try json.jsonString()?.write(to: confURL, atomically: true, encoding: String.Encoding.utf8)
         } catch {
@@ -278,9 +278,11 @@ extension Manager {
         var content = ""
         if let upstreamProxy = upstreamProxy {
             if upstreamProxy.type == .Shadowsocks || upstreamProxy.type == .ShadowsocksR {
-                content = ["type": upstreamProxy.type.rawValue, "host": upstreamProxy.host, "port": upstreamProxy.port, "password": upstreamProxy.password ?? "", "authscheme": upstreamProxy.authscheme ?? "", "ota": upstreamProxy.ota, "protocol": upstreamProxy.ssrProtocol ?? "", "obfs": upstreamProxy.ssrObfs ?? "", "obfs_param": upstreamProxy.ssrObfsParam ?? ""].jsonString() ?? ""
+                let dict: NSDictionary = ["type": upstreamProxy.type.rawValue, "host": upstreamProxy.host, "port": upstreamProxy.port, "password": upstreamProxy.password ?? "", "authscheme": upstreamProxy.authscheme ?? "", "ota": upstreamProxy.ota, "protocol": upstreamProxy.ssrProtocol ?? "", "obfs": upstreamProxy.ssrObfs ?? "", "obfs_param": upstreamProxy.ssrObfsParam ?? ""]
+                content = dict.jsonString() ?? ""
             } else if upstreamProxy.type == .Socks5 {
-                content = ["type": upstreamProxy.type.rawValue, "host": upstreamProxy.host, "port": upstreamProxy.port, "password": upstreamProxy.password ?? "", "authscheme": upstreamProxy.authscheme ?? ""].jsonString() ?? ""
+                let dict: NSDictionary = ["type": upstreamProxy.type.rawValue, "host": upstreamProxy.host, "port": upstreamProxy.port, "password": upstreamProxy.password ?? "", "authscheme": upstreamProxy.authscheme ?? ""]
+                content = dict.jsonString() ?? ""
             }
         }
         try content.write(to: confURL, atomically: true, encoding: String.Encoding.utf8)
@@ -294,26 +296,27 @@ extension Manager {
         let logDir = rootUrl.appendingPathComponent("log").path
         let maxminddbPath = Potatso.sharedUrl().appendingPathComponent("GeoLite2-Country.mmdb").path
         let userActionUrl = confDirUrl.appendingPathComponent("potatso.action")
-        for p in [confDirUrl!.path!, templateDirPath, temporaryDirPath, logDir] {
+        for p in [confDirUrl.path, templateDirPath, temporaryDirPath, logDir] {
             if !FileManager.default.fileExists(atPath: p) {
                 _ = try? FileManager.default.createDirectory(atPath: p, withIntermediateDirectories: true, attributes: nil)
             }
         }
-        var mainConf: [String: AnyObject] = [:]
-        if let path = Bundle.main.path(forResource: "proxy", ofType: "plist"), let defaultConf = NSDictionary(contentsOfFile: path) as? [String: AnyObject] {
+        
+        var mainConf = NSMutableDictionary()
+        if let path = Bundle.main.path(forResource: "proxy", ofType: "plist"), let defaultConf = NSMutableDictionary(contentsOfFile: path) {
             mainConf = defaultConf
         }
-        mainConf["confdir"] = confDirUrl.path!
+        mainConf["confdir"] = confDirUrl.path
         mainConf["templdir"] = templateDirPath
         mainConf["logdir"] = logDir
         mainConf["mmdbpath"] = maxminddbPath
         mainConf["global-mode"] = defaultToProxy
 //        mainConf["debug"] = 1024+65536+1
-        mainConf["debug"] = 131071
+        mainConf["debug"] = "131071"
         if LoggingLevel.currentLoggingLevel != .off {
             mainConf["logfile"] = privoxyLogFile
         }
-        mainConf["actionsfile"] = userActionUrl!.path!
+        mainConf["actionsfile"] = userActionUrl.path
         mainConf["tolerate-pipelining"] = 1
         let mainContent = mainConf.map { "\($0) \($1)"}.joined(separator: "\n")
         try mainContent.write(to: Potatso.sharedHttpProxyConfUrl(), atomically: true, encoding: String.Encoding.utf8)
@@ -355,14 +358,14 @@ extension Manager {
         actionContent.append(contentsOf: Pollution.dnsList.map({ "DNS-IP-CIDR, \($0)/32, PROXY" }))
 
         let userActionString = actionContent.joined(separator: "\n")
-        try userActionString.write(toFile: userActionUrl!.path!, atomically: true, encoding: String.Encoding.utf8)
+        try userActionString.write(toFile: userActionUrl.path, atomically: true, encoding: String.Encoding.utf8)
     }
 
 }
 
 extension Manager {
     
-    public func isVPNStarted(_ complete: (Bool, NETunnelProviderManager?) -> Void) {
+    public func isVPNStarted(_ complete: @escaping (Bool, NETunnelProviderManager?) -> Void) {
         loadProviderManager { (manager) -> Void in
             if let manager = manager {
                 complete(manager.connection.status == .connected, manager)

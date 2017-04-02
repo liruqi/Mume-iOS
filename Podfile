@@ -34,7 +34,6 @@ target "Potatso" do
     pod 'MBProgressHUD'
     pod 'CallbackURLKit'
     pod 'SVPullToRefresh', :git => 'https://github.com/samvermette/SVPullToRefresh'
-    pod 'ISO8601DateFormatter', '~> 0.8'
     pod 'ObjectMapper'
     pod 'PSOperations'
     pod 'Fabric'

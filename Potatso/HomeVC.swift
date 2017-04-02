@@ -90,7 +90,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     
     // MARK: - HomePresenter Protocol
 
-    func handleRefreshUI(_ error: ErrorProtocol?) {
+    func handleRefreshUI(_ error: Error?) {
         if presenter.group.isDefault {
             let vpnStatus = Manager.sharedManager.vpnStatus
             if status == .connecting {
@@ -286,7 +286,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         if editingStyle == .delete {
             do {
                 try defaultRealm.write {
-                    presenter.group.ruleSets.removeAtIndex(indexPath.row)
+                    presenter.group.ruleSets.remove(at: indexPath.row)
                 }
                 form[indexPath].hidden = true
                 form[indexPath].evaluateHidden()

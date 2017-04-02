@@ -29,7 +29,7 @@ class RecentRequestsVC: UIViewController, UITableViewDataSource, UITableViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Recent Requests".localized()
-        NotificationCenter.default.addObserver(self, selector: #selector(onVPNStatusChanged), name: kProxyServiceVPNStatusNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onVPNStatusChanged), name: NSNotification.Name(rawValue: kProxyServiceVPNStatusNotification), object: nil)
         wormhole.listenForMessage(withIdentifier: "tunnelConnectionRecords") { [unowned self](response) in
             self.tableView.pullToRefreshView?.stopAnimating()
             self.updateUI(response as? String)
@@ -56,7 +56,7 @@ class RecentRequestsVC: UIViewController, UITableViewDataSource, UITableViewDele
     func refresh() {
         let on = [VPNStatus.on, VPNStatus.connecting].contains(Manager.sharedManager.vpnStatus)
         if on {
-            wormhole.passMessageObject("", identifier: "getTunnelConnectionRecords")
+            wormhole.passMessageObject(NSString(), identifier: "getTunnelConnectionRecords")
         } else {
             self.tableView.pullToRefreshView?.stopAnimating()
             tableView.showsPullToRefresh = false;
@@ -64,7 +64,7 @@ class RecentRequestsVC: UIViewController, UITableViewDataSource, UITableViewDele
     }
     
     func updateUI(_ requestString: String?) {
-        if let responseStr = requestString, jsonArray = responseStr.jsonArray() {
+        if let responseStr = requestString, let jsonArray = responseStr.jsonArray() {
             self.requests = jsonArray.reversed().filter({ ($0 as? [String : AnyObject]) != nil }).flatMap({ Request(dict: $0 as! [String : AnyObject]) })
         }else {
             self.requests = []

@@ -33,26 +33,21 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func loadData() {
-        API.getRuleSets() { (response) in
+        API.getRuleSets() { (result) in
             self.tableView.pullToRefreshView?.stopAnimating()
-            if response.result.isFailure {
-                // Fail
-//                let errDesc = response.result.error?.localizedDescription ?? ""
-                // self.showTextHUD((errDesc.characters.count > 0 ? "\(errDesc)" : "Unkown error".localized()), dismissAfterDelay: 1.5)
-            } else {
-                guard let result = response.result.value else {
-                    return
-                }
-                let data = result.filter({ $0.name.characters.count > 0})
-                for i in 0..<data.count {
-                    do {
-                        try RuleSet.addRemoteObject(data[i])
-                    } catch {
-                        NSLog("Fail to subscribe".localized())
-                    }
-                }
-                self.reloadData()
+            
+            guard result.count > 0 else {
+                return
             }
+            let data = result.filter({ $0.name.characters.count > 0})
+            for i in 0..<data.count {
+                do {
+                    try RuleSet.addRemoteObject(data[i])
+                } catch {
+                    NSLog("Fail to subscribe".localized())
+                }
+            }
+            self.reloadData()
         }
     }
     

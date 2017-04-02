@@ -14,8 +14,8 @@ public enum SyncServiceType: String {
 }
 
 public protocol SyncServiceProtocol {
-    func setup(_ completion: ((ErrorProtocol?) -> Void)?)
-    func sync(_ manually: Bool, completion: ((ErrorProtocol?) -> Void)?)
+    func setup(_ completion: ((Error?) -> Void)?)
+    func sync(_ manually: Bool, completion: ((Error?) -> Void)?)
     func stop()
 }
 
@@ -31,7 +31,7 @@ open class SyncManager {
 
     var currentSyncServiceType: SyncServiceType {
         get {
-            if let raw = UserDefaults.standard.object(forKey: SyncManager.serviceTypeKey) as? String, type = SyncServiceType(rawValue: raw) {
+            if let raw = UserDefaults.standard.object(forKey: SyncManager.serviceTypeKey) as? String, let type = SyncServiceType(rawValue: raw) {
                 return type
             }
             return .None
@@ -79,7 +79,7 @@ open class SyncManager {
 
 extension SyncManager {
 
-    func setupNewService(_ type: SyncServiceType, completion: ((ErrorProtocol?) -> Void)?) {
+    func setupNewService(_ type: SyncServiceType, completion: ((Error?) -> Void)?) {
         if let service = getSyncService(forType: type) {
             service.setup(completion)
         } else {
@@ -87,11 +87,11 @@ extension SyncManager {
         }
     }
 
-    func setup(_ completion: ((ErrorProtocol?) -> Void)?) {
+    func setup(_ completion: ((Error?) -> Void)?) {
         getCurrentSyncService()?.setup(completion)
     }
 
-    func sync(_ manually: Bool = false, completion: ((ErrorProtocol?) -> Void)? = nil) {
+    func sync(_ manually: Bool = false, completion: ((Error?) -> Void)? = nil) {
         if let service = getCurrentSyncService() {
             syncing = true
             NotificationCenter.default.post(name: Notification.Name(rawValue: SyncManager.syncServiceChangedNotification), object: nil)

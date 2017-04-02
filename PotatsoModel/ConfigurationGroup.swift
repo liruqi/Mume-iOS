@@ -35,8 +35,8 @@ open class ConfigurationGroup: BaseModel {
     open dynamic var name = ""
     open dynamic var defaultToProxy = true
     open dynamic var dns = ""
-    open let proxies = List<Proxy>()
-    open let ruleSets = List<RuleSet>()
+    open var proxies = List<Proxy>()
+    open var ruleSets = List<RuleSet>()
     
     open override static func indexedProperties() -> [String] {
         return ["name"]

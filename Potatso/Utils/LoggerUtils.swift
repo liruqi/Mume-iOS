@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension ErrorProtocol {
+extension Error {
 
     func log(_ message: String?) {
         if let message = message {

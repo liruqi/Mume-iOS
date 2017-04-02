@@ -283,7 +283,7 @@ class Request {
     var forwardStage: ForwardStage = .none
     
     init?(dict: [String: AnyObject]) {
-        guard let url = dict["url"] as? String, m = dict["method"] as? String, method = HTTPMethod(rawValue: m) else {
+        guard let url = dict["url"] as? String, let m = dict["method"] as? String, let method = HTTPMethod(rawValue: m) else {
             return nil
         }
 
@@ -299,21 +299,21 @@ class Request {
         if let ip = dict["ip"] as? String {
             self.ip = ip
         }
-        if let c = dict["responseCode"] as? Int, code = HTTPResponseCode(rawValue: c) {
+        if let c = dict["responseCode"] as? Int, let code = HTTPResponseCode(rawValue: c) {
             self.responseCode = code
         }
         self.globalMode = dict["global"] as? Bool ?? false
-        if let c = dict["routing"] as? Int, r = RequestRouting(rawValue: c) {
+        if let c = dict["routing"] as? Int, let r = RequestRouting(rawValue: c) {
             self.routing = r
         }
-        if let c = dict["forward_stage"] as? Int, r = ForwardStage(rawValue: c) {
+        if let c = dict["forward_stage"] as? Int, let r = ForwardStage(rawValue: c) {
             self.forwardStage = r
         }
 
         // Events
         var unnormalizedEvents: [RequestEvent] = []
         for i in 0..<RequestTimeStage.count.rawValue {
-            if let ts = dict["time\(i)"] as? Double, stage = RequestTimeStage(rawValue: i) {
+            if let ts = dict["time\(i)"] as? Double, let stage = RequestTimeStage(rawValue: i) {
                 guard ts > 0 else {
                     continue
                 }

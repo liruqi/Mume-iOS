@@ -52,7 +52,7 @@ class RuleSetsSelectionViewController: FormViewController {
     func generateForm() {
         form.delegate = nil
         form.removeAll()
-        ruleSets = defaultRealm.objects(PotatsoModel.RuleSet).sorted("createAt").map({ $0 })
+        ruleSets = defaultRealm.objects(PotatsoModel.RuleSet).sorted(byKeyPath: "createAt").map({ $0 })
         form +++ Section("Rule Set".localized())
         for ruleSet in ruleSets {
             form[0]

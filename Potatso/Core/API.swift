@@ -10,7 +10,6 @@ import Foundation
 import PotatsoModel
 import Alamofire
 import ObjectMapper
-import ISO8601DateFormatter
 
 struct API {
 
@@ -32,17 +31,28 @@ struct API {
         }
     }
     
-    static func getRuleSets(_ callback: (Alamofire.Response<[RuleSet], NSError>) -> Void) {
+    static func getRuleSets(_ callback: @escaping ([RuleSet]) -> Void) {
         let lang = Locale.preferredLanguages[0]
-        let versionCode: AnyObject? = Bundle.main.infoDictionary!["CFBundleShortVersionString"]
+        let versionCode = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? ""
         NSLog("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
-        Alamofire.request(.GET, Path.RuleSets.url, parameters: ["lang": lang, "version": versionCode!]).responseArray(completionHandler: callback)
+        let parameters: Parameters = ["lang": lang, "version": versionCode]
+        Alamofire.SessionManager.default.request(Path.ruleSets.url, parameters: parameters)
+            .responseJSON { response in
+                if let JSON = response.result.value {
+                    print("JSON: \(JSON)")
+                    if let parsedObject = Mapper<RuleSet>().mapArray(JSONObject: JSON) {
+                        callback(parsedObject)
+                        return
+                    }
+                }
+                
+            }
     }
     
-    static func getProxySets(_ callback: ([Dictionary<String, String>]) -> Void) {
+    static func getProxySets(_ callback: @escaping ([Dictionary<String, String>]) -> Void) {
         let kCloudProxySets = "kCloudProxySets"
         let lang = Locale.preferredLanguages[0]
-        let versionCode: AnyObject? = Bundle.main.infoDictionary!["CFBundleShortVersionString"]
+        let versionCode = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? ""
         NSLog("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
         
         if let data = Potatso.sharedUserDefaults().data(forKey: kCloudProxySets) {
@@ -54,13 +64,12 @@ struct API {
                 print("Local deserialization failed")
             }
         }
-        Alamofire.request(.GET, API.URL + "shadowsocks.php", parameters: ["lang": lang, "version": versionCode!])
+        Alamofire.request(API.URL + "shadowsocks.php", parameters: ["lang": lang, "version": versionCode])
             .responseJSON { response in
-                print(response.request)  // original URL request
-                print(response.response) // URL response
-                print(response.data)     // server data
+                print(response.response ?? "response.response") // URL response
+                print(response.data ?? "response.data")     // server data
                 print(response.result)   // result of response serialization
-                Potatso.sharedUserDefaults().setObject(response.data, forKey: kCloudProxySets)
+                Potatso.sharedUserDefaults().set(response.data, forKey: kCloudProxySets)
                 if let JSON = response.result.value as? [Dictionary<String, String>] {
                     callback(JSON)
                 }
@@ -70,20 +79,20 @@ struct API {
 
 extension RuleSet: Mappable {
 
-    public convenience init?(_ map: Map) {
+    public convenience init?(map: Map) {
         self.init()
-        guard let rulesJSON = map.JSONDictionary["rules"] as? [AnyObject] else {
+        guard let rulesJSON = map.JSON["rules"] else {
             return
         }
         var rules: [Rule] = []
-        if let parsedObject = Mapper<Rule>().mapArray(rulesJSON){
-            rules.appendContentsOf(parsedObject)
+        if let parsedObject = Mapper<Rule>().mapArray(JSONObject: rulesJSON){
+            rules.append(contentsOf: parsedObject)
         }
         self.rules = rules
     }
 
     // Mappable
-    public func mapping(_ map: Map) {
+    public func mapping(map: Map) {
         uuid      <- map["id"]
         name      <- map["name"]
         createAt  <- (map["created_at"], DateTransform())
@@ -120,21 +129,20 @@ extension RuleSet {
 
 extension Rule: Mappable {
 
-    public convenience init?(_ map: Map) {
-        guard let pattern = map.JSONDictionary["pattern"] as? String else {
+    public convenience init?(map: Map) {
+        guard let pattern = map.JSON["pattern"] as? String else {
             return nil
         }
-        guard let actionStr = map.JSONDictionary["action"] as? String, let action = RuleAction(rawValue: actionStr) else {
+        guard let actionStr = map.JSON["action"] as? String, let action = RuleAction(rawValue: actionStr) else {
             return nil
         }
-        guard let typeStr = map.JSONDictionary["type"] as? String, type = MMRuleType(rawValue: typeStr) else {
+        guard let typeStr = map.JSON["type"] as? String, let type = MMRuleType(rawValue: typeStr) else {
             return nil
         }
         self.init(type: type, action: action, value: pattern)
     }
-
-    // Mappable
-    public func mapping(_ map: Map) {
+    
+    public func mapping(map: Map) {
     }
 }
 
@@ -142,135 +150,33 @@ extension Rule: Mappable {
 
 struct DateTransform: TransformType {
 
-    func transformFromJSON(_ value: AnyObject?) -> Double? {
+    func transformFromJSON(_ value: Any?) -> Double? {
         guard let dateStr = value as? String else {
             return Date().timeIntervalSince1970
         }
-        return ISO8601DateFormatter.ISO8601DateFormatter().date(from: dateStr)?.timeIntervalSince1970
+        if #available(iOS 10.0, *) {
+            return ISO8601DateFormatter().date(from: dateStr)?.timeIntervalSince1970
+        } else {
+            return Date().timeIntervalSince1970
+        }
     }
 
-    func transformToJSON(_ value: Double?) -> AnyObject? {
+    func transformToJSON(_ value: Double?) -> Any? {
         guard let v = value else {
             return nil
         }
         let date = Date(timeIntervalSince1970: v)
-        return ISO8601DateFormatter.ISO8601DateFormatter().string(from: date)
+        if #available(iOS 10.0, *) {
+            return ISO8601DateFormatter().string(from: date)
+        } else {
+            return nil
+        }
     }
 
 }
 
 extension Alamofire.Request {
-
-    public static func ObjectMapperSerializer<T: Mappable>(_ keyPath: String?, mapToObject object: T? = nil) -> ResponseSerializer<T, NSError> {
-        return ResponseSerializer { request, response, data, error in
-            NSLog("Alamofire response ===> request: \(request.debugDescription), response: \(response.debugDescription)")
-            guard error == nil else {
-                logError(error!, request: request, response: response)
-                return .Failure(error!)
-            }
-
-            guard let _ = data else {
-                let failureReason = "Data could not be serialized. Input data was nil."
-                let error = Error.errorWithCode(.DataSerializationFailed, failureReason: failureReason)
-                logError(error, request: request, response: response)
-                return .Failure(error)
-            }
-
-            let JSONResponseSerializer = Alamofire.Request.JSONResponseSerializer(options: .AllowFragments)
-            let result = JSONResponseSerializer.serializeResponse(request, response, data, error)
-
-            var JSONToMap: AnyObject?
-            if let keyPath = keyPath where keyPath.isEmpty == false {
-                JSONToMap = result.value?.valueForKeyPath(keyPath)
-            } else {
-                JSONToMap = result.value
-            }
-
-            if let object = object {
-                Mapper<T>().map(JSONToMap, toObject: object)
-                return .Success(object)
-            } else if let parsedObject = Mapper<T>().map(JSONToMap){
-                return .Success(parsedObject)
-            }
-
-            let failureReason = "ObjectMapper failed to serialize response"
-            let error = Error.errorWithCode(.DataSerializationFailed, failureReason: failureReason)
-            logError(error, request: request, response: response)
-            return .Failure(error)
-        }
-    }
-
-    /**
-     Adds a handler to be called once the request has finished.
-
-     - parameter queue:             The queue on which the completion handler is dispatched.
-     - parameter keyPath:           The key path where object mapping should be performed
-     - parameter object:            An object to perform the mapping on to
-     - parameter completionHandler: A closure to be executed once the request has finished and the data has been mapped by ObjectMapper.
-
-     - returns: The request.
-     */
-
-    public func responseObject<T: Mappable>(queue: dispatch_queue_t? = nil, keyPath: String? = nil, mapToObject object: T? = nil, completionHandler: (Response<T, NSError>) -> Void) -> Self {
-        return response(queue: queue, responseSerializer: Alamofire.Request.ObjectMapperSerializer(keyPath, mapToObject: object), completionHandler: completionHandler)
-    }
-
-    public static func ObjectMapperArraySerializer<T: Mappable>(_ keyPath: String?) -> ResponseSerializer<[T], NSError> {
-        return ResponseSerializer { request, response, data, error in
-            NSLog("Alamofire response ===> request: \(request.debugDescription), response: \(response.debugDescription)")
-            guard error == nil else {
-                logError(error!, request: request, response: response)
-                return .Failure(error!)
-            }
-
-            guard let _ = data else {
-                let failureReason = "Data could not be serialized. Input data was nil."
-                let error = Error.errorWithCode(.DataSerializationFailed, failureReason: failureReason)
-                logError(error, request: request, response: response)
-                return .Failure(error)
-            }
-
-            let JSONResponseSerializer = Alamofire.Request.JSONResponseSerializer(options: .AllowFragments)
-            let result = JSONResponseSerializer.serializeResponse(request, response, data, error)
-
-            if let errorMessage = result.value?.valueForKeyPath("error_message") as? String {
-                let error = Error.errorWithCode(.StatusCodeValidationFailed, failureReason: errorMessage)
-                logError(error, request: request, response: response)
-                return .Failure(error)
-            }
-
-            let JSONToMap: AnyObject?
-            if let keyPath = keyPath where keyPath.isEmpty == false {
-                JSONToMap = result.value?.valueForKeyPath(keyPath)
-            } else {
-                JSONToMap = result.value
-            }
-
-            if let parsedObject = Mapper<T>().mapArray(JSONToMap){
-                return .Success(parsedObject)
-            }
-
-            let failureReason = "ObjectMapper failed to serialize response."
-            let error = Error.errorWithCode(.DataSerializationFailed, failureReason: failureReason)
-            logError(error, request: request, response: response)
-            return .Failure(error)
-        }
-    }
-
-    /**
-     Adds a handler to be called once the request has finished.
-
-     - parameter queue: The queue on which the completion handler is dispatched.
-     - parameter keyPath: The key path where object mapping should be performed
-     - parameter completionHandler: A closure to be executed once the request has finished and the data has been mapped by ObjectMapper.
-
-     - returns: The request.
-     */
-    public func responseArray<T: Mappable>(queue: dispatch_queue_t? = nil, keyPath: String? = nil, completionHandler: (Response<[T], NSError>) -> Void) -> Self {
-        return response(queue: queue, responseSerializer: Alamofire.Request.ObjectMapperArraySerializer(keyPath), completionHandler: completionHandler)
-    }
-
-    fileprivate static func logError(_ error: NSError, request: NSURLRequest?, response: NSURLResponse?) {
-        NSLog("ObjectMapperSerializer failure: \(error), request: \(request?.debugDescription), response: \(response.debugDescription)")
+    fileprivate static func logError(_ error: NSError, request: NSURLRequest, response: URLResponse?) {
+        NSLog("ObjectMapperSerializer failure: \(error), request: \(request.debugDescription), response: \(response.debugDescription)")
     }
 }

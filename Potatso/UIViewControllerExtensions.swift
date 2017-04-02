@@ -11,7 +11,7 @@ import Aspects
 
 extension UIViewController: UIGestureRecognizerDelegate  {
     
-    public override class func initialize() {
+    open override class func initialize() {
         struct Static {
             static var token: Int = 0
         }
@@ -21,7 +21,8 @@ extension UIViewController: UIGestureRecognizerDelegate  {
             return
         }
         
-        dispatch_once(&Static.token) {
+        if (0 == Static.token) {
+            Static.token = 1
             UIViewController.aspectHook(#selector(viewDidLoad), swizzledSelector: #selector(ics_viewDidLoad))
             UIViewController.aspectHook(#selector(viewWillAppear(_:)), swizzledSelector: #selector(ics_viewWillAppear(_:)))
             UIViewController.aspectHook(#selector(viewDidAppear(_:)), swizzledSelector: #selector(ics_viewDidAppear(_:)))
@@ -95,7 +96,7 @@ extension UIViewController: UIGestureRecognizerDelegate  {
     }
     
     func close() {
-        if let navVC = self.navigationController where navVC.viewControllers.count > 1 {
+        if let navVC = self.navigationController, navVC.viewControllers.count > 1 {
             pop()
         }else {
             dismiss()

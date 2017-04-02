@@ -11,7 +11,7 @@ import PotatsoModel
 import Eureka
 import Cartography
 
-class ProxyRow: Row<Proxy, ProxyRowCell>, RowType {
+final class ProxyRow: Row<ProxyRowCell>, RowType {
 
     required init(tag: String?) {
         super.init(tag: tag)
@@ -24,6 +24,10 @@ class ProxyRowCell: Cell<Proxy>, CellType {
 
     required init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func setup() {

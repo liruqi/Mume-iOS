@@ -70,9 +70,9 @@ class DashboardVC: FormViewController {
             try? fileManager.removeItem(at: Potatso.sharedLogUrl())
             
             let rootUrl = Potatso.sharedUrl()
-            let logDir = rootUrl.appendingPathComponent("log")!
+            let logDir = rootUrl.appendingPathComponent("log")
             let logPath = logDir.appendingPathComponent(privoxyLogFile)
-            try? fileManager.removeItem(at: logPath!)
+            try? fileManager.removeItem(at: logPath)
         }
         return section
     }
@@ -84,22 +84,22 @@ class DashboardVC: FormViewController {
 
     func showLogs() {
         print ("stderr log: %@", Potatso.sharedLogUrl())
-        navigationController?.pushViewController(LogDetailViewController(path: Potatso.sharedLogUrl().path!), animated: true)
+        navigationController?.pushViewController(LogDetailViewController(path: Potatso.sharedLogUrl().path), animated: true)
     }
 
     func showShadowsocksLogs() {
         let rootUrl = Potatso.sharedUrl()
         let logPath = rootUrl.appendingPathComponent(shadowsocksLogFile)
-        print ("shadowsocks log: %@", logPath!)
-        navigationController?.pushViewController(LogDetailViewController(path: logPath!.path!), animated: true)
+        print ("shadowsocks log: %@", logPath)
+        navigationController?.pushViewController(LogDetailViewController(path: logPath.path), animated: true)
     }
     
     func showPrivoxyLogs() {
         let rootUrl = Potatso.sharedUrl()
-        let logDir = rootUrl.appendingPathComponent("log")!
+        let logDir = rootUrl.appendingPathComponent("log")
         let logPath = logDir.appendingPathComponent(privoxyLogFile)
-        print ("privoxy log: %@", logPath!)
-        navigationController?.pushViewController(LogDetailViewController(path: logPath!.path!), animated: true)
+        print ("privoxy log: %@", logPath)
+        navigationController?.pushViewController(LogDetailViewController(path: logPath.path), animated: true)
     }
     
     lazy var startTimeFormatter: DateFormatter = {

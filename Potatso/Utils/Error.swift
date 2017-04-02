@@ -8,6 +8,6 @@
 
 import Foundation
 
-extension String: ErrorProtocol {
+extension String: Error {
     
 }

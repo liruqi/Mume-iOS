@@ -9,7 +9,7 @@
 import Foundation
 
 protocol HomePresenterProtocol: class {
-    func handleRefreshUI(_ error: ErrorProtocol?)
+    func handleRefreshUI(_ error: Error?)
 }
 
 class HomePresenter: NSObject {
@@ -30,8 +30,8 @@ class HomePresenter: NSObject {
 
     override init() {
         super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(onVPNStatusChanged), name: kProxyServiceVPNStatusNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(showAddConfigGroup), name: HomePresenter.kAddConfigGroup, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onVPNStatusChanged), name: NSNotification.Name(rawValue: kProxyServiceVPNStatusNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showAddConfigGroup), name: NSNotification.Name(rawValue: HomePresenter.kAddConfigGroup), object: nil)
         CurrentGroupManager.shared.onChange = { group in
             self.delegate?.handleRefreshUI(nil)
         }
