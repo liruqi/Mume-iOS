@@ -181,32 +181,41 @@ extension Proxy {
     
     public convenience init(dictionary: [String: Any]) throws {
         self.init()
-        if let uriString = dictionary["uri"] as? String {
-            if uriString.lowercased().hasPrefix(Proxy.ssUriPrefix) {
-                // Shadowsocks
-                let undecodedString = uriString.substring(from: uriString.characters.index(uriString.startIndex, offsetBy: Proxy.ssUriPrefix.characters.count))
-                guard let proxyString = base64DecodeIfNeeded(undecodedString),
-                    let url = URL(string: proxyString),
-                    let fullAuthscheme = url.host?.lowercased(),
-                    let host = url.host,
-                    let port = url.port else {
+        if let uriString = dictionary["uri"] as? String, let rawUri = URL(string: uriString) {
+            if let s = rawUri.scheme?.lowercased(),
+                s == "socks5" || s == "socks" {
+                guard let host = rawUri.host else {
                     throw ProxyError.invalidUri
                 }
-                
-                if let pOTA = fullAuthscheme.range(of: "-auth", options: .backwards)?.lowerBound {
-                    self.authscheme = fullAuthscheme.substring(to: pOTA)
-                    self.ota = true
-                }else {
-                    self.authscheme = fullAuthscheme
-                }
-                self.password = url.password
                 self.host = host
-                self.port = Int(port)
-                self.type = .Shadowsocks
-            }else if uriString.lowercased().hasPrefix(Proxy.ssrUriPrefix) {
-                let undecodedString = uriString.substring(from: uriString.characters.index(uriString.startIndex, offsetBy: Proxy.ssrUriPrefix.characters.count))
-                guard let proxyString = base64DecodeIfNeeded(undecodedString), let url = URL(string: proxyString),
-                    let queryString = url.query else {
+                self.port = rawUri.port ?? 1080
+                return
+            }
+            // Shadowsocks
+            guard let undecodedString = rawUri.host,
+                let proxyString = base64DecodeIfNeeded(undecodedString),
+                let url = URL(string: "https://" + proxyString),
+                let fullAuthscheme = url.user?.lowercased(),
+                let host = url.host,
+                let port = url.port else {
+                    throw ProxyError.invalidUri
+            }
+            
+            if let pOTA = fullAuthscheme.range(of: "-auth", options: .backwards)?.lowerBound {
+                self.authscheme = fullAuthscheme.substring(to: pOTA)
+                self.ota = true
+            }else {
+                self.authscheme = fullAuthscheme
+            }
+            self.password = url.password
+            self.host = host
+            self.port = Int(port)
+            self.type = .Shadowsocks
+            
+            if uriString.lowercased().hasPrefix(Proxy.ssUriPrefix) {
+                return
+            } else if uriString.lowercased().hasPrefix(Proxy.ssrUriPrefix) {
+                guard let queryString = url.query else {
                     throw ProxyError.invalidUri
                 }
                 var hostString: String = proxyString
@@ -242,7 +251,7 @@ extension Proxy {
                     }
                 }
                 self.type = .ShadowsocksR
-            }else {
+            } else {
                 // Not supported yet
                 throw ProxyError.invalidUri
             }
