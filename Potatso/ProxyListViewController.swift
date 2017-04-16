@@ -17,7 +17,6 @@ private let kProxyCellIdentifier = "proxy"
 class ProxyListViewController: FormViewController {
 
     var proxies: [Proxy?] = []
-    var cloudProxies: [Proxy] = []
 
     let allowNone: Bool
     let chooseCallback: ((Proxy?) -> Void)?
@@ -35,14 +34,6 @@ class ProxyListViewController: FormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        API.getProxySets() { (response) in
-            for dic in response {
-                if let proxy = try? Proxy(dictionary: dic) {
-                    self.cloudProxies.append(proxy)
-                }
-            }
-            self.reloadData()
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,7 +55,7 @@ class ProxyListViewController: FormViewController {
         }
         form.delegate = nil
         form.removeAll()
-        let section = self.cloudProxies.count > 0 ? Section("Local".localized()) : Section()
+        let section = DataInitializer.cloudProxies.count > 0 ? Section("Local".localized()) : Section()
         for proxy in proxies {
             section
                 <<< ProxyRow () {
@@ -86,9 +77,9 @@ class ProxyListViewController: FormViewController {
         }
         form +++ section
         
-        if self.cloudProxies.count > 0 {
+        if DataInitializer.cloudProxies.count > 0 {
             let cloudSection = Section("Cloud".localized())
-            for proxy in cloudProxies {
+            for proxy in DataInitializer.cloudProxies {
                 cloudSection
                     <<< ProxyRow () {
                         $0.value = proxy

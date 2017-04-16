@@ -15,10 +15,18 @@ import RealmSwift
 import Realm
 
 class DataInitializer: NSObject, AppLifeCycleProtocol {
+    static var cloudProxies: [Proxy] = []
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         Manager.sharedManager.setup()
         sync()
+        API.getProxySets() { (response) in
+            for dic in response {
+                if let proxy = try? Proxy(dictionary: dic) {
+                    DataInitializer.cloudProxies.append(proxy)
+                }
+            }
+        }
         return true
     }
     
