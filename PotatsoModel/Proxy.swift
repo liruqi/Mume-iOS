@@ -162,7 +162,7 @@ extension Proxy {
             }
         case .Socks5:
             if let user = user, let password = password {
-                return "socks5://\(authscheme):\(password)@\(host):\(port)"
+                return "socks5://\(user):\(password)@\(host):\(port)"
             }
             return "socks5://\(host):\(port)" // TODO: support username/password
         default:
@@ -187,6 +187,7 @@ extension Proxy {
                 guard let host = rawUri.host else {
                     throw ProxyError.invalidUri
                 }
+                self.type = .Socks5
                 self.host = host
                 self.port = rawUri.port ?? 1080
                 return
