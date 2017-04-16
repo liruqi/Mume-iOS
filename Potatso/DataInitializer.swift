@@ -35,7 +35,7 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
-        _ = try? Manager.sharedManager.regenerateConfigFiles()
+        print("applicationWillTerminate")
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {

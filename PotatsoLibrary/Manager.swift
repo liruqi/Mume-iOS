@@ -296,6 +296,7 @@ extension Manager {
         let logDir = rootUrl.appendingPathComponent("log").path
         let maxminddbPath = Potatso.sharedUrl().appendingPathComponent("GeoLite2-Country.mmdb").path
         let userActionUrl = confDirUrl.appendingPathComponent("mume.action")
+        let directDomainsUrl = confDirUrl.appendingPathComponent("mume.direct")
         for p in [confDirUrl.path, templateDirPath, temporaryDirPath, logDir] {
             if !FileManager.default.fileExists(atPath: p) {
                 _ = try? FileManager.default.createDirectory(atPath: p, withIntermediateDirectories: true, attributes: nil)
@@ -325,6 +326,7 @@ extension Manager {
         var forwardURLRules: [String] = []
         var forwardIPRules: [String] = []
         var forwardGEOIPRules: [String] = []
+        var directDomainRules = [String]()
         let rules = defaultConfigGroup.ruleSets.flatMap({ $0.rules })
         for rule in rules {
             
@@ -334,7 +336,12 @@ extension Manager {
             case .IPCIDR:
                 forwardIPRules.append(rule.description)
             default:
-                forwardURLRules.append(rule.description)
+                if rule.action == .Direct,
+                    (rule.type == .DomainSuffix) {
+                    directDomainRules.append(rule.value)
+                } else {
+                    forwardURLRules.append(rule.description)
+                }
             }
         }
 
@@ -358,7 +365,8 @@ extension Manager {
         actionContent.append(contentsOf: Pollution.dnsList.map({ "DNS-IP-CIDR, \($0)/32, PROXY" }))
 
         let userActionString = actionContent.joined(separator: "\n")
-        try userActionString.write(toFile: userActionUrl.path, atomically: true, encoding: String.Encoding.utf8)
+        try userActionString.write(toFile: userActionUrl.path, atomically: true, encoding: .utf8)
+        try directDomainRules.joined(separator: "\n").write(to: directDomainsUrl, atomically: true, encoding: .utf8)
     }
 
 }

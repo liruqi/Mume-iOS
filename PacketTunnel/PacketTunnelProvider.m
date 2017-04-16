@@ -29,6 +29,7 @@
 @property (nonatomic) NWPath *lastPath;
 @property (strong) void (^pendingStartCompletion)(NSError *);
 @property (strong) void (^pendingStopCompletion)(void);
+@property (strong) NSArray *directDomains;
 @end
 
 
@@ -44,6 +45,10 @@
         exit(1);
         return;
     }
+    NSURL *confDirUrl = [[Potatso sharedUrl] URLByAppendingPathComponent:@"httpconf"];
+    NSString* domainsData = [NSString stringWithContentsOfURL:[confDirUrl URLByAppendingPathComponent:@"mume.direct"]
+                           encoding:NSUTF8StringEncoding error:nil];
+    self.directDomains = [domainsData componentsSeparatedByString:@"\n"];
     self.pendingStartCompletion = completionHandler;
     [self startProxies];
     [self startPacketForwarders];
@@ -207,7 +212,7 @@
     proxySettings.HTTPSEnabled = YES;
     proxySettings.HTTPSServer = [[NEProxyServer alloc] initWithAddress:proxyServerName port:proxyServerPort];
     proxySettings.excludeSimpleHostnames = YES;
-    proxySettings.exceptionList = @[@"mumevpn.com", @"crashlytics.com", @"liruqi.info"];
+    proxySettings.exceptionList = [@[@"mumevpn.com", @"crashlytics.com", @"liruqi.info"] arrayByAddingObjectsFromArray:self.directDomains];
     settings.proxySettings = proxySettings;
     NEDNSSettings *dnsSettings = [[NEDNSSettings alloc] initWithServers:dnsServers];
     dnsSettings.matchDomains = @[@""];
@@ -281,6 +286,7 @@
 }
 
 - (void)handleAppMessage:(NSData *)messageData completionHandler:(void (^)(NSData *))completionHandler {
+    NSLog(@"handleAppMessage: %@", [[NSString alloc] initWithData:messageData encoding:NSUTF8StringEncoding]);
     if (completionHandler != nil) {
         completionHandler(nil);
     }
