@@ -313,7 +313,7 @@ extension Manager {
         mainConf["global-mode"] = defaultToProxy
 //        mainConf["debug"] = 1024+65536+1
         mainConf["debug"] = "131071"
-        if LoggingLevel.currentLoggingLevel != .off {
+        if Potatso.logLevel() > 0 {
             mainConf["logfile"] = privoxyLogFile
         }
         mainConf["actionsfile"] = userActionUrl.path
@@ -364,16 +364,6 @@ extension Manager {
 }
 
 extension Manager {
-    
-    public func isVPNStarted(_ complete: @escaping (Bool, NETunnelProviderManager?) -> Void) {
-        loadProviderManager { (manager) -> Void in
-            if let manager = manager {
-                complete(manager.connection.status == .connected, manager)
-            }else{
-                complete(false, nil)
-            }
-        }
-    }
     
     public func startVPN(_ complete: ((NETunnelProviderManager?, Error?) -> Void)? = nil) {
         startVPNWithOptions(nil, complete: complete)
@@ -441,12 +431,7 @@ extension Manager {
     fileprivate func loadAndCreateProviderManager(_ complete: @escaping (NETunnelProviderManager?, Error?) -> Void ) {
         NETunnelProviderManager.loadAllFromPreferences { [unowned self] (managers, error) -> Void in
             if let managers = managers {
-                let manager: NETunnelProviderManager
-                if managers.count > 0 {
-                    manager = managers[0]
-                }else{
-                    manager = self.createProviderManager()
-                }
+                let manager: NETunnelProviderManager = (managers.count) > 0 ? managers[0] : self.createProviderManager()
                 manager.isEnabled = true
                 manager.localizedDescription = AppEnv.appName
                 manager.protocolConfiguration?.serverAddress = AppEnv.appName

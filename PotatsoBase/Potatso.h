@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define kLoggingLevel @"loggingLevel"
+
 extern NSString * _Nonnull sharedGroupIdentifier;
 extern NSString * _Nonnull shadowsocksLogFile;
 extern NSString * _Nonnull privoxyLogFile;
@@ -21,4 +23,7 @@ extern NSString * _Nonnull privoxyLogFile;
 + (NSURL * _Nonnull)sharedProxyConfUrl;
 + (NSURL * _Nonnull)sharedHttpProxyConfUrl;
 + (NSURL * _Nonnull)sharedLogUrl;
+
++ (int) logLevel;
++ (void) setLogLevel:(int) ll;
 @end

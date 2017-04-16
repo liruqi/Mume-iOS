@@ -32,13 +32,13 @@ class DashboardVC: FormViewController {
         
         section <<< SwitchRow("Open logging") {
             $0.title = "Logging".localized()
-            $0.value = LoggingLevel.currentLoggingLevel != .off 
+            $0.value = Potatso.logLevel() > 0
         }.onChange({ [unowned self] (row) in
-            LoggingLevel.currentLoggingLevel = (LoggingLevel.currentLoggingLevel == .off ? .debug : .off)
+            Potatso.setLogLevel((Potatso.logLevel() > 0 ? 0 : 1))
             self.updateForm()
         })
         
-        if LoggingLevel.currentLoggingLevel != .off {
+        if Potatso.logLevel() > 0 {
             section <<< LabelRow() {
                 $0.title = "stderr".localized()
                 }.cellSetup({ (cell, row) -> () in

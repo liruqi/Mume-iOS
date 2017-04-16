@@ -44,7 +44,7 @@ class LogDetailViewController: UIViewController {
     }
     
     func showLog() {
-        guard LoggingLevel.currentLoggingLevel != .off && self.logPath != "" else {
+        guard self.logPath != "" else {
             emptyView.isHidden = false
             return
         }

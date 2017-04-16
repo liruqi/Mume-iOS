@@ -226,6 +226,9 @@
 }
 
 - (void)openLog {
+    if ([Potatso logLevel] != 1) {
+        return;
+    }
     NSString *logFilePath = [Potatso sharedLogUrl].path;
     [[NSFileManager defaultManager] createFileAtPath:logFilePath contents:nil attributes:nil];
     freopen([logFilePath cStringUsingEncoding:NSASCIIStringEncoding], "w+", stderr);
