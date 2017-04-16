@@ -295,7 +295,7 @@ extension Manager {
         let temporaryDirPath = rootUrl.appendingPathComponent("httptemporary").path
         let logDir = rootUrl.appendingPathComponent("log").path
         let maxminddbPath = Potatso.sharedUrl().appendingPathComponent("GeoLite2-Country.mmdb").path
-        let userActionUrl = confDirUrl.appendingPathComponent("potatso.action")
+        let userActionUrl = confDirUrl.appendingPathComponent("mume.action")
         for p in [confDirUrl.path, templateDirPath, temporaryDirPath, logDir] {
             if !FileManager.default.fileExists(atPath: p) {
                 _ = try? FileManager.default.createDirectory(atPath: p, withIntermediateDirectories: true, attributes: nil)
@@ -445,13 +445,7 @@ extension Manager {
                         complete(nil, error)
                     }else{
                         print("Did saveToPreferencesWithCompletionHandler")
-                        manager.loadFromPreferences(completionHandler: { (error) -> Void in
-                            if let error = error {
-                                complete(nil, error)
-                            }else{
-                                complete(manager, nil)
-                            }
-                        })
+                        complete(manager, nil)
                     }
                 })
             }else{
@@ -477,7 +471,7 @@ extension Manager {
         let manager = NETunnelProviderManager()
         let p = NETunnelProviderProtocol()
         p.providerBundleIdentifier = "info.liruqi.potatso.tunnel"
-        if let upstreamProxy = upstreamProxy, upstreamProxy.type == .Shadowsocks {
+        if let upstreamProxy = upstreamProxy {
             p.providerConfiguration = ["host": upstreamProxy.host, "port": upstreamProxy.port]
             p.serverAddress = upstreamProxy.host
         }

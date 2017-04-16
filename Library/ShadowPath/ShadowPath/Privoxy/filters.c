@@ -2651,7 +2651,7 @@ struct forward_spec *forward_url(struct client_state *csp,
     csp->current_forward_stage = FORWARD_STAGE_NONE;
     struct forward_spec *fwd = NULL;
 
-    // Match forward in potatso.action
+    // Match forward in mume.action
     log_time_stage(csp, TIME_STAGE_URL_RULE_MATCH_START);
     struct url_actions *action = po_url_rules;
     while (action != NULL) {
