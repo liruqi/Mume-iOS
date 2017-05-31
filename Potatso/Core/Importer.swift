@@ -62,7 +62,7 @@ struct Importer {
     
     func importSS(source: String) {
         do {
-            let proxy = try Proxy(dictionary: ["uri": source])
+            let proxy = try Proxy(uri: source)
             do {
                 try proxy.validate()
                 try DBUtils.add(proxy)

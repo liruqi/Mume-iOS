@@ -19,12 +19,12 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
         let manager = CallbackURLKit.Manager.shared
         manager.callbackURLScheme = CallbackURLKit.Manager.urlSchemes?.first
         for action in [URLAction.ON, URLAction.OFF, URLAction.SWITCH] {
-            manager[action.rawValue] = { parameters, success, failure, cancel in
+            manager[action.rawValue] = { parameters, success, failure, _ in
                 action.perform(nil, parameters: parameters) { error in
                     Async.main(after: 1, {
                         if let error = error {
                             failure(error as NSError)
-                        }else {
+                        } else {
                             success(nil)
                         }
                     })
@@ -36,6 +36,24 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any]) -> Bool {
+        guard let scheme = url.scheme?.lowercased() else {
+            return false
+        }
+        
+        if scheme == "ss" || scheme == "shadowsocks" {
+            if let proxy = try? Proxy(uri: url.absoluteString) {
+                do {
+                    try proxy.validate()
+                    try DBUtils.add(proxy)
+                    return true
+                } catch {
+                    let errorDesc = "(\(error))"
+                    print ("\("Fail to save config.".localized()) \(errorDesc)")
+                }
+            }
+            return false
+        }
+        
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         var parameters: Parameters = [:]
         components?.queryItems?.forEach {
