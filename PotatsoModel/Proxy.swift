@@ -285,7 +285,7 @@ extension Proxy {
     
     public convenience init(dictionary: [String: Any]) throws {
         if let uriString = dictionary["uri"] as? String {
-            try self.init(uri: uriString)
+            try self.init(uri: uriString.trimmingCharacters(in: CharacterSet.whitespaces))
             return
         }
         

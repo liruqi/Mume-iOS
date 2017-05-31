@@ -28,7 +28,7 @@ struct Importer {
         }
         alert.addAction(UIAlertAction(title: "OK".localized(), style: .default, handler: { (action) in
             if let input = urlTextField?.text {
-                self.onImportInput(input)
+                self.onImportInput(input.trimmingCharacters(in: CharacterSet.whitespaces))
             }
         }))
         alert.addAction(UIAlertAction(title: "CANCEL".localized(), style: .cancel, handler: nil))

@@ -79,7 +79,7 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         let pasteBoard = UIPasteboard.general
-        if let content = pasteBoard.string?.trimmingCharacters(in: CharacterSet(charactersIn: " !@#$%^&*")),
+        if let content = pasteBoard.string?.trimmingCharacters(in: CharacterSet.whitespaces).trimmingCharacters(in: CharacterSet(charactersIn: " !@#$%^&*")),
             content.characters.count > 3 {
             if Proxy.uriIsShadowsocks(content) {
                 do {
