@@ -53,6 +53,10 @@
 				<key>object</key>
 				<string>Potatso.NotificationHandler</string>
 			</dict>
+            <dict>
+                <key>object</key>
+                <string>Potatso.UrlHandler</string>
+            </dict>
 		</array>
 		<key>didFinishLaunchingWithOptions</key>
 		<array>

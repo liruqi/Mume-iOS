@@ -12,6 +12,7 @@ import PotatsoLibrary
 import Async
 import CallbackURLKit
 
+public let kProxyServiceAdded = "kProxyServiceAdded"
 
 class UrlHandler: NSObject, AppLifeCycleProtocol {
     
@@ -45,6 +46,7 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
                 do {
                     try proxy.validate()
                     try DBUtils.add(proxy)
+                    NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
                     return true
                 } catch {
                     let errorDesc = "(\(error))"
@@ -75,6 +77,23 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
         return action.perform(url, parameters: parameters)
     }
 
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        let pasteBoard = UIPasteboard.general
+        if let content = pasteBoard.string?.trimmingCharacters(in: CharacterSet(charactersIn: " !@#$%^&*")),
+            content.characters.count > 3 {
+            if Proxy.uriIsShadowsocks(content) {
+                do {
+                    let proxy = try Proxy(uri: content)
+                    try proxy.validate()
+                    try DBUtils.add(proxy)
+                    pasteBoard.string = ""
+                    NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
+                    return
+                } catch {
+                }
+            }
+        }
+    }
 }
 
 enum URLAction: String {

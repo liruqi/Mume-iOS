@@ -46,6 +46,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         super.viewDidLoad()
         // Fix a UI stuck bug
         navigationController?.delegate = self
+        NotificationCenter.default.addObserver(self, selector: #selector(updateForm), name: NSNotification.Name(rawValue: kProxyServiceAdded), object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -121,7 +122,6 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         form.delegate = nil
         form.removeAll()
 
-        
         form.delegate = nil
         form.removeAll()
         
