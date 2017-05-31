@@ -45,6 +45,14 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
             if let proxy = try? Proxy(uri: url.absoluteString) {
                 do {
                     try proxy.validate()
+                    let proxies = DBUtils.allNotDeleted(Proxy.self, sorted: "createAt").map({ $0 })
+                    for ep in proxies {
+                        if ep.host == proxy.host,
+                            ep.port == proxy.port {
+                            print ("Proxy existings: " + url.absoluteString)
+                            return true
+                        }
+                    }
                     try DBUtils.add(proxy)
                     NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
                     return true
@@ -85,6 +93,14 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
                 do {
                     let proxy = try Proxy(uri: content)
                     try proxy.validate()
+                    let proxies = DBUtils.allNotDeleted(Proxy.self, sorted: "createAt").map({ $0 })
+                    for ep in proxies {
+                        if ep.host == proxy.host,
+                            ep.port == proxy.port {
+                            print ("Proxy existings: " + content)
+                            return
+                        }
+                    }
                     try DBUtils.add(proxy)
                     pasteBoard.string = ""
                     NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)

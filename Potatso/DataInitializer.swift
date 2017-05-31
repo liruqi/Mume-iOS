@@ -23,6 +23,14 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
         API.getProxySets() { (response) in
             for dic in response {
                 if let proxy = try? Proxy(dictionary: dic) {
+                    let proxies = DBUtils.allNotDeleted(Proxy.self, sorted: "createAt").map({ $0 })
+                    for ep in proxies {
+                        if ep.host == proxy.host,
+                            ep.port == proxy.port {
+                            print ("Proxy existings: " + dic.description)
+                            return
+                        }
+                    }
                     DataInitializer.cloudProxies.append(proxy)
                 }
             }
