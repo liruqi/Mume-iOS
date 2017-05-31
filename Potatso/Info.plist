@@ -25,9 +25,21 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>mume</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>mume</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>ss</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>ss</string>
 			</array>
 		</dict>
 	</array>

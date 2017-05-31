@@ -54,13 +54,13 @@ struct Importer {
     
     func onImportInput(_ result: String) {
         if Proxy.uriIsShadowsocks(result) {
-            importSS(result)
-        }else {
+            importSS(source: result)
+        } else {
             importConfig(result, isURL: true)
         }
     }
     
-    func importSS(_ source: String) {
+    func importSS(source: String) {
         do {
             let proxy = try Proxy(dictionary: ["uri": source])
             do {

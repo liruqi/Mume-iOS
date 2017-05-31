@@ -179,11 +179,10 @@ extension Proxy {
 // Import
 extension Proxy {
     
-    public convenience init(dictionary: [String: Any]) throws {
+    public convenience init(uri: String) throws {
         self.init()
-        if let uriString = dictionary["uri"] as? String, let rawUri = URL(string: uriString) {
-            if let s = rawUri.scheme?.lowercased(),
-                s == "socks5" || s == "socks" {
+        if let rawUri = URL(string: uri), let s = rawUri.scheme?.lowercased() {
+            if s == "socks5" || s == "socks" {
                 guard let host = rawUri.host else {
                     throw ProxyError.invalidUri
                 }
@@ -192,13 +191,36 @@ extension Proxy {
                 self.port = rawUri.port ?? 1080
                 return
             }
-            // Shadowsocks
+            // mume://method:base64(password)@hostname:port
+            if s == "mume" || s == "shadowsocks" {
+                let proxyString = uri.substring(from: uri.index(uri.startIndex, offsetBy: s.characters.count))
+                guard let httpsurl = URL(string: "https" + proxyString),
+                    let fullAuthscheme = httpsurl.user?.lowercased(),
+                    let host = httpsurl.host,
+                    let port = httpsurl.port else {
+                        throw ProxyError.invalidUri
+                }
+                
+                if let pOTA = fullAuthscheme.range(of: "-auth", options: .backwards)?.lowerBound {
+                    self.authscheme = fullAuthscheme.substring(to: pOTA)
+                    self.ota = true
+                } else {
+                    self.authscheme = fullAuthscheme
+                }
+                self.password = base64DecodeIfNeeded(httpsurl.password ?? "")
+                self.host = host
+                self.port = Int(port)
+                self.type = .Shadowsocks
+                return
+            }
+            
+            // Shadowsocks ss://cmM0LW1kNTp4aWFtaS5sYUBjbjEuc3hpYW1pLmNvbTo0NTQwMg==
             guard let undecodedString = rawUri.host,
                 let proxyString = base64DecodeIfNeeded(undecodedString),
-                let url = URL(string: "https://" + proxyString),
-                let fullAuthscheme = url.user?.lowercased(),
-                let host = url.host,
-                let port = url.port else {
+                let httpsURL = URL(string: "https://" + proxyString),
+                let fullAuthscheme = httpsURL.user?.lowercased(),
+                let host = httpsURL.host,
+                let port = httpsURL.port else {
                     throw ProxyError.invalidUri
             }
             
@@ -208,15 +230,15 @@ extension Proxy {
             }else {
                 self.authscheme = fullAuthscheme
             }
-            self.password = url.password
+            self.password = httpsURL.password
             self.host = host
             self.port = Int(port)
             self.type = .Shadowsocks
             
-            if uriString.lowercased().hasPrefix(Proxy.ssUriPrefix) {
+            if uri.lowercased().hasPrefix(Proxy.ssUriPrefix) {
                 return
-            } else if uriString.lowercased().hasPrefix(Proxy.ssrUriPrefix) {
-                guard let queryString = url.query else {
+            } else if uri.lowercased().hasPrefix(Proxy.ssrUriPrefix) {
+                guard let queryString = httpsURL.query else {
                     throw ProxyError.invalidUri
                 }
                 var hostString: String = proxyString
@@ -256,7 +278,17 @@ extension Proxy {
                 // Not supported yet
                 throw ProxyError.invalidUri
             }
-        }else {
+        }
+    }
+    
+    public convenience init(dictionary: [String: Any]) throws {
+        if let uriString = dictionary["uri"] as? String {
+            try self.init(uri: uriString)
+            return
+        }
+        
+            self.init()
+
             guard let host = dictionary["host"] as? String else{
                 throw ProxyError.invalidHost
             }
@@ -277,7 +309,7 @@ extension Proxy {
             self.password = password
             self.authscheme = encryption
             self.type = type
-        }
+        
         try validate()
     }
 
@@ -294,7 +326,7 @@ extension Proxy {
     }
 
     public class func uriIsShadowsocks(_ uri: String) -> Bool {
-        return uri.lowercased().hasPrefix(Proxy.ssUriPrefix) || uri.lowercased().hasPrefix(Proxy.ssrUriPrefix)
+        return uri.lowercased().hasPrefix(Proxy.ssUriPrefix) || uri.lowercased().hasPrefix(Proxy.ssrUriPrefix) || uri.lowercased().hasPrefix("mume://")
     }
 
 }
