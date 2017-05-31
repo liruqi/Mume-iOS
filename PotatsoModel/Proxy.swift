@@ -215,9 +215,11 @@ extension Proxy {
             }
             
             // Shadowsocks ss://cmM0LW1kNTp4aWFtaS5sYUBjbjEuc3hpYW1pLmNvbTo0NTQwMg==
-            guard let undecodedString = rawUri.host,
-                let proxyString = base64DecodeIfNeeded(undecodedString),
-                let httpsURL = URL(string: "https://" + proxyString),
+            guard let undecodedString = rawUri.host else {
+                throw ProxyError.invalidUri
+            }
+            let proxyString = base64DecodeIfNeeded(undecodedString)
+            guard let httpsURL = URL(string: "https://" + proxyString),
                 let fullAuthscheme = httpsURL.user?.lowercased(),
                 let host = httpsURL.host,
                 let port = httpsURL.port else {
@@ -313,20 +315,21 @@ extension Proxy {
         try validate()
     }
 
-    fileprivate func base64DecodeIfNeeded(_ proxyString: String) -> String? {
-        if let _ = proxyString.range(of: ":")?.lowerBound {
+    fileprivate func base64DecodeIfNeeded(_ proxyString: String) -> String {
+        let base64String = proxyString.replacingOccurrences(of: "-", with: "+").replacingOccurrences(of: "_", with: "/")
+        let base64Charset = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=")
+        if CharacterSet(charactersIn: base64String).isSubset(of: base64Charset) {
+            let padding = base64String.characters.count + (base64String.characters.count % 4 != 0 ? (4 - base64String.characters.count % 4) : 0)
+            if let decodedData = Data(base64Encoded: base64String.padding(toLength: padding, withPad: "=", startingAt: 0), options: NSData.Base64DecodingOptions(rawValue: 0)), let decodedString = NSString(data: decodedData, encoding: String.Encoding.utf8.rawValue) {
+                return decodedString as String
+            }
             return proxyString
         }
-        let base64String = proxyString.replacingOccurrences(of: "-", with: "+").replacingOccurrences(of: "_", with: "/")
-        let padding = base64String.characters.count + (base64String.characters.count % 4 != 0 ? (4 - base64String.characters.count % 4) : 0)
-        if let decodedData = Data(base64Encoded: base64String.padding(toLength: padding, withPad: "=", startingAt: 0), options: NSData.Base64DecodingOptions(rawValue: 0)), let decodedString = NSString(data: decodedData, encoding: String.Encoding.utf8.rawValue) {
-            return decodedString as String
-        }
-        return nil
+        return proxyString
     }
 
     public class func uriIsShadowsocks(_ uri: String) -> Bool {
-        return uri.lowercased().hasPrefix(Proxy.ssUriPrefix) || uri.lowercased().hasPrefix(Proxy.ssrUriPrefix) || uri.lowercased().hasPrefix("mume://")
+        return uri.lowercased().hasPrefix(Proxy.ssUriPrefix) || uri.lowercased().hasPrefix(Proxy.ssrUriPrefix) || uri.lowercased().hasPrefix("mume://") || uri.lowercased().hasPrefix("shadowsocks://")
     }
 
 }
