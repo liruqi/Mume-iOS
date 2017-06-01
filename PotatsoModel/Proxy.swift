@@ -77,8 +77,8 @@ open class Proxy: BaseModel {
     open dynamic var ssrObfs: String?
     open dynamic var ssrObfsParam: String?
 
-    open static let ssUriPrefix = "ss://"
-    open static let ssrUriPrefix = "ssr://"
+    open static let ssUriMethod = "ss"
+    open static let ssrUriMethod = "ssr"
 
     open static let ssrSupportedProtocol = [
         "origin",
@@ -237,9 +237,9 @@ extension Proxy {
             self.port = Int(port)
             self.type = .Shadowsocks
             
-            if uri.lowercased().hasPrefix(Proxy.ssUriPrefix) {
+            if s == Proxy.ssUriMethod {
                 return
-            } else if uri.lowercased().hasPrefix(Proxy.ssrUriPrefix) {
+            } else if s == Proxy.ssrUriMethod || s.hasPrefix("shadowsocksr") {
                 guard let queryString = httpsURL.query else {
                     throw ProxyError.invalidUri
                 }
@@ -329,7 +329,7 @@ extension Proxy {
     }
 
     public class func uriIsShadowsocks(_ uri: String) -> Bool {
-        return uri.lowercased().hasPrefix(Proxy.ssUriPrefix) || uri.lowercased().hasPrefix(Proxy.ssrUriPrefix) || uri.lowercased().hasPrefix("mume://") || uri.lowercased().hasPrefix("shadowsocks://")
+        return uri.lowercased().hasPrefix(Proxy.ssUriMethod + "://") || uri.lowercased().hasPrefix(Proxy.ssrUriMethod + "://") || uri.lowercased().hasPrefix("mume://") || uri.lowercased().hasPrefix("shadowsocks")
     }
 
 }

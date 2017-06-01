@@ -41,7 +41,7 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
             return false
         }
         
-        if scheme == "ss" || scheme == "shadowsocks" {
+        if scheme == "ss" || scheme == "shadowsocks" || scheme == "ssr" || scheme == "shadowsocksr" {
             if let proxy = try? Proxy(uri: url.absoluteString) {
                 do {
                     try proxy.validate()

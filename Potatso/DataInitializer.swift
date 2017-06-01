@@ -47,11 +47,6 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        sync()
-    }
-
-    func sync() {
-        SyncManager.shared.sync()
     }
 
 }
