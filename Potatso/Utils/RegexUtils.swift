@@ -23,4 +23,23 @@ class Regex {
         return matches.count > 0
     }
 
+    // return group of the first matching text
+    func capturedGroup(string: String) -> [String]? {
+        
+        let matches = internalExpression.matches(in: string, options: [], range: NSRange(location:0, length: string.characters.count))
+        
+        guard let match = matches.first else { return nil }
+        
+        let lastRangeIndex = match.numberOfRanges - 1
+        guard lastRangeIndex >= 1 else { return nil }
+
+        var results = [String]()
+        for i in 1...lastRangeIndex {
+            let capturedGroupIndex = match.rangeAt(i)
+            let matchedString = (string as NSString).substring(with: capturedGroupIndex)
+            results.append(matchedString)
+        }
+        
+        return results
+    }
 }

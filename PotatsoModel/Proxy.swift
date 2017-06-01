@@ -218,7 +218,27 @@ extension Proxy {
             guard let undecodedString = rawUri.host else {
                 throw ProxyError.invalidUri
             }
+            self.type = .Shadowsocks
             let proxyString = base64DecodeIfNeeded(undecodedString)
+            let detailsParser = "([a-zA-Z0-9-_]+):(.*)@([a-zA-Z0-9-_.]+):(\\d+)"
+            if let regex = try? Regex(detailsParser),
+                regex.test(proxyString),
+                let parts = regex.capturedGroup(string: proxyString),
+                parts.count >= 4 {
+                let fullAuthscheme = parts[0].lowercased()
+                if let pOTA = fullAuthscheme.range(of: "-auth", options: .backwards)?.lowerBound {
+                    self.authscheme = fullAuthscheme.substring(to: pOTA)
+                    self.ota = true
+                } else {
+                    self.authscheme = fullAuthscheme
+                    self.ota = false
+                }
+                self.password = parts[1]
+                self.host = parts[2]
+                self.port = Int(parts[3]) ?? 8388
+                return
+            }
+            
             guard let httpsURL = URL(string: "https://" + proxyString),
                 let fullAuthscheme = httpsURL.user?.lowercased(),
                 let host = httpsURL.host,

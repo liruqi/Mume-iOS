@@ -11,6 +11,7 @@
 		553D95BB1D63FE6700B193B7 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553D95BA1D63FE6700B193B7 /* NetworkExtension.framework */; };
 		553D95BC1D63FECA00B193B7 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553D95BA1D63FE6700B193B7 /* NetworkExtension.framework */; };
 		553D95BD1D63FEDF00B193B7 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553D95BA1D63FE6700B193B7 /* NetworkExtension.framework */; };
+		55E14B841EDFF9DA0068F812 /* RegexUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8319A091D1B975C001E50C2 /* RegexUtils.swift */; };
 		671F4F760B4AA48CEDC1B834 /* Pods_TodayWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83D8D7B7274BAF6E28C980D9 /* Pods_TodayWidget.framework */; };
 		6BF89D48551DF9EC9D65F0BA /* Pods_PotatsoModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 972ACD00F18B9E461F9D38B1 /* Pods_PotatsoModel.framework */; };
 		9B0CFA0F1C1C0B1B007BD7C6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0CFA0E1C1C0B1B007BD7C6 /* AppDelegate.swift */; };
@@ -2705,6 +2706,7 @@
 				9BC215C11CB5083B002AADD1 /* ConfigurationGroup.swift in Sources */,
 				9BC215BD1CB4DE6B002AADD1 /* Rule.swift in Sources */,
 				B8D7F1841D518FF000B115F3 /* DBUtils.swift in Sources */,
+				55E14B841EDFF9DA0068F812 /* RegexUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
