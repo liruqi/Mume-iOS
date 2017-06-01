@@ -27,7 +27,7 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
                     for ep in proxies {
                         if ep.host == proxy.host,
                             ep.port == proxy.port {
-                            print ("Proxy existings: " + dic.description)
+                            print ("Proxy exists: " + dic.description)
                             return
                         }
                     }

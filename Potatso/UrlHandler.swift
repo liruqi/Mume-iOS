@@ -49,7 +49,7 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
                     for ep in proxies {
                         if ep.host == proxy.host,
                             ep.port == proxy.port {
-                            print ("Proxy existings: " + url.absoluteString)
+                            print ("Proxy exists: " + url.absoluteString)
                             return true
                         }
                     }
@@ -97,7 +97,7 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
                     for ep in proxies {
                         if ep.host == proxy.host,
                             ep.port == proxy.port {
-                            print ("Proxy existings: " + content)
+                            print ("Proxy exists: " + content)
                             return
                         }
                     }
