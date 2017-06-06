@@ -303,14 +303,22 @@ extension Proxy {
         }
     }
     
-    public convenience init(dictionary: [String: Any]) throws {
-        if let uriString = dictionary["uri"] as? String {
-            try self.init(uri: uriString.trimmingCharacters(in: CharacterSet.whitespaces))
-            return
-        }
-        
-            self.init()
-
+    public convenience init(host: String, port: Int, authscheme: String, password: String, type: ProxyType) throws {
+        self.init()
+        self.host = host
+        self.port = port
+        self.password = password
+        self.authscheme = authscheme
+        self.type = type
+        try validate()
+    }
+    
+    public static func proxy(dictionary: [String: Any]) -> Proxy? {
+        do {
+            if let uriString = dictionary["uri"] as? String {
+                return try Proxy(uri: uriString.trimmingCharacters(in: CharacterSet.whitespaces))
+            }
+            
             guard let host = dictionary["host"] as? String else{
                 throw ProxyError.invalidHost
             }
@@ -326,13 +334,10 @@ extension Proxy {
             guard let password = dictionary["password"] as? String else{
                 throw ProxyError.invalidPassword
             }
-            self.host = host
-            self.port = port
-            self.password = password
-            self.authscheme = encryption
-            self.type = type
-        
-        try validate()
+            return try Proxy(host: host, port: port, authscheme: encryption, password: password, type: type)
+        } catch {
+        }
+        return nil
     }
 
     fileprivate func base64DecodeIfNeeded(_ proxyString: String) -> String {

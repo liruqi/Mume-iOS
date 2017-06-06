@@ -22,7 +22,7 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
         sync()
         API.getProxySets() { (response) in
             for dic in response {
-                if let proxy = try? Proxy(dictionary: dic) {
+                if let proxy = Proxy.proxy(dictionary: dic) {
                     let proxies = DBUtils.allNotDeleted(Proxy.self, sorted: "createAt").map({ $0 })
                     for ep in proxies {
                         if ep.host == proxy.host,

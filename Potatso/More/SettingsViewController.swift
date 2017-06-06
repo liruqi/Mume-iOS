@@ -143,7 +143,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
     }
 
     func showUserManual() {
-        let url = "http://mumevpn.com/ios/"
+        let url = "https://mumevpn.com/ios/manual.php"
         let vc = BaseSafariViewController(url: URL(string: url)!, entersReaderIfAvailable: false)
         vc.delegate = self
         present(vc, animated: true, completion: nil)
