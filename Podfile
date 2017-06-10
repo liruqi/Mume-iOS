@@ -30,7 +30,7 @@ target "Potatso" do
     pod 'AsyncSwift'
     pod 'SwiftColor'
     pod 'Appirater'
-    pod 'Eureka'
+    pod 'Eureka', '~> 2'
     pod 'MBProgressHUD'
     pod 'CallbackURLKit'
     pod 'SVPullToRefresh', :git => 'https://github.com/samvermette/SVPullToRefresh'
