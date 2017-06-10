@@ -70,7 +70,7 @@ extension ConfigurationGroup {
         }
         if let ruleSetsName = dictionary["ruleSets"] as? [String] {
             for ruleSetName in ruleSetsName {
-                if let ruleSet = realm.objects(RuleSet).filter("name = '\(ruleSetName)'").first {
+                if let ruleSet = realm.objects(RuleSet.self).filter("name = '\(ruleSetName)'").first {
                     self.ruleSets.append(ruleSet)
                 }
             }
