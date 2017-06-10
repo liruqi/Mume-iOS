@@ -152,7 +152,7 @@ open class Manager {
                 "If-Modified-Since": lastM,
             ]
             Alamofire.request(url!, headers: headers).response { response in
-                guard let data = response.data, let r = response as? HTTPURLResponse else {
+                guard let data = response.data, let r = response.response else {
                     print("Download GeoLite2-Country.mmdb error: empty data")
                     return
                 }
