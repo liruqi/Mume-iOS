@@ -111,6 +111,7 @@ class HomePresenter: NSObject {
         }
         do {
             try ConfigurationGroup.appendRuleSet(forGroupId: group.uuid, rulesetId: ruleSet.uuid)
+            Manager.sharedManager.setDefaultConfigGroup(group.uuid, name: group.name)
             self.delegate?.handleRefreshUI(nil)
         }catch {
             self.vc.showTextHUD("\("Fail to add ruleset".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)

@@ -214,8 +214,9 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     }
 
     func generateRuleSetSection() -> Section {
+        let group = self.presenter.group
         ruleSetSection = Section("Rule Set".localized())
-        for ruleSet in presenter.group.ruleSets {
+        for ruleSet in group.ruleSets {
             ruleSetSection
                 <<< LabelRow () {
                     $0.title = "\(ruleSet.name)"
@@ -236,7 +237,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         }
         ruleSetSection <<< SwitchRow(kFormDefaultToProxy) {
             $0.title = "Default To Proxy".localized()
-            $0.value = presenter.group.defaultToProxy
+            $0.value = group.defaultToProxy
             $0.hidden = Condition.function([kFormProxies]) { [unowned self] form in
                 return self.presenter.proxy == nil
             }
@@ -285,12 +286,14 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     func tableView(_ tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: IndexPath) {
         if editingStyle == .delete {
             do {
+                let group = presenter.group
                 try defaultRealm.write {
-                    presenter.group.ruleSets.remove(at: indexPath.row)
+                    group.ruleSets.remove(at: indexPath.row)
                 }
                 form[indexPath].hidden = true
                 form[indexPath].evaluateHidden()
-            }catch {
+                Manager.sharedManager.setDefaultConfigGroup(group.uuid, name: group.name)
+            } catch {
                 self.showTextHUD("\("Fail to delete item".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
             }
         }
