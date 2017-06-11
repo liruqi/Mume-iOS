@@ -16,6 +16,7 @@ PODS:
   - CocoaAsyncSocket/RunLoop (7.4.3)
   - Crashlytics (3.8.4):
     - Fabric (~> 1.6.3)
+  - EFQRCode (1.2.5)
   - Eureka (2.0.1)
   - Fabric (1.6.11)
   - ICSMainFramework (0.0.1)
@@ -57,6 +58,7 @@ DEPENDENCIES:
   - Cartography
   - CocoaAsyncSocket (~> 7.4.3)
   - Crashlytics
+  - EFQRCode (~> 1.2.5)
   - Eureka (~> 2)
   - Fabric
   - ICSMainFramework (from `./Library/ICSMainFramework/`)
@@ -92,6 +94,7 @@ SPEC CHECKSUMS:
   Cartography: 0538ccb4044acbbda2266335fc58cb4228794d90
   CocoaAsyncSocket: a18c75dca4b08723628a0bacca6e94803d90be91
   Crashlytics: 79e236942ca1e7fc641df1feb9a275360a78ab6a
+  EFQRCode: 96834a369f74d14b8be882cfe6f27f00cd4cad18
   Eureka: ae837bb1dfae0c07bc1bda7aeef87876eeb537c2
   Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
   ICSMainFramework: 56240e9556d3b0755fc9c934a91ee8ebd09cb753
@@ -105,6 +108,6 @@ SPEC CHECKSUMS:
   SVPullToRefresh: ba2e718695a43253d8bea6852d2960097dc15d8c
   SwiftColor: c240d8cb2e1a29d731ae8deca8739eac6b9c56bd
 
-PODFILE CHECKSUM: 8f3c0194bea0a94ecd2eed2ac31d0bb1c2f12b3c
+PODFILE CHECKSUM: 59ac38b4f278ce25a1f3a672599066f9efb1829f
 
 COCOAPODS: 1.2.1

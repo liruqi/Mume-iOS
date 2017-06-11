@@ -313,25 +313,25 @@ extension Proxy {
         try validate()
     }
     
-    public static func proxy(dictionary: [String: Any]) -> Proxy? {
+    public static func proxy(dictionary: [String: String]) -> Proxy? {
         do {
-            if let uriString = dictionary["uri"] as? String {
+            if let uriString = dictionary["uri"] {
                 return try Proxy(uri: uriString.trimmingCharacters(in: CharacterSet.whitespaces))
             }
             
-            guard let host = dictionary["host"] as? String else{
+            guard let host = dictionary["host"] else {
                 throw ProxyError.invalidHost
             }
-            guard let typeRaw = (dictionary["type"] as? String)?.uppercased(), let type = ProxyType(rawValue: typeRaw) else{
+            guard let typeRaw = dictionary["type"]?.uppercased(), let type = ProxyType(rawValue: typeRaw) else {
                 throw ProxyError.invalidType
             }
-            guard let portStr = (dictionary["port"] as? String), let port = Int(portStr) else{
+            guard let portStr = dictionary["port"], let port = Int(portStr) else {
                 throw ProxyError.invalidPort
             }
-            guard let encryption = dictionary["encryption"] as? String else{
+            guard let encryption = dictionary["encryption"] else {
                 throw ProxyError.invalidAuthScheme
             }
-            guard let password = dictionary["password"] as? String else{
+            guard let password = dictionary["password"] else {
                 throw ProxyError.invalidPassword
             }
             return try Proxy(host: host, port: port, authscheme: encryption, password: password, type: type)

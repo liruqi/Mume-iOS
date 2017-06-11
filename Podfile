@@ -38,6 +38,7 @@ target "Potatso" do
     pod 'PSOperations'
     pod 'Fabric'
     pod 'Crashlytics'
+    pod "EFQRCode", '~> 1.2.5'
     tunnel
     library
     socket
