@@ -91,14 +91,14 @@ class HomePresenter: NSObject {
         CurrentGroupManager.shared.setConfigGroupId(group.uuid)
     }
 
-    func addRuleSet() {
+    func addRuleSet(existing: [String]) {
         let destVC: UIViewController
-        if defaultRealm.objects(RuleSet).count == 0 {
+        if defaultRealm.objects(RuleSet.self).count <= existing.count {
             destVC = RuleSetConfigurationViewController() { [unowned self] ruleSet in
                 self.appendRuleSet(ruleSet)
             }
-        }else {
-            destVC = RuleSetListViewController { [unowned self] ruleSet in
+        } else {
+            destVC = RuleSetListViewController(existing: existing) { [unowned self] ruleSet in
                 self.appendRuleSet(ruleSet)
             }
         }

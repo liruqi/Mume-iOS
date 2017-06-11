@@ -215,8 +215,10 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
 
     func generateRuleSetSection() -> Section {
         let group = self.presenter.group
+        var ruleSetIds = [String]()
         ruleSetSection = Section("Rule Set".localized())
         for ruleSet in group.ruleSets {
+            ruleSetIds.append(ruleSet.uuid)
             ruleSetSection
                 <<< LabelRow () {
                     $0.title = "\(ruleSet.name)"
@@ -253,7 +255,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         ruleSetSection <<< BaseButtonRow () {
             $0.title = "Add Rule Set".localized()
         }.onCellSelection({ [unowned self] (cell, row) -> () in
-            self.presenter.addRuleSet()
+            self.presenter.addRuleSet(existing: ruleSetIds)
         })
         return ruleSetSection
     }

@@ -77,8 +77,8 @@ open class Config {
     }
     
     func setupProxies() throws {
-        if let proxiesConfig = configDict["proxies"] as? [[String: AnyObject]] {
-            proxies = try proxiesConfig.map({ (config) -> Proxy? in
+        if let proxiesConfig = configDict["proxies"] as? [[String: String]] {
+            proxies = proxiesConfig.map({ (config) -> Proxy? in
                 return Proxy.proxy(dictionary: config)
             }).filter { $0 != nil }.map { $0! }
             try proxies.forEach {

@@ -17,14 +17,16 @@ private let kRuleSetCellIdentifier = "ruleset"
 
 class RuleSetListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var ruleSets: Results<RuleSet>
+    var existingRules: [String] = []
     var chooseCallback: ((RuleSet?) -> Void)?
     // Observe Realm Notifications
     var heightAtIndex: [Int: CGFloat] = [:]
     fileprivate let pageSize = 20
     
-    init(chooseCallback: ((RuleSet?) -> Void)? = nil) {
+    init(existing: [String], chooseCallback: ((RuleSet?) -> Void)? = nil) {
         self.chooseCallback = chooseCallback
-        self.ruleSets = DBUtils.allNotDeleted(RuleSet.self, sorted: "createAt")
+        self.existingRules = existing
+        self.ruleSets = DBUtils.allNotDeleted(RuleSet.self, filter: "uuid = ''", sorted: "createAt")
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -57,7 +59,7 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(add))
         reloadData()
         
-        tableView.addPullToRefresh( actionHandler: { [weak self] in
+        self.tableView.addPullToRefresh( actionHandler: { [weak self] in
             self?.loadData()
             })
         if ruleSets.count == 0 {
@@ -66,7 +68,8 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
     }
 
     func reloadData() {
-        ruleSets = DBUtils.allNotDeleted(RuleSet.self, sorted: "createAt")
+        let cond = self.existingRules.map{ "uuid != '\($0)'" }.joined(separator: " && ")
+        self.ruleSets = DBUtils.allNotDeleted(RuleSet.self, filter: cond, sorted: "createAt")
         tableView.reloadData()
     }
 

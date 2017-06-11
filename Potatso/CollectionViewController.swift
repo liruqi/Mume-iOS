@@ -14,7 +14,7 @@ private let rowHeight: CGFloat = 135
 class CollectionViewController: SegmentPageVC {
 
     let pageVCs = [
-        RuleSetListViewController(),
+        RuleSetListViewController(existing: []),
         ProxyListViewController(),
     ]
 

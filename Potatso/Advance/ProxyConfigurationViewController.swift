@@ -184,7 +184,7 @@ class ProxyConfigurationViewController: FormViewController {
                 throw "Host can't be empty".localized()
             }
             if !self.isEdit {
-                if let _ = defaultRealm.objects(Proxy).filter("host = '\(host)'").first {
+                if let _ = defaultRealm.objects(Proxy.self).filter("host = '\(host)'").first {
                     throw "Server already exists".localized()
                 }
             }
