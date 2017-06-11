@@ -40,10 +40,13 @@ struct API {
             .responseJSON { response in
                 if let JSON = response.result.value {
                     print("JSON: \(JSON)")
+                    Crashlytics.sharedInstance().setObjectValue(JSON, forKey: "getRuleSets")
                     if let parsedObject = Mapper<RuleSet>().mapArray(JSONObject: JSON) {
                         callback(parsedObject)
                         return
                     }
+                } else {
+                    Crashlytics.sharedInstance().setObjectValue(response.data ?? "response.data", forKey: "getRuleSetsFailed")
                 }
                 
             }
@@ -71,7 +74,10 @@ struct API {
                 print(response.result)   // result of response serialization
                 Potatso.sharedUserDefaults().set(response.data, forKey: kCloudProxySets)
                 if let JSON = response.result.value as? [Dictionary<String, String>] {
+                    Crashlytics.sharedInstance().setObjectValue(JSON, forKey: "getProxySets")
                     callback(JSON)
+                } else {
+                    Crashlytics.sharedInstance().setObjectValue(response.data ?? "response.data", forKey: "getProxySetsFailed")
                 }
         }
     }

@@ -257,6 +257,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         }.onCellSelection({ [unowned self] (cell, row) -> () in
             self.presenter.addRuleSet(existing: ruleSetIds)
         })
+        Crashlytics.sharedInstance().setObjectValue(ruleSetIds.joined(separator: " "), forKey: "activeRules")
         return ruleSetSection
     }
 
