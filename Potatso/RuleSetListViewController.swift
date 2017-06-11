@@ -62,7 +62,7 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
         self.tableView.addPullToRefresh( actionHandler: { [weak self] in
             self?.loadData()
             })
-        if ruleSets.count == 0 {
+        if self.ruleSets.count == 0 {
             tableView.triggerPullToRefresh()
         }
     }

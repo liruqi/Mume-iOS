@@ -35,6 +35,19 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
                 }
             }
         }
+        API.getRuleSets() { (result) in            
+            guard result.count > 0 else {
+                return
+            }
+            let data = result.filter({ $0.name.characters.count > 0})
+            for i in 0..<data.count {
+                do {
+                    try RuleSet.addRemoteObject(data[i])
+                } catch {
+                    NSLog("Fail to subscribe".localized())
+                }
+            }
+        }
         return true
     }
     
