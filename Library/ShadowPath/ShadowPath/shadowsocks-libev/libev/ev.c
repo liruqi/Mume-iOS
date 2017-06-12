@@ -1018,33 +1018,6 @@ ecb_function_ ecb_const uint32_t ecb_bitrev32 (uint32_t x)
   return x;
 }
 
-/* popcount64 is only available on 64 bit cpus as gcc builtin */
-/* so for this version we are lazy */
-ecb_function_ ecb_const int ecb_popcount64 (uint64_t x);
-ecb_function_ ecb_const int
-ecb_popcount64 (uint64_t x)
-{
-  return ecb_popcount32 (x) + ecb_popcount32 (x >> 32);
-}
-
-ecb_inline ecb_const uint8_t  ecb_rotl8  (uint8_t  x, unsigned int count);
-ecb_inline ecb_const uint8_t  ecb_rotr8  (uint8_t  x, unsigned int count);
-ecb_inline ecb_const uint16_t ecb_rotl16 (uint16_t x, unsigned int count);
-ecb_inline ecb_const uint16_t ecb_rotr16 (uint16_t x, unsigned int count);
-ecb_inline ecb_const uint32_t ecb_rotl32 (uint32_t x, unsigned int count);
-ecb_inline ecb_const uint32_t ecb_rotr32 (uint32_t x, unsigned int count);
-ecb_inline ecb_const uint64_t ecb_rotl64 (uint64_t x, unsigned int count);
-ecb_inline ecb_const uint64_t ecb_rotr64 (uint64_t x, unsigned int count);
-
-ecb_inline ecb_const uint8_t  ecb_rotl8  (uint8_t  x, unsigned int count) { return (x >> ( 8 - count)) | (x << count); }
-ecb_inline ecb_const uint8_t  ecb_rotr8  (uint8_t  x, unsigned int count) { return (x << ( 8 - count)) | (x >> count); }
-ecb_inline ecb_const uint16_t ecb_rotl16 (uint16_t x, unsigned int count) { return (x >> (16 - count)) | (x << count); }
-ecb_inline ecb_const uint16_t ecb_rotr16 (uint16_t x, unsigned int count) { return (x << (16 - count)) | (x >> count); }
-ecb_inline ecb_const uint32_t ecb_rotl32 (uint32_t x, unsigned int count) { return (x >> (32 - count)) | (x << count); }
-ecb_inline ecb_const uint32_t ecb_rotr32 (uint32_t x, unsigned int count) { return (x << (32 - count)) | (x >> count); }
-ecb_inline ecb_const uint64_t ecb_rotl64 (uint64_t x, unsigned int count) { return (x >> (64 - count)) | (x << count); }
-ecb_inline ecb_const uint64_t ecb_rotr64 (uint64_t x, unsigned int count) { return (x << (64 - count)) | (x >> count); }
-
 #if ECB_GCC_VERSION(4,3) || (ECB_CLANG_BUILTIN(__builtin_bswap32) && ECB_CLANG_BUILTIN(__builtin_bswap64))
   #if ECB_GCC_VERSION(4,8) || ECB_CLANG_BUILTIN(__builtin_bswap16)
   #define ecb_bswap16(x)  __builtin_bswap16 (x)
