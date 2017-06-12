@@ -70,7 +70,7 @@ extension DBUtils {
     public static func all<T: BaseModel>(_ type: T.Type, filter: String? = nil, sorted: String? = nil, inRealm realm: Realm? = nil) -> Results<T> {
         let mRealm = currentRealm(realm)
         var res = mRealm.objects(type)
-        if let filter = filter {
+        if let filter = filter, filter.characters.count > 0 {
             res = res.filter(filter)
         }
         if let sorted = sorted {

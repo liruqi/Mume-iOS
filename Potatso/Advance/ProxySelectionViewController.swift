@@ -40,10 +40,9 @@ class ProxySelectionViewController: FormViewController {
     func generateForm() {
         form.delegate = nil
         form.removeAll()
-        proxies = defaultRealm.objects(Proxy.self).sorted(byKeyPath: "createAt").map{ $0 }
+        self.proxies = defaultRealm.objects(Proxy.self).sorted(byKeyPath: "createAt").map{ $0 }
         form +++ Section("Proxy".localized())
-        let sets = proxies.filter { $0.host != nil }
-        for proxy in sets {
+        for proxy in self.proxies {
             form[0]
                 <<< CheckRow(proxy.description) {
                     $0.title = proxy.description
