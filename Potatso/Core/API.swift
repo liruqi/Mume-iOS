@@ -53,9 +53,9 @@ struct API {
     }
     
     static func getProxySets(_ callback: @escaping ([Dictionary<String, String>]) -> Void) {
-        let kCloudProxySets = "kCloudProxySets"
         let lang = Locale.preferredLanguages[0]
         let versionCode = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? ""
+        let kCloudProxySets = "kCloudProxySets" + versionCode
         NSLog("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
         
         if let data = Potatso.sharedUserDefaults().data(forKey: kCloudProxySets) {

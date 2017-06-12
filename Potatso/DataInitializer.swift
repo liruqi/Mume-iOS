@@ -21,9 +21,10 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
         Manager.sharedManager.setup()
         sync()
         API.getProxySets() { (response) in
+            do {
             for dic in response {
                 if let proxy = Proxy.proxy(dictionary: dic) {
-                    let proxies = DBUtils.allNotDeleted(Proxy.self, sorted: "createAt").map({ $0 })
+                    let proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
                     for ep in proxies {
                         if ep.host == proxy.host,
                             ep.port == proxy.port {
@@ -31,8 +32,10 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
                             return
                         }
                     }
-                    DataInitializer.cloudProxies.append(proxy)
+                    try DBUtils.add(proxy)
                 }
+            }
+            } catch {
             }
         }
         API.getRuleSets() { (result) in            
