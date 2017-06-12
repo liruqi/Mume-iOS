@@ -182,6 +182,10 @@ extension Proxy {
     public convenience init(uri: String) throws {
         self.init()
         if let rawUri = URL(string: uri), let s = rawUri.scheme?.lowercased() {
+            if let fragment = rawUri.fragment, fragment.characters.count == 36 {
+                self.uuid = fragment
+            }
+            
             if s == "socks5" || s == "socks" {
                 guard let host = rawUri.host else {
                     throw ProxyError.invalidUri
@@ -191,6 +195,7 @@ extension Proxy {
                 self.port = rawUri.port ?? 1080
                 return
             }
+            
             // mume://method:base64(password)@hostname:port
             if s == "mume" || s == "shadowsocks" {
                 let proxyString = uri.substring(from: uri.index(uri.startIndex, offsetBy: s.characters.count))

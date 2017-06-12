@@ -67,7 +67,7 @@ struct API {
                 print("Local deserialization failed")
             }
         }
-        Alamofire.request(API.URL + "shadowsocks.php", parameters: ["lang": lang, "version": versionCode])
+        Alamofire.request("https://mumevpn.com/shared.php", parameters: ["lang": lang, "version": versionCode])
             .responseJSON { response in
                 print(response.response ?? "response.response") // URL response
                 print(response.data ?? "response.data")     // server data

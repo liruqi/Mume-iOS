@@ -22,11 +22,11 @@ class VPN {
             Async.main(after: 1) {
                 _switchDefaultVPN(group, completion: completion)
             }
-        }else {
+        } else {
             _switchDefaultVPN(group, completion: completion)
         }
     }
-
+    
     fileprivate static func _switchDefaultVPN(_ group: ConfigurationGroup, completion: ((Error?) -> Void)? = nil) {
         Manager.sharedManager.switchVPN { (manager, error) in
             if let _ = manager {
@@ -39,5 +39,4 @@ class VPN {
             }
         }
     }
-    
 }
