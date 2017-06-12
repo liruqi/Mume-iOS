@@ -72,6 +72,26 @@
 				<string>shadowsocksr</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>socks</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>socks</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>socks5</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>socks5</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>168</string>

@@ -53,7 +53,7 @@ struct Importer {
     }
     
     func onImportInput(_ result: String) {
-        if Proxy.uriIsShadowsocks(result) {
+        if Proxy.uriIsProxy(result) {
             importSS(source: result)
         } else {
             importConfig(result, isURL: true)

@@ -358,10 +358,13 @@ extension Proxy {
         return proxyString
     }
 
-    public class func uriIsShadowsocks(_ uri: String) -> Bool {
+    private class func uriIsShadowsocks(_ uri: String) -> Bool {
         return uri.lowercased().hasPrefix(Proxy.ssUriMethod + "://") || uri.lowercased().hasPrefix(Proxy.ssrUriMethod + "://") || uri.lowercased().hasPrefix("mume://") || uri.lowercased().hasPrefix("shadowsocks")
     }
 
+    public class func uriIsProxy(_ uri: String) -> Bool {
+        return Proxy.uriIsShadowsocks(uri) || uri.lowercased().hasPrefix("socks")
+    }
 }
 
 public func ==(lhs: Proxy, rhs: Proxy) -> Bool {
