@@ -66,6 +66,7 @@ struct Importer {
             do {
                 try proxy.validate()
                 try DBUtils.add(proxy)
+                NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
                 self.onConfigSaveCallback(true, error: nil)
             } catch {
                 self.onConfigSaveCallback(false, error: error)
@@ -90,10 +91,10 @@ struct Importer {
                             if let result = String(data: data, encoding: .ascii) {
                                 if Proxy.uriIsProxy(result) {
                                     self.importSS(source: result)
-                                } else {
-                                    try config.setup(string: result)
-                                    try config.save()
+                                    return
                                 }
+                                try config.setup(string: result)
+                                try config.save()
                                 self.onConfigSaveCallback(true, error: nil)
                                 return
                             }

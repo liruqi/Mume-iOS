@@ -33,6 +33,7 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
                         }
                     }
                     try DBUtils.add(proxy)
+                    NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
                 }
             }
             } catch {
