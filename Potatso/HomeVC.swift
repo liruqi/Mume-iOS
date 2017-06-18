@@ -59,6 +59,9 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: "List".templateImage, style: .plain, target: presenter, action: #selector(HomePresenter.chooseConfigGroups))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addProxy(_:)))
         startTimer()
+        if let proxy = presenter.proxy {
+            Crashlytics.sharedInstance().setObjectValue(proxy.description, forKey: "ShadowsocksConfig")
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -128,6 +131,13 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         form +++ generateProxySection()
 
         let section = Section("Proxy".localized())
+        defer {
+            form +++ section
+            
+            form +++ generateRuleSetSection()
+            form.delegate = self
+            tableView?.reloadData()
+        }
         proxies = DBUtils.allNotDeleted(Proxy.self, sorted: "createAt").map({ $0 })
         if proxies.count == 0 {
             section
@@ -138,11 +148,11 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                         cell.selectionStyle = .none
                         cell.accessoryType = .checkmark
                     })
-        } else {
-            if nil == self.presenter.proxy {
-                try? ConfigurationGroup.changeProxy(forGroupId: self.presenter.group.uuid, proxyId: proxies[0].uuid)
-            }
-        
+            return
+        }
+        if nil == self.presenter.proxy {
+            try? ConfigurationGroup.changeProxy(forGroupId: self.presenter.group.uuid, proxyId: proxies[0].uuid)
+        }
         for proxy in proxies {
             section
                 <<< ProxyRow() {
@@ -167,12 +177,6 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                         }
                         })
         }
-            }
-        form +++ section
-        
-        form +++ generateRuleSetSection()
-        form.delegate = self
-        tableView?.reloadData()
     }
 
     func updateConnectButton() {

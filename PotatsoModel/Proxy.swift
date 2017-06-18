@@ -12,7 +12,7 @@ import CloudKit
 public enum ProxyType: String {
     case Shadowsocks = "Shadowsocks"
     case ShadowsocksR = "ShadowsocksR"
-    case Https = "HTTPS"
+    //case Https = "HTTPS"
     case Socks5 = "SOCKS5"
     case None = "NONE"
 }
@@ -139,7 +139,32 @@ open class Proxy: BaseModel {
             break
         }
     }
-
+    
+    open override var description: String {
+        return String.init(format: "%@:%d", host, port)
+    }
+    
+    open func shareUri() -> String {
+        switch type {
+        case .Shadowsocks:
+            if let authscheme = authscheme,
+                let password = password,
+                let ss = "\(authscheme):\(password)@\(host):\(port)".data(using: .ascii)
+            {
+                return "https://mumevpn.com/ss.php?s=" + ss.base64EncodedString()
+            }
+            return ""
+        
+        case .Socks5:
+            if let ss = "\(host):\(port)".data(using: .ascii) {
+                return "https://mumevpn.com/socks5.php?s=" + ss.base64EncodedString()
+            }
+            return ""
+            
+        default:
+            return ""
+        }
+    }
 }
 
 // Public Accessor
@@ -169,9 +194,6 @@ extension Proxy {
             break
         }
         return ""
-    }
-    open override var description: String {
-        return String.init(format: "%@:%d", host, port)
     }
     
 }
@@ -358,11 +380,11 @@ extension Proxy {
         return proxyString
     }
 
-    private class func uriIsShadowsocks(_ uri: String) -> Bool {
+    private static func uriIsShadowsocks(_ uri: String) -> Bool {
         return uri.lowercased().hasPrefix(Proxy.ssUriMethod + "://") || uri.lowercased().hasPrefix(Proxy.ssrUriMethod + "://") || uri.lowercased().hasPrefix("mume://") || uri.lowercased().hasPrefix("shadowsocks")
     }
 
-    public class func uriIsProxy(_ uri: String) -> Bool {
+    public static func uriIsProxy(_ uri: String) -> Bool {
         return Proxy.uriIsShadowsocks(uri) || uri.lowercased().hasPrefix("socks")
     }
 }

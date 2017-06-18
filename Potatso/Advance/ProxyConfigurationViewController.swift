@@ -35,7 +35,10 @@ class ProxyConfigurationViewController: FormViewController {
         if let proxy = upstreamProxy {
             self.upstreamProxy = Proxy(value: proxy)
             self.isEdit = true
-        }else {
+            if (self.upstreamProxy.host.hasSuffix("mume.site")) {
+                self.readOnly = true
+            }
+        } else {
             self.upstreamProxy = Proxy()
             self.isEdit = false
         }
@@ -130,7 +133,7 @@ class ProxyConfigurationViewController: FormViewController {
                     if let r1 : PushRow<ProxyType> = form.rowBy(tag: kProxyFormType) {
                         return r1.value != ProxyType.Shadowsocks
                     }
-                    return false
+                    return self.isEdit
                 }
             }
             <<< PushRow<String>(kProxyFormProtocol) {
@@ -171,7 +174,19 @@ class ProxyConfigurationViewController: FormViewController {
                 cell.textField.autocorrectionType = .no
                 cell.textField.autocapitalizationType = .none
             }
-
+        
+        if self.readOnly {
+            return
+        }
+        guard self.isEdit else {
+            return
+        }
+        
+        let proxyUri = self.upstreamProxy.shareUri()
+        if proxyUri.characters.count > 0 {
+            let footerSize = self.view.frame.width
+            self.tableView?.tableFooterView = ProxyQRCode(frame: CGRect.init(x: 0, y: 0, width: footerSize, height: footerSize), proxy: proxyUri)
+        }
     }
     
     func save() {
