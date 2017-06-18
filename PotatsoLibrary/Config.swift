@@ -49,13 +49,6 @@ open class Config {
         try setupModels()
     }
     
-    open func setup(url: URL) throws {
-        guard let string = try? String(contentsOf: url) else {
-            throw ConfigError.downloadFail
-        }
-        try setup(string: string)
-    }
-    
     open func save() throws {
         do {
             try realm.commitWrite()

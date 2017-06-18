@@ -188,7 +188,7 @@ class ProxyConfigurationViewController: FormViewController {
             self.tableView?.tableFooterView = ProxyQRCode(frame: CGRect.init(x: 0, y: 0, width: footerSize, height: footerSize), proxy: proxyUri, callback: { shareImage in
 
                 var objectsToShare = [AnyObject]()
-                objectsToShare.append("Mume VPN configuration" as AnyObject)
+                objectsToShare.append("Try Mume VPN😚" as AnyObject)
                 objectsToShare.append(shareImage)
                 if let url = URL(string: proxyUri) {
                     objectsToShare.append(url as AnyObject)

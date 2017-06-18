@@ -80,16 +80,33 @@ struct Importer {
         Async.background(after: 1) {
             let config = Config()
             do {
-                if isURL {
-                    if let url = URL(string: source) {
-                        try config.setup(url: url)
-                    }
-                }else {
+                if isURL, let url = URL(string: source), (url.scheme == "https" || url.scheme == "http") {
+                    API.getImportData(url: url, callback: { data, error in
+                        if let error = error {
+                            self.onConfigSaveCallback(false, error: error)
+                            return
+                        }
+                        do {
+                            if let result = String(data: data, encoding: .ascii) {
+                                if Proxy.uriIsProxy(result) {
+                                    self.importSS(source: result)
+                                } else {
+                                    try config.setup(string: result)
+                                    try config.save()
+                                }
+                                self.onConfigSaveCallback(true, error: nil)
+                                return
+                            }
+                        } catch {
+                        }
+                        self.onConfigSaveCallback(false, error: error)
+                    })
+                } else {
                     try config.setup(string: source)
+                    try config.save()
+                    self.onConfigSaveCallback(true, error: nil)
                 }
-                try config.save()
-                self.onConfigSaveCallback(true, error: nil)
-            }catch {
+            } catch {
                 self.onConfigSaveCallback(false, error: error)
             }
         }

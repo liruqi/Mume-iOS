@@ -31,6 +31,24 @@ struct API {
         }
     }
     
+    static func getImportData(url: URL, callback: @escaping (Data, Error?) -> Void) {
+        let lang = Locale.preferredLanguages[0]
+        let versionCode = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? ""
+        NSLog("API.getImportData ===> lang: \(lang), version: \(versionCode)")
+        let parameters: Parameters = ["lang": lang, "version": versionCode]
+        Alamofire.SessionManager.default.request(url, parameters: parameters)
+            .responseData { response in
+                if let JSON = response.data {
+                    print("API.getImportData: " + (String(data: JSON, encoding: .ascii) ?? ""))
+                    Crashlytics.sharedInstance().setObjectValue(JSON, forKey: "getImportData")
+                    callback(JSON, nil)
+                } else {
+                    Crashlytics.sharedInstance().setObjectValue(response.data ?? "response.data", forKey: "getImportData")
+                    callback(Data(), response.error)
+                }
+        }
+    }
+    
     static func getRuleSets(_ callback: @escaping ([RuleSet]) -> Void) {
         let lang = Locale.preferredLanguages[0]
         let versionCode = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? ""
