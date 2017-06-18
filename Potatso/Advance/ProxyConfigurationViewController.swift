@@ -185,7 +185,19 @@ class ProxyConfigurationViewController: FormViewController {
         let proxyUri = self.upstreamProxy.shareUri()
         if proxyUri.characters.count > 0 {
             let footerSize = self.view.frame.width
-            self.tableView?.tableFooterView = ProxyQRCode(frame: CGRect.init(x: 0, y: 0, width: footerSize, height: footerSize), proxy: proxyUri)
+            self.tableView?.tableFooterView = ProxyQRCode(frame: CGRect.init(x: 0, y: 0, width: footerSize, height: footerSize), proxy: proxyUri, callback: { shareImage in
+
+                var objectsToShare = [AnyObject]()
+                objectsToShare.append("Mume VPN configuration" as AnyObject)
+                objectsToShare.append(shareImage)
+                if let url = URL(string: proxyUri) {
+                    objectsToShare.append(url as AnyObject)
+                }
+
+                let activityViewController = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+                activityViewController.popoverPresentationController?.sourceView = self.view
+                self.present(activityViewController, animated: true, completion: nil)
+            })
         }
     }
     
