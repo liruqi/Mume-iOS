@@ -131,7 +131,7 @@ class ProxyConfigurationViewController: FormViewController {
                 $0.baseCell.isUserInteractionEnabled = canEdit
                 $0.hidden = Condition.function([kProxyFormType]) { form in
                     if let r1 : PushRow<ProxyType> = form.rowBy(tag: kProxyFormType) {
-                        return r1.value != ProxyType.Shadowsocks
+                        return (r1.value != ProxyType.Shadowsocks) || self.isEdit
                     }
                     return self.isEdit
                 }

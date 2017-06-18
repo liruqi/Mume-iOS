@@ -25,7 +25,7 @@ class ProxyQRCode : UIView {
         
         if let tryImage = EFQRCode.generate(
             content: proxy,
-            watermark: UIImage(named: "AppIcon")?.toCGImage()
+            watermark: UIImage(named: "Mume")?.toCGImage()
             ) {
             print("Create QRCode image success: \(tryImage)")
             self.sadView.image = UIImage(cgImage: tryImage)
