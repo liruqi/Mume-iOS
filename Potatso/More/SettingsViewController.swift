@@ -24,8 +24,6 @@ enum FeedBackType: String, CustomStringConvertible {
     }
 }
 
-
-
 class SettingsViewController: FormViewController, MFMailComposeViewControllerDelegate, SFSafariViewControllerDelegate {
     
     // MARK: - View Life Cycle
@@ -92,7 +90,26 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
             <<< ActionRow() {
                 $0.title = "Feedback".localized()
             }.onCellSelection({ (cell, row) -> () in
-                Appirater.rateApp()
+                let alert = UIAlertController(title: "Feedback".localized(), message: nil, preferredStyle: .actionSheet)
+                alert.addAction(UIAlertAction(title: "Rate us on App Store".localized(), style: .default, handler: { (action) in
+                    Appirater.rateApp()
+                }))
+                alert.addAction(UIAlertAction(title: "Send feedback".localized(), style: .default, handler: { (action) in
+                    if MFMailComposeViewController.canSendMail() {
+                        let composer = MFMailComposeViewController()
+                        composer.mailComposeDelegate = self
+                        composer.setToRecipients(["mume@mumevpn.com"])
+                        composer.setSubject("Feedback for Mume " + AppEnv.fullVersion)
+                        composer.setMessageBody("", isHTML: false)
+                        self.present(composer, animated: true, completion: nil)
+                    } else if let url = URL(string: "mailto:mume@mumevpn.com") {
+                        UIApplication.shared.openURL(url)
+                    } else if let url = URL(string: "https://mumevpn.com/") {
+                        UIApplication.shared.openURL(url)
+                    }
+                }))
+                alert.addAction(UIAlertAction(title: "CANCEL".localized(), style: .cancel, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             })
             <<< ActionRow() {
                 $0.title = "Share with friends".localized()
@@ -101,7 +118,11 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
             })
         return section
     }
-
+    
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     func generateAboutSection() -> Section {
         let section = Section()
         section
