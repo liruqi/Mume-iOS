@@ -91,7 +91,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
                 $0.title = "Feedback".localized()
             }.onCellSelection({ (cell, row) -> () in
                 let alert = UIAlertController(title: "Feedback".localized(), message: nil, preferredStyle: .actionSheet)
-                alert.addAction(UIAlertAction(title: "Rate us on App Store".localized(), style: .default, handler: { (action) in
+                alert.addAction(UIAlertAction(title: "Rate on App Store".localized(), style: .default, handler: { (action) in
                     Appirater.rateApp()
                 }))
                 alert.addAction(UIAlertAction(title: "Send feedback".localized(), style: .default, handler: { (action) in

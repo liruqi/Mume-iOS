@@ -170,8 +170,6 @@
 		B87B98041D3B423B00FA66BF /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B87B98031D3B423B00FA66BF /* PaddingLabel.swift */; };
 		B87B980A1D3B64BE00FA66BF /* RequestEventRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B87B98091D3B64BE00FA66BF /* RequestEventRow.swift */; };
 		B88096B21D0652F0008BEB87 /* RuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88096B11D0652F0008BEB87 /* RuleCell.swift */; };
-		B8822CD31D2B81C400AD252C /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B8822CD11D2B81C400AD252C /* libcrypto.a */; };
-		B8822CD41D2B81C400AD252C /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B8822CD21D2B81C400AD252C /* libssl.a */; };
 		B88559EB1D21319D00B1243E /* YAML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88559EA1D21319D00B1243E /* YAML.framework */; };
 		B88559EC1D21319D00B1243E /* YAML.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B88559EA1D21319D00B1243E /* YAML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B88559F01D21371A00B1243E /* PotatsoModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BC6FFEA1CB28B4B00E5EA61 /* PotatsoModel.framework */; };
@@ -820,8 +818,6 @@
 		B87B98031D3B423B00FA66BF /* PaddingLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaddingLabel.swift; sourceTree = "<group>"; };
 		B87B98091D3B64BE00FA66BF /* RequestEventRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestEventRow.swift; sourceTree = "<group>"; };
 		B88096B11D0652F0008BEB87 /* RuleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuleCell.swift; sourceTree = "<group>"; };
-		B8822CD11D2B81C400AD252C /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "Library/ShadowPath/ShadowPath/shadowsocks-libev/libopenssl/lib/libcrypto.a"; sourceTree = "<group>"; };
-		B8822CD21D2B81C400AD252C /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "Library/ShadowPath/ShadowPath/shadowsocks-libev/libopenssl/lib/libssl.a"; sourceTree = "<group>"; };
 		B88559EA1D21319D00B1243E /* YAML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YAML.framework; path = Carthage/Build/iOS/YAML.framework; sourceTree = "<group>"; };
 		B8C256AF1D1A957A0074D3B1 /* HomePresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomePresenter.swift; sourceTree = "<group>"; };
 		B8CCC6DC1CFD5D5D000E7E2E /* CollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
@@ -854,8 +850,6 @@
 				B88559EB1D21319D00B1243E /* YAML.framework in Frameworks */,
 				553D95BB1D63FE6700B193B7 /* NetworkExtension.framework in Frameworks */,
 				234575943B38F4EAD3E2B481 /* Pods_Potatso.framework in Frameworks */,
-				B8822CD31D2B81C400AD252C /* libcrypto.a in Frameworks */,
-				B8822CD41D2B81C400AD252C /* libssl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1903,8 +1897,6 @@
 			isa = PBXGroup;
 			children = (
 				553D95BA1D63FE6700B193B7 /* NetworkExtension.framework */,
-				B8822CD11D2B81C400AD252C /* libcrypto.a */,
-				B8822CD21D2B81C400AD252C /* libssl.a */,
 				B88559EA1D21319D00B1243E /* YAML.framework */,
 				9B87060C1C1DBDD400651424 /* libresolv.tbd */,
 				9B8193B31CBCFEE700BE320D /* NotificationCenter.framework */,
