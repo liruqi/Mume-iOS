@@ -293,12 +293,12 @@ extension Manager {
         let templateDirPath = rootUrl.appendingPathComponent("httptemplate").path
         let temporaryDirPath = rootUrl.appendingPathComponent("httptemporary").path
         let logDir = rootUrl.appendingPathComponent("log").path
-        let maxminddbPath = Potatso.sharedUrl().appendingPathComponent("GeoLite2-Country.mmdb").path
+        let maxminddbPath = rootUrl.appendingPathComponent("GeoLite2-Country.mmdb").path
         let userActionUrl = confDirUrl.appendingPathComponent("mume.action")
         let directDomainsUrl = confDirUrl.appendingPathComponent("mume.direct")
         for p in [confDirUrl.path, templateDirPath, temporaryDirPath, logDir] {
             if !FileManager.default.fileExists(atPath: p) {
-                _ = try? FileManager.default.createDirectory(atPath: p, withIntermediateDirectories: true, attributes: nil)
+                _ = try? FileManager.default.createDirectory(atPath: p, withIntermediateDirectories: true, attributes: [FileAttributeKey.protectionKey.rawValue: FileProtectionType.none])
             }
         }
         
