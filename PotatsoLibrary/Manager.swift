@@ -203,17 +203,16 @@ open class Manager {
         if let groupUUID = Potatso.sharedUserDefaults().string(forKey: kDefaultGroupIdentifier), let group = DBUtils.get(groupUUID, type: ConfigurationGroup.self) {
             return group
         } else {
-            var group: ConfigurationGroup
-            if let g = DBUtils.allNotDeleted(ConfigurationGroup.self, sorted: "createAt").first {
-                group = g
-            }else {
-                group = ConfigurationGroup()
-                group.name = "Default".localized()
-                do {
+            var group = ConfigurationGroup()
+            do {
+                if let g = DBUtils.all(ConfigurationGroup.self, sorted: "createAt").first {
+                    group = g
+                } else {
+                    group.name = "Default".localized()
                     try DBUtils.add(group)
-                }catch {
-                    fatalError("Fail to generate default group")
                 }
+            } catch {
+                group.name = "Default".localized()
             }
             let uuid = group.uuid
             let name = group.name

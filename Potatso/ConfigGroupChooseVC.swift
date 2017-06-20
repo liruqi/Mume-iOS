@@ -78,7 +78,7 @@ class ConfigGroupChooseVC: UIViewController, UITableViewDataSource, UITableViewD
     var token: RLMNotificationToken?
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        groups = DBUtils.allNotDeleted(ConfigurationGroup.self, sorted: "createAt")
+        groups = DBUtils.all(ConfigurationGroup.self, sorted: "createAt")
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         NotificationCenter.default.addObserver(self, selector: #selector(onVPNStatusChanged), name: NSNotification.Name(rawValue: kProxyServiceVPNStatusNotification), object: nil)
     }

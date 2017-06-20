@@ -45,7 +45,7 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
             if let proxy = try? Proxy(uri: url.absoluteString) {
                 do {
                     try proxy.validate()
-                    let proxies = DBUtils.allNotDeleted(Proxy.self, sorted: "createAt").map({ $0 })
+                    let proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
                     for ep in proxies {
                         if ep.host == proxy.host,
                             ep.port == proxy.port {
@@ -93,7 +93,7 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
                 do {
                     let proxy = try Proxy(uri: content)
                     try proxy.validate()
-                    let proxies = DBUtils.allNotDeleted(Proxy.self, sorted: "createAt").map({ $0 })
+                    let proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
                     for ep in proxies {
                         if ep.host == proxy.host,
                             ep.port == proxy.port {

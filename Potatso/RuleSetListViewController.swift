@@ -26,7 +26,7 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
     init(existing: [String], chooseCallback: ((RuleSet?) -> Void)? = nil) {
         self.chooseCallback = chooseCallback
         self.existingRules = existing
-        self.ruleSets = DBUtils.allNotDeleted(RuleSet.self, filter: "uuid = ''", sorted: "createAt")
+        self.ruleSets = DBUtils.all(RuleSet.self, filter: "uuid = ''", sorted: "createAt")
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -69,7 +69,7 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
 
     func reloadData() {
         let cond = self.existingRules.map{ "uuid != '\($0)'" }.joined(separator: " && ")
-        self.ruleSets = DBUtils.allNotDeleted(RuleSet.self, filter: cond, sorted: "createAt")
+        self.ruleSets = DBUtils.all(RuleSet.self, filter: cond, sorted: "createAt")
         tableView.reloadData()
     }
 

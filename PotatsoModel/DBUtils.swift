@@ -63,10 +63,6 @@ open class DBUtils {
 // Query
 extension DBUtils {
 
-    public static func allNotDeleted<T: BaseModel>(_ type: T.Type, filter: String? = nil, sorted: String? = nil, inRealm realm: Realm? = nil) -> Results<T> {
-        return all(type, filter: filter, sorted: sorted, inRealm: realm)
-    }
-
     public static func all<T: BaseModel>(_ type: T.Type, filter: String? = nil, sorted: String? = nil, inRealm realm: Realm? = nil) -> Results<T> {
         let mRealm = currentRealm(realm)
         var res = mRealm.objects(type)

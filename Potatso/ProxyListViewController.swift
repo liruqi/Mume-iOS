@@ -49,7 +49,7 @@ class ProxyListViewController: FormViewController {
     }
 
     func reloadData() {
-        proxies = DBUtils.allNotDeleted(Proxy.self, sorted: "createAt").map({ $0 })
+        proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
         if allowNone {
             proxies.insert(nil, at: 0)
         }

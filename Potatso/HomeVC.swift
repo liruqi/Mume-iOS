@@ -138,7 +138,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
             form.delegate = self
             tableView?.reloadData()
         }
-        proxies = DBUtils.allNotDeleted(Proxy.self, sorted: "createAt").map({ $0 })
+        proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
         if proxies.count == 0 {
             section
                 <<< ProxyRow() {
@@ -191,8 +191,8 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
 
         proxySection <<< SwitchRow("connection") {
             reloading = true
-            $0.title = status.hintDescription
-            $0.value = status.onOrConnectiong
+            $0.title = status.hintDescription()
+            $0.value = status.onOrConnectiong()
             reloading = false
             }.onChange({ [unowned self] (row) in
                 if reloading {
@@ -202,8 +202,8 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                 })
             .cellUpdate ({ cell, row in
                 reloading = true
-                row.title = self.status.hintDescription
-                row.value = self.status.onOrConnectiong
+                row.title = self.status.hintDescription()
+                row.value = self.status.onOrConnectiong()
                 reloading = false
             })
         <<< TextRow(kFormDNS) {
@@ -361,16 +361,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
 
 extension VPNStatus {
     
-    var color: UIColor {
-        switch self {
-        case .on, .disconnecting:
-            return Color.StatusOn
-        case .off, .connecting:
-            return Color.StatusOff
-        }
-    }
-
-    var onOrConnectiong: Bool {
+    func onOrConnectiong() -> Bool {
         switch self {
         case .on, .connecting:
             return true
@@ -379,7 +370,7 @@ extension VPNStatus {
         }
     }
     
-    var hintDescription: String {
+    func hintDescription() -> String {
         switch self {
         case .on:
             if let time = Settings.shared().startTime {
