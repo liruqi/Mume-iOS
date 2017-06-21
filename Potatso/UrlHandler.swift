@@ -42,7 +42,7 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
         }
         
         if scheme == "ss" || scheme == "shadowsocks" || scheme == "ssr" || scheme == "shadowsocksr" {
-            if let proxy = try? Proxy(uri: url.absoluteString) {
+            if let proxy = try? Proxy(url: url) {
                 do {
                     try proxy.validate()
                     let proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
@@ -91,7 +91,7 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
             content.characters.count > 3 {
             if Proxy.uriIsProxy(content) {
                 do {
-                    let proxy = try Proxy(uri: content)
+                    let proxy = try Proxy(string: content)
                     try proxy.validate()
                     let proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
                     for ep in proxies {

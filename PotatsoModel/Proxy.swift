@@ -200,10 +200,17 @@ extension Proxy {
 
 // Import
 extension Proxy {
+    public convenience init(string: String) throws {
+        if let rawUri = URL(string: string) {
+            try self.init(url: rawUri)
+        } else {
+            throw ProxyError.invalidUri
+        }
+    }
     
-    public convenience init(uri: String) throws {
+    public convenience init(url rawUri: URL) throws {
         self.init()
-        if let rawUri = URL(string: uri), let s = rawUri.scheme?.lowercased() {
+        let s = rawUri.scheme?.lowercased() ?? (rawUri.user == nil ? "socks5" : "shadowsocks")
             if let fragment = rawUri.fragment, fragment.characters.count == 36 {
                 self.uuid = fragment
             }
@@ -220,11 +227,9 @@ extension Proxy {
             
             // mume://method:base64(password)@hostname:port
             if s == "mume" || s == "shadowsocks" {
-                let proxyString = uri.substring(from: uri.index(uri.startIndex, offsetBy: s.characters.count))
-                guard let httpsurl = URL(string: "https" + proxyString),
-                    let fullAuthscheme = httpsurl.user?.lowercased(),
-                    let host = httpsurl.host,
-                    let port = httpsurl.port else {
+                guard let fullAuthscheme = rawUri.user?.lowercased(),
+                    let host = rawUri.host,
+                    let port = rawUri.port else {
                         throw ProxyError.invalidUri
                 }
                 
@@ -234,7 +239,7 @@ extension Proxy {
                 } else {
                     self.authscheme = fullAuthscheme
                 }
-                self.password = base64DecodeIfNeeded(httpsurl.password ?? "")
+                self.password = base64DecodeIfNeeded((rawUri.password ?? "").removingPercentEncoding ?? "")
                 self.host = host
                 self.port = Int(port)
                 self.type = .Shadowsocks
@@ -327,7 +332,6 @@ extension Proxy {
                 // Not supported yet
                 throw ProxyError.invalidUri
             }
-        }
     }
     
     public convenience init(host: String, port: Int, authscheme: String, password: String, type: ProxyType) throws {
@@ -343,7 +347,7 @@ extension Proxy {
     public static func proxy(dictionary: [String: String]) -> Proxy? {
         do {
             if let uriString = dictionary["uri"] {
-                return try Proxy(uri: uriString.trimmingCharacters(in: CharacterSet.whitespaces))
+                return try Proxy(string: uriString.trimmingCharacters(in: CharacterSet.whitespaces))
             }
             
             guard let host = dictionary["host"] else {
