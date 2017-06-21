@@ -384,12 +384,18 @@ extension Proxy {
         return proxyString
     }
 
-    private static func uriIsShadowsocks(_ uri: String) -> Bool {
-        return uri.lowercased().hasPrefix(Proxy.ssUriMethod + "://") || uri.lowercased().hasPrefix(Proxy.ssrUriMethod + "://") || uri.lowercased().hasPrefix("mume://") || uri.lowercased().hasPrefix("shadowsocks")
+    public static func schemeIsProxy(_ scheme: String) -> Bool {
+        return (scheme == Proxy.ssUriMethod)  || (scheme == Proxy.ssrUriMethod) || (scheme == "mume") || (scheme == "shadowsocks") || (scheme == "shadowsocksr")
     }
 
     public static func uriIsProxy(_ uri: String) -> Bool {
-        return Proxy.uriIsShadowsocks(uri) || uri.lowercased().hasPrefix("socks")
+        if let url = URL(string: uri) {
+            if let scheme = url.scheme {
+                return Proxy.schemeIsProxy(scheme.lowercased())
+            }
+            return true
+        }
+        return false
     }
 }
 
