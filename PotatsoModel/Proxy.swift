@@ -271,33 +271,32 @@ extension Proxy {
                 return
             }
             
-            guard let httpsURL = URL(string: "https://" + proxyString),
+            if let httpsURL = URL(string: "https://" + proxyString),
                 let fullAuthscheme = httpsURL.user?.lowercased(),
                 let host = httpsURL.host,
-                let port = httpsURL.port else {
-                    throw ProxyError.invalidUri
-            }
-            
-            if let pOTA = fullAuthscheme.range(of: "-auth", options: .backwards)?.lowerBound {
-                self.authscheme = fullAuthscheme.substring(to: pOTA)
-                self.ota = true
-            }else {
-                self.authscheme = fullAuthscheme
-            }
-            self.password = httpsURL.password
-            self.host = host
-            self.port = Int(port)
-            self.type = .Shadowsocks
-            
-            if s == Proxy.ssUriMethod {
-                return
-            } else if s == Proxy.ssrUriMethod || s.hasPrefix("shadowsocksr") {
-                guard let queryString = httpsURL.query else {
-                    throw ProxyError.invalidUri
+                let port = httpsURL.port {
+        
+                if let pOTA = fullAuthscheme.range(of: "-auth", options: .backwards)?.lowerBound {
+                    self.authscheme = fullAuthscheme.substring(to: pOTA)
+                    self.ota = true
+                }else {
+                    self.authscheme = fullAuthscheme
                 }
+                self.password = httpsURL.password
+                self.host = host
+                self.port = Int(port)
+                self.type = .Shadowsocks
+                if s == Proxy.ssUriMethod {
+                    return
+                }
+            }
+    
+            if s == Proxy.ssrUriMethod || s.hasPrefix("shadowsocksr") {
                 var hostString: String = proxyString
-                if let queryMarkIndex = proxyString.range(of: "?", options: .backwards)?.lowerBound {
-                    hostString = proxyString.substring(to: queryMarkIndex)
+                var queryString = ""
+                if let queryMarkRange = proxyString.range(of: "?", options: .backwards) {
+                    hostString = proxyString.substring(to: queryMarkRange.lowerBound)
+                    queryString = proxyString.substring(from: queryMarkRange.upperBound)
                 }
                 if let hostSlashIndex = hostString.range(of: "/", options: .backwards)?.lowerBound {
                     hostString = hostString.substring(to: hostSlashIndex)
