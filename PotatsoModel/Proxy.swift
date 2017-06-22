@@ -392,7 +392,6 @@ extension Proxy {
             if let scheme = url.scheme {
                 return Proxy.schemeIsProxy(scheme.lowercased())
             }
-            return true
         }
         return false
     }
