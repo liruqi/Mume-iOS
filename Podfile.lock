@@ -74,9 +74,9 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   Aspects:
-    :path: ./Library/Aspects/
+    :path: "./Library/Aspects/"
   ICSMainFramework:
-    :path: ./Library/ICSMainFramework/
+    :path: "./Library/ICSMainFramework/"
   SVPullToRefresh:
     :git: https://github.com/samvermette/SVPullToRefresh
 

@@ -9,7 +9,6 @@
 #ifndef Potatso_Bridge_Header_h
 #define Potatso_Bridge_Header_h
 
-#import "Confidential.h"
 #import <asl.h>
 #import "QRCodeScannerVC.h"
 @import PotatsoLibrary;
