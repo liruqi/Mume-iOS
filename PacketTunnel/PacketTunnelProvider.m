@@ -212,7 +212,7 @@
     proxySettings.HTTPSEnabled = YES;
     proxySettings.HTTPSServer = [[NEProxyServer alloc] initWithAddress:proxyServerName port:proxyServerPort];
     proxySettings.excludeSimpleHostnames = YES;
-    proxySettings.exceptionList = [@[@"crashlytics.com", @"liruqi.info"] arrayByAddingObjectsFromArray:self.directDomains];
+    proxySettings.exceptionList = [@[@"crashlytics.com", @"liruqi.info", @"mumevpn.com"] arrayByAddingObjectsFromArray:self.directDomains];
     settings.proxySettings = proxySettings;
     NEDNSSettings *dnsSettings = [[NEDNSSettings alloc] initWithServers:dnsServers];
     dnsSettings.matchDomains = @[@""];
