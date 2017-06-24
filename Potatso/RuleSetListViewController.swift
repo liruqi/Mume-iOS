@@ -41,10 +41,13 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
             guard result.count > 0 else {
                 return
             }
-            let data = result.filter({ $0.name.characters.count > 0})
-            for i in 0..<data.count {
+            for rule in result {
                 do {
-                    try RuleSet.addRemoteObject(data[i])
+                    if rule.name.characters.count > 0 {
+                        try RuleSet.addRemoteObject(rule)
+                    } else {
+                        try DBUtils.hardDelete(rule.uuid, type: RuleSet.self)
+                    }
                 } catch {
                     NSLog("Fail to subscribe".localized())
                 }
@@ -121,18 +124,19 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
     }
 
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        let item = ruleSets[indexPath.row]
+        if item.isOfficial {
+            return .none
+        }
         return .delete
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let item: RuleSet
-            guard indexPath.row < ruleSets.count else {
-                return
-            }
-            item = ruleSets[indexPath.row]
+            let item = ruleSets[indexPath.row]
             do {
                 try DBUtils.hardDelete(item.uuid, type: RuleSet.self)
+                self.reloadData()
             }catch {
                 self.showTextHUD("\("Fail to delete item".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
             }
