@@ -271,7 +271,6 @@
     NSLog(@"stoping potatso tunnel...");
     [[Potatso sharedUserDefaults] setObject:@(0) forKey:@"tunnelStatusPort"];
     [[Potatso sharedUserDefaults] synchronize];
-    [[ProxyManager sharedManager] stopHttpProxy];
     [TunnelInterface stop];
 }
 

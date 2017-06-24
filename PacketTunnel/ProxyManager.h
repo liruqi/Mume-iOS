@@ -23,7 +23,6 @@ extern int sock_port (int fd);
 @property (nonatomic, readonly) BOOL shadowsocksProxyRunning;
 
 - (void)startHttpProxy: (HttpProxyCompletion)completion;
-- (void)stopHttpProxy;
 - (void)startShadowsocks: (ShadowsocksProxyCompletion)completion;
 - (void)stopShadowsocks;
 - (NSString *)socksProxy; //host:port

@@ -180,10 +180,6 @@ int sock_port (int fd) {
     shadowpath_main(strdup([[confURL path] UTF8String]), proxy, http_proxy_handler, (__bridge void *)self);
 }
 
-- (void)stopHttpProxy {
-//    polipoExit();
-}
-
 - (void)onHttpProxyCallback:(int)fd {
     NSError *error;
     if (fd > 0) {
