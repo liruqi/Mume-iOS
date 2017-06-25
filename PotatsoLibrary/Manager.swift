@@ -271,13 +271,22 @@ extension Manager {
         var content = ""
         if let upstreamProxy = upstreamProxy {
             if upstreamProxy.type == .Shadowsocks || upstreamProxy.type == .ShadowsocksR {
-                let dict: NSDictionary = ["type": upstreamProxy.type.rawValue, "host": upstreamProxy.host, "port": upstreamProxy.port, "password": upstreamProxy.password ?? "", "authscheme": upstreamProxy.authscheme ?? "", "ota": upstreamProxy.ota, "protocol": upstreamProxy.ssrProtocol ?? "", "obfs": upstreamProxy.ssrObfs ?? "", "obfs_param": upstreamProxy.ssrObfsParam ?? ""]
+                let dict: NSDictionary = [
+                    "type": upstreamProxy.type.rawValue,
+                    "host": upstreamProxy.ip ?? upstreamProxy.host,
+                    "port": upstreamProxy.port,
+                    "password": upstreamProxy.password ?? "",
+                    "authscheme": upstreamProxy.authscheme ?? "", "ota": upstreamProxy.ota, "protocol": upstreamProxy.ssrProtocol ?? "", "obfs": upstreamProxy.ssrObfs ?? "", "obfs_param": upstreamProxy.ssrObfsParam ?? ""]
                 content = dict.jsonString() ?? ""
             } else if upstreamProxy.type == .Socks5 {
-                let dict: NSDictionary = ["type": upstreamProxy.type.rawValue, "host": upstreamProxy.host, "port": upstreamProxy.port, "password": upstreamProxy.password ?? "", "authscheme": upstreamProxy.authscheme ?? ""]
+                let dict: NSDictionary = [
+                    "type": upstreamProxy.type.rawValue,
+                    "host": upstreamProxy.ip ?? upstreamProxy.host,
+                    "port": upstreamProxy.port, "password": upstreamProxy.password ?? "", "authscheme": upstreamProxy.authscheme ?? ""]
                 content = dict.jsonString() ?? ""
             }
         }
+        print("generateShadowsocksConfig: " + content)
         try content.write(to: confURL, atomically: true, encoding: String.Encoding.utf8)
     }
     
