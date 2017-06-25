@@ -11,6 +11,7 @@
 		553D95BB1D63FE6700B193B7 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553D95BA1D63FE6700B193B7 /* NetworkExtension.framework */; };
 		553D95BC1D63FECA00B193B7 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553D95BA1D63FE6700B193B7 /* NetworkExtension.framework */; };
 		553D95BD1D63FEDF00B193B7 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553D95BA1D63FE6700B193B7 /* NetworkExtension.framework */; };
+		556E68EA1EFFA76E00BD84ED /* ProxyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556E68E91EFFA76E00BD84ED /* ProxyUtils.swift */; };
 		5586A6BD1EF65B1A00E9CB17 /* ProxyQRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5586A6BC1EF65B1A00E9CB17 /* ProxyQRCode.swift */; };
 		55E14B841EDFF9DA0068F812 /* RegexUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8319A091D1B975C001E50C2 /* RegexUtils.swift */; };
 		671F4F760B4AA48CEDC1B834 /* Pods_TodayWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83D8D7B7274BAF6E28C980D9 /* Pods_TodayWidget.framework */; };
@@ -288,6 +289,7 @@
 		5230B5D70A0595F06A9F15F8 /* Pods-PotatsoLibraryTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PotatsoLibraryTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PotatsoLibraryTests/Pods-PotatsoLibraryTests.debug.xcconfig"; sourceTree = "<group>"; };
 		553D95B91D63FE5A00B193B7 /* Potatso.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Potatso.entitlements; sourceTree = "<group>"; };
 		553D95BA1D63FE6700B193B7 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		556E68E91EFFA76E00BD84ED /* ProxyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProxyUtils.swift; sourceTree = "<group>"; };
 		5586A6BC1EF65B1A00E9CB17 /* ProxyQRCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProxyQRCode.swift; path = Base/ProxyQRCode.swift; sourceTree = "<group>"; };
 		5800BF48973D41E6DFC2DF35 /* Pods-Potatso.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Potatso.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Potatso/Pods-Potatso.debug.xcconfig"; sourceTree = "<group>"; };
 		66AB52504A6434A50F434876 /* Pods-TodayWidget.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TodayWidget.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TodayWidget/Pods-TodayWidget.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1016,6 +1018,7 @@
 				B87A04391D193ABC001132F2 /* LoggerUtils.swift */,
 				B8319A091D1B975C001E50C2 /* RegexUtils.swift */,
 				B83D3E781D2BA689007655CE /* Event.swift */,
+				556E68E91EFFA76E00BD84ED /* ProxyUtils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -2581,6 +2584,7 @@
 				9B1F74621C2F85540028C1A6 /* UIManager.swift in Sources */,
 				B8C256B01D1A957A0074D3B1 /* HomePresenter.swift in Sources */,
 				9B1F74601C2F84250028C1A6 /* AppInitializer.swift in Sources */,
+				556E68EA1EFFA76E00BD84ED /* ProxyUtils.swift in Sources */,
 				9B54CC441C1C266C00DDEEBB /* UIViewControllerExtensions.swift in Sources */,
 				9B0CFA0F1C1C0B1B007BD7C6 /* AppDelegate.swift in Sources */,
 				9BB3F73C1CC3D3DE00C2DD05 /* RecentRequestsCell.swift in Sources */,

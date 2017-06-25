@@ -5,10 +5,9 @@ use_frameworks!
 
 def library
     pod 'Alamofire'
-    pod 'KissXML'
-    pod 'KissXML/libxml_module'
     pod 'ICSMainFramework', :path => "./Library/ICSMainFramework/"
     pod 'MMWormhole', '~> 2.0.0'
+    pod "MMDB-Swift"
 end
 
 def tunnel

@@ -69,6 +69,7 @@ open class Proxy: BaseModel {
     open dynamic var typeRaw = ProxyType.Shadowsocks.rawValue
     open dynamic var host = ""
     open dynamic var port = 0
+    open dynamic var ip = ""
     open dynamic var authscheme: String?  // method in SS
     open dynamic var user: String?
     open dynamic var password: String?
@@ -346,7 +347,14 @@ extension Proxy {
     public static func proxy(dictionary: [String: String]) -> Proxy? {
         do {
             if let uriString = dictionary["uri"] {
-                return try Proxy(string: uriString.trimmingCharacters(in: CharacterSet.whitespaces))
+                
+                let p = try Proxy(string: uriString.trimmingCharacters(in: CharacterSet.whitespaces))
+                if let ip = dictionary["ip"] {
+                    p.ip = ip
+                } else {
+                    
+                }
+                return p
             }
             
             guard let host = dictionary["host"] else {

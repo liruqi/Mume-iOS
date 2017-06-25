@@ -20,14 +20,8 @@ PODS:
   - Eureka (2.0.1)
   - Fabric (1.6.11)
   - ICSMainFramework (0.0.1)
-  - KissXML (5.1.2):
-    - KissXML/Core (= 5.1.2)
-  - KissXML/Core (5.1.2)
-  - KissXML/libxml_module (5.1.2):
-    - KissXML/SwiftNSXML
-  - KissXML/SwiftNSXML (5.1.2):
-    - KissXML/Core
   - MBProgressHUD (1.0.0)
+  - MMDB-Swift (0.2.1)
   - MMWormhole (2.0.0):
     - MMWormhole/Core (= 2.0.0)
   - MMWormhole/Core (2.0.0)
@@ -62,9 +56,8 @@ DEPENDENCIES:
   - Eureka (~> 2)
   - Fabric
   - ICSMainFramework (from `./Library/ICSMainFramework/`)
-  - KissXML
-  - KissXML/libxml_module
   - MBProgressHUD
+  - MMDB-Swift
   - MMWormhole (~> 2.0.0)
   - ObjectMapper
   - PSOperations
@@ -74,9 +67,9 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   Aspects:
-    :path: "./Library/Aspects/"
+    :path: ./Library/Aspects/
   ICSMainFramework:
-    :path: "./Library/ICSMainFramework/"
+    :path: ./Library/ICSMainFramework/
   SVPullToRefresh:
     :git: https://github.com/samvermette/SVPullToRefresh
 
@@ -98,8 +91,8 @@ SPEC CHECKSUMS:
   Eureka: ae837bb1dfae0c07bc1bda7aeef87876eeb537c2
   Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
   ICSMainFramework: 56240e9556d3b0755fc9c934a91ee8ebd09cb753
-  KissXML: 246c842586bb77110e04fb88e19376d96245c856
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
+  MMDB-Swift: 8a3075474ad3e15bbd51b79ee343758bc4e477ec
   MMWormhole: 0cd3fd35a9118b2e2d762b499f54eeaace0be791
   ObjectMapper: 65abcfd9a61cf7396cbd14a4fb22fddfcc46577e
   PSOperations: 6bc00aac233d9d19b60caced190e6cb8fbcb1dcd
@@ -108,6 +101,6 @@ SPEC CHECKSUMS:
   SVPullToRefresh: ba2e718695a43253d8bea6852d2960097dc15d8c
   SwiftColor: c240d8cb2e1a29d731ae8deca8739eac6b9c56bd
 
-PODFILE CHECKSUM: 59ac38b4f278ce25a1f3a672599066f9efb1829f
+PODFILE CHECKSUM: eb9ae6ac8fb05db2ea270d79caafaeb05776deb3
 
 COCOAPODS: 1.2.1

@@ -17,11 +17,13 @@ import Realm
 
 class DataInitializer: NSObject, AppLifeCycleProtocol {
     static var cloudProxies: [Proxy] = []
+    static var dns: [String: String] = [:]
     static var serverConfigurations: Dictionary<String, String> = [:]
     static let reachabilityManager = NetworkReachabilityManager(host:"mumevpn.com")
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         Manager.sharedManager.setup()
         sync()
+        self.updateMumeServers()
         API.getRuleSets() { (result) in
             guard result.count > 0 else {
                 return
@@ -48,7 +50,6 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        self.updateMumeServers()
     }
     
     func updateMumeServers() {
