@@ -100,7 +100,16 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
                         composer.mailComposeDelegate = self
                         composer.setToRecipients(["mume@mumevpn.com"])
                         composer.setSubject("Feedback for Mume " + AppEnv.fullVersion)
-                        composer.setMessageBody("", isHTML: false)
+                        
+                        let currentDevice = UIDevice.current
+                        var body = [String]()
+                        body.append("")
+                        body.append("-")
+                        body.append("System info: ")
+                        body.append(currentDevice.systemName)
+                        body.append(currentDevice.systemVersion)
+                        body.append(currentDevice.model)
+                        composer.setMessageBody(body.joined(separator: "\r\n"), isHTML: false)
                         self.present(composer, animated: true, completion: nil)
                     } else if let url = URL(string: "mailto:mume@mumevpn.com") {
                         UIApplication.shared.openURL(url)

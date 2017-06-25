@@ -8,6 +8,7 @@
 
 import Foundation
 import MMDB_Swift
+import ICSMainFramework
 
 class ProxyUtils {
     static let mmdb = MMDB(Potatso.sharedUrl().appendingPathComponent("GeoLite2-Country.mmdb").path)
@@ -15,7 +16,7 @@ class ProxyUtils {
         if ip.characters.count >= 7,
             let mmdb = self.mmdb,
             let info = mmdb.lookup(ip) {
-            var lang = Locale.preferredLanguages.first ?? "zh-CN"
+            var lang = AppEnv.languageCode
             let langc = lang.components(separatedBy: "-")
             if langc.count > 2 {
                 lang = langc[0] + "-" + (langc.last ?? "")
