@@ -52,24 +52,13 @@ class RequestOverviewVC: FormViewController {
         return section
     }
 
-    func tableView(_ tableView: UITableView, shouldShowMenuForRowAtIndexPath indexPath: IndexPath) -> Bool {
-        return true
-    }
-
-    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAtIndexPath indexPath: IndexPath, withSender sender: AnyObject?) -> Bool {
-        return action == ("copy")
-    }
-
-    func tableView(_ tableView: UITableView, performAction action: Selector, forRowAtIndexPath indexPath: IndexPath, withSender sender: AnyObject?) {
-        switch action {
-        case ("copy"):
-            guard let cell = tableView.cellForRow(at: indexPath) as? RequestEventRowCell else {
-                return
-            }
-            UIPasteboard.general.string = cell.copyContent
-            // implement copy here
-        default:
-            assertionFailure()
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        guard let cell = tableView.cellForRow(at: indexPath) as? RequestEventRowCell else {
+            return
+        }
+        if let cc = cell.copyContent {
+            UIPasteboard.general.string = cc
+            self.showTextHUD("Copied:".localized() + " " + cc, dismissAfterDelay: 1)
         }
     }
 

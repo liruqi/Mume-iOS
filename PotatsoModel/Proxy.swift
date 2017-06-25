@@ -358,7 +358,7 @@ extension Proxy {
             }
             
             guard let host = dictionary["host"] else {
-                throw ProxyError.invalidHost
+                return nil
             }
             guard let typeRaw = dictionary["type"]?.uppercased(), let type = ProxyType(rawValue: typeRaw) else {
                 throw ProxyError.invalidType

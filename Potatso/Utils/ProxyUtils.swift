@@ -17,10 +17,10 @@ class ProxyUtils {
             let mmdb = self.mmdb,
             let info = mmdb.lookup(ip) {
             var lang = AppEnv.languageCode
-            let langc = lang.components(separatedBy: "-")
-            if langc.count > 2 {
-                lang = langc[0] + "-" + (langc.last ?? "")
+            if let name = info.names[lang] {
+                return info.isoCode.emojiFlag() + name
             }
+            lang = lang + "-" + AppEnv.countryCode
             let name = info.names[lang] ?? info.isoCode
             return info.isoCode.emojiFlag() + name
         }
