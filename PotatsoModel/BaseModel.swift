@@ -10,7 +10,7 @@ import RealmSwift
 import PotatsoBase
 import CloudKit
 
-private let version: UInt64 = 20
+private let version: UInt64 = 21
 public var defaultRealm: Realm!
 
 public func setupDefaultReaml() {
@@ -20,8 +20,22 @@ public func setupDefaultReaml() {
     config.fileURL = sharedURL
     config.schemaVersion = version
     config.migrationBlock = { migration, oldSchemaVersion in
-        if oldSchemaVersion < 20 {
-            // No migration yet
+        if oldSchemaVersion < version {
+            migration.enumerateObjects(ofType: Proxy.className()) { oldObject, newObject in
+                guard let oldObject = oldObject, let newObject = newObject else {
+                    return
+                }
+                if oldObject["typeRaw"] as? String == ProxyType.ShadowsocksR.rawValue {
+                    return
+                }
+                newObject["typeRaw"] = oldObject["typeRaw"] as! String
+                newObject["host"] = oldObject["host"] as! String
+                newObject["port"] = oldObject["port"] as! Int
+                newObject["authscheme"] = oldObject["authscheme"] as? String
+                newObject["user"] = oldObject["user"] as? String
+                newObject["password"] = oldObject["password"] as? String
+                newObject["ota"] = oldObject["ota"] as? Bool
+            }
         }
     }
     Realm.Configuration.defaultConfiguration = config
