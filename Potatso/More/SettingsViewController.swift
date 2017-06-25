@@ -150,13 +150,30 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
                 self.followWeibo()
              })
              */
-            <<< ActionRow() {
+        
+        var telegram = false
+        if let tgUrl = URL(string: "tg://resolve?domain=mumevpn"),
+            UIApplication.shared.canOpenURL(tgUrl) {
+            section <<< ActionRow() {
                 $0.title = "Join Telegram Group".localized()
                 $0.value = "telegram.me/mumevpn"
-            }.onCellSelection({ [unowned self] (cell, row) -> () in
-                self.joinTelegramGroup()
-            })
-            <<< LabelRow() {
+                }.onCellSelection({ [unowned self] (cell, row) -> () in
+                    UIApplication.shared.openURL(tgUrl)
+                })
+            telegram = true
+        }
+        if (Locale.preferredLanguages[0].lowercased().hasPrefix("zh") || telegram == false),
+            let qq = DataInitializer.serverConfigurations["qq"] {
+            section <<< ActionRow() {
+                $0.title = "Mume QQ群".localized()
+                $0.value = qq
+                }.onCellSelection({ [unowned self] (cell, row) -> () in
+                    let pasteBoard = UIPasteboard.general
+                    pasteBoard.string = qq
+                    self.showTextHUD("已复制QQ群号", dismissAfterDelay: 1)
+                })
+        }
+        section <<< LabelRow() {
                 $0.title = "Version".localized()
                 $0.value = AppEnv.fullVersion
             }
@@ -172,10 +189,6 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
 
     func followTwitter() {
         UIApplication.shared.openURL(URL(string: "https://twitter.com/intent/user?screen_name=mumevpn")!)
-    }
-
-    func joinTelegramGroup() {
-        UIApplication.shared.openURL(URL(string: "https://telegram.me/mumevpn")!)
     }
 
     func shareWithFriends() {

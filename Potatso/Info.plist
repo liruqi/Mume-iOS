@@ -94,7 +94,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>176</string>
+	<string>177</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -117,6 +117,10 @@
 	</dict>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>tg</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
