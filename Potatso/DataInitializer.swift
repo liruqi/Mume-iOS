@@ -22,28 +22,7 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         Manager.sharedManager.setup()
         sync()
-        API.getProxySets() { (response) in
-            do {
-            for dic in response {
-                if let proxy = Proxy.proxy(dictionary: dic) {
-                    let proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
-                    for ep in proxies {
-                        if ep.host == proxy.host,
-                            ep.port == proxy.port {
-                            print ("Proxy exists: " + dic.description)
-                            return
-                        }
-                    }
-                    try DBUtils.add(proxy)
-                    NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
-                } else {
-                    DataInitializer.serverConfigurations = dic
-                }
-            }
-            } catch {
-            }
-        }
-        API.getRuleSets() { (result) in            
+        API.getRuleSets() { (result) in
             guard result.count > 0 else {
                 return
             }
@@ -60,6 +39,7 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
+        self.updateMumeServers()
         _ = try? Manager.sharedManager.regenerateConfigFiles()
     }
 
@@ -68,6 +48,30 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
+        self.updateMumeServers()
     }
-
+    
+    func updateMumeServers() {
+        API.getProxySets() { (response) in
+            do {
+                for dic in response {
+                    if let proxy = Proxy.proxy(dictionary: dic) {
+                        let proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
+                        for ep in proxies {
+                            if ep.host == proxy.host,
+                                ep.port == proxy.port {
+                                print ("Proxy exists: " + dic.description)
+                                return
+                            }
+                        }
+                        try DBUtils.add(proxy)
+                        NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
+                    } else {
+                        DataInitializer.serverConfigurations = dic
+                    }
+                }
+            } catch {
+            }
+        }
+    }
 }

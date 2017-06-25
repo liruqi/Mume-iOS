@@ -49,6 +49,16 @@ public extension String {
     public func localizedPlural(_ argument: CVarArg) -> String {
         return NSString.localizedStringWithFormat(localized() as NSString, argument) as String
     }
+    
+    // https://stackoverflow.com/questions/30402435/
+    public func emojiFlag() -> String {
+        let base : UInt32 = 127397
+        var s = ""
+        for v in self.unicodeScalars {
+            s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
+        }
+        return String(s)
+    }
 }
 
 

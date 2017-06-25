@@ -76,7 +76,7 @@ struct API {
         let kCloudProxySets = "kCloudProxySets" + versionCode
         NSLog("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
         
-        if (DataInitializer.reachabilityManager?.isReachableOnWWAN == false),
+        if (DataInitializer.reachabilityManager?.isReachableOnEthernetOrWiFi == false),
             let data = Potatso.sharedUserDefaults().data(forKey: kCloudProxySets) {
             do {
                 if let JSON = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [Dictionary<String, String>] {
