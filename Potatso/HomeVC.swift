@@ -16,6 +16,7 @@ private let kFormName = "name"
 private let kFormDNS = "dns"
 private let kFormProxies = "proxies"
 private let kFormDefaultToProxy = "defaultToProxy"
+public let kProxyServicePermissionChanged = "kProxyServicePermissionChanged"
 
 class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterProtocol, UITextFieldDelegate {
 
@@ -46,7 +47,14 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         super.viewDidLoad()
         // Fix a UI stuck bug
         navigationController?.delegate = self
-        NotificationCenter.default.addObserver(self, selector: #selector(updateForm), name: NSNotification.Name(rawValue: kProxyServiceAdded), object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateForm),
+                                               name: NSNotification.Name(rawValue: kProxyServiceAdded),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleConnectButtonPressed),
+                                               name: NSNotification.Name(rawValue: kProxyServicePermissionChanged),
+                                               object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -271,7 +279,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     func handleConnectButtonPressed() {
         if status == .on {
             status = .disconnecting
-        }else {
+        } else {
             status = .connecting
         }
         presenter.switchVPN()

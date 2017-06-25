@@ -50,11 +50,12 @@ class HomePresenter: NSObject {
 
     func switchVPN() {
         VPN.switchVPN(group) { [unowned self] (error) in
-            if let error = error as? NSError {
+            if let error = error as NSError? {
                 HomePresenter.errorCnt += 1
                 self.delegate?.handleRefreshUI(error)
                 // https://forums.developer.apple.com/thread/25928
                 if error.code == 1, HomePresenter.errorCnt == 1 {
+                    NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServicePermissionChanged), object: nil)
                     return
                 }
                 Alert.show(self.vc, message: "\("Fail to switch VPN.".localized()) (\(error))")

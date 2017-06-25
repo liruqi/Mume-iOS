@@ -13,6 +13,7 @@ import NetworkExtension
 import ICSMainFramework
 import MMWormhole
 import Alamofire
+import MMDB_Swift
 
 public enum ManagerError: Error {
     case invalidProvider
@@ -140,9 +141,8 @@ open class Manager {
     func copyGEOIPData() throws {
         let toURL = Potatso.sharedUrl().appendingPathComponent("GeoLite2-Country.mmdb")
 
-        guard let fromURL = Bundle.main.url(forResource: "GeoLite2-Country", withExtension: "mmdb") else {
             let MaxmindLastModifiedKey = "MaxmindLastModifiedKey"
-            let lastM = Potatso.sharedUserDefaults().string(forKey: MaxmindLastModifiedKey) ?? "Tue, 20 Dec 2016 12:53:05 GMT"
+            let lastM = Potatso.sharedUserDefaults().string(forKey: MaxmindLastModifiedKey) ?? "Sun, 25 Jun 2017 00:07:41 GMT"
             
             let url = URL(string: "https://mumevpn.com/ios/GeoLite2-Country.mmdb")
             let request = NSMutableURLRequest(url: url!)
@@ -170,11 +170,6 @@ open class Manager {
                     print("Download GeoLite2-Country.mmdb no update maybe: " + (r.description))
                 }
             }
-            return
-        }
-        if FileManager.default.fileExists(atPath: fromURL.path) {
-            try FileManager.default.copyItem(at: fromURL, to: toURL)
-        }
     }
 
     func copyTemplateData() throws {
@@ -292,7 +287,10 @@ extension Manager {
         let templateDirPath = rootUrl.appendingPathComponent("httptemplate").path
         let temporaryDirPath = rootUrl.appendingPathComponent("httptemporary").path
         let logDir = rootUrl.appendingPathComponent("log").path
-        let maxminddbPath = rootUrl.appendingPathComponent("GeoLite2-Country.mmdb").path
+        var maxminddbPath = rootUrl.appendingPathComponent("GeoLite2-Country.mmdb").path
+        if !FileManager.default.fileExists(atPath: maxminddbPath) {
+            maxminddbPath = Bundle(for: MMDB.self).path(forResource: "GeoLite2-Country", ofType: "mmdb") ?? ""
+        }
         let userActionUrl = confDirUrl.appendingPathComponent("mume.action")
         let directDomainsUrl = confDirUrl.appendingPathComponent("mume.direct")
         for p in [confDirUrl.path, templateDirPath, temporaryDirPath, logDir] {
