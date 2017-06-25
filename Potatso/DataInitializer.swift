@@ -57,15 +57,15 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
             do {
                 for dic in response {
                     if let proxy = Proxy.proxy(dictionary: dic) {
+                        /*
                         let proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
                         for ep in proxies {
                             if ep.host == proxy.host,
                                 ep.port == proxy.port {
                                 print ("Proxy exists: " + dic.description)
-                                return
                             }
-                        }
-                        try DBUtils.add(proxy)
+                        }*/
+                        try DBUtils.add(proxy) // can do modification with same key
                         NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
                     } else {
                         DataInitializer.serverConfigurations = dic

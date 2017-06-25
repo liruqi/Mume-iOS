@@ -25,6 +25,9 @@ class ProxyUtils {
 
 extension Proxy {
     open func subTitle() -> String {
-        return self.type.description + " " + ProxyUtils.country(ip: self.ip)
+        if let ip = self.ip {
+            return self.type.description + " " + ProxyUtils.country(ip: ip)
+        }
+        return self.type.description
     }
 }

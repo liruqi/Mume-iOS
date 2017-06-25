@@ -69,7 +69,7 @@ open class Proxy: BaseModel {
     open dynamic var typeRaw = ProxyType.Shadowsocks.rawValue
     open dynamic var host = ""
     open dynamic var port = 0
-    open dynamic var ip = ""
+    open dynamic var ip: String?
     open dynamic var authscheme: String?  // method in SS
     open dynamic var user: String?
     open dynamic var password: String?
