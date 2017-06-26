@@ -311,9 +311,8 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         if ruleids.count == 0 {
             return
         }
-        let cond = ruleids.map{ "uuid == '\($0)'" }.joined(separator: " && ")
-        let ruleSets = DBUtils.all(RuleSet.self, filter: cond, sorted: "createAt")
-        for ruleSet in ruleSets {
+        for ruleid in ruleids {
+            let ruleSet = DBUtils.get(ruleid, type: RuleSet.self)
             self.presenter.appendRuleSet(ruleSet)
         }
         self.updateForm()
