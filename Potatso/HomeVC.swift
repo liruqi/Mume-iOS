@@ -316,6 +316,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         for ruleSet in ruleSets {
             self.presenter.appendRuleSet(ruleSet)
         }
+        self.updateForm()
     }
     // MARK: - TableView
 
