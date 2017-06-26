@@ -143,7 +143,6 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
         }
     }
     
-
     override func loadView() {
         super.loadView()
         view.backgroundColor = UIColor.clear

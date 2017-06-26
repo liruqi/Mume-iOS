@@ -17,6 +17,7 @@ private let kFormDNS = "dns"
 private let kFormProxies = "proxies"
 private let kFormDefaultToProxy = "defaultToProxy"
 public let kProxyServicePermissionChanged = "kProxyServicePermissionChanged"
+public let kProxyServerConfigurationUpdated = "kProxyServerConfigurationUpdated"
 
 class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterProtocol, UITextFieldDelegate {
 
@@ -54,6 +55,10 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(handleConnectButtonPressed),
                                                name: NSNotification.Name(rawValue: kProxyServicePermissionChanged),
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(onServerConfigurationUpdated),
+                                               name: NSNotification.Name(rawValue: kProxyServerConfigurationUpdated),
                                                object: nil)
     }
 
@@ -289,6 +294,29 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         presenter.changeGroupName()
     }
 
+    func onServerConfigurationUpdated() {
+        guard let rules = DataInitializer.serverConfigurations["rules"] as? String else {
+            return
+        }
+        var ruleids = (rules ).components(separatedBy: ",")
+        let rulesTriggerCondition = (DataInitializer.serverConfigurations["rulesTriggerCondition"] as? Int) ?? 0
+        let group = self.presenter.group
+        
+        if group.ruleSets.count > rulesTriggerCondition {
+            return
+        }
+        for er in group.ruleSets {
+            ruleids = ruleids.filter() { $0 == er.uuid }
+        }
+        if ruleids.count == 0 {
+            return
+        }
+        let cond = ruleids.map{ "uuid == '\($0)'" }.joined(separator: " && ")
+        let ruleSets = DBUtils.all(RuleSet.self, filter: cond, sorted: "createAt")
+        for ruleSet in ruleSets {
+            self.presenter.appendRuleSet(ruleSet)
+        }
+    }
     // MARK: - TableView
 
     func tableView(_ tableView: UITableView, canEditRowAtIndexPath indexPath: IndexPath) -> Bool {

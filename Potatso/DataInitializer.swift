@@ -17,8 +17,7 @@ import Realm
 
 class DataInitializer: NSObject, AppLifeCycleProtocol {
     static var cloudProxies: [Proxy] = []
-    static var dns: [String: String] = [:]
-    static var serverConfigurations: Dictionary<String, String> = [:]
+    static var serverConfigurations: NSDictionary = NSDictionary()
     static let reachabilityManager = NetworkReachabilityManager(host:"mumevpn.com")
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         Manager.sharedManager.setup()
@@ -56,7 +55,7 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
         API.getProxySets() { (response) in
             do {
                 for dic in response {
-                    if let proxy = Proxy.proxy(dictionary: dic) {
+                    if let dict = dic as? [String : String], let proxy = Proxy.proxy(dictionary: dict) {
                         /*
                         let proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
                         for ep in proxies {
@@ -67,8 +66,9 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
                         }*/
                         try DBUtils.add(proxy) // can do modification with same key
                         NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
-                    } else {
-                        DataInitializer.serverConfigurations = dic
+                    } else if let dict = dic as? NSDictionary {
+                        DataInitializer.serverConfigurations = dict
+                        NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServerConfigurationUpdated), object: dic)
                     }
                 }
             } catch {

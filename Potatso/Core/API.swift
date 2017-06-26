@@ -70,7 +70,7 @@ struct API {
             }
     }
     
-    static func getProxySets(_ callback: @escaping ([Dictionary<String, String>]) -> Void) {
+    static func getProxySets(_ callback: @escaping (NSArray) -> Void) {
         let lang = Locale.preferredLanguages[0]
         let versionCode = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? ""
         let kCloudProxySets = "kCloudProxySets" + versionCode
@@ -79,7 +79,7 @@ struct API {
         if (DataInitializer.reachabilityManager?.isReachableOnEthernetOrWiFi == false),
             let data = Potatso.sharedUserDefaults().data(forKey: kCloudProxySets) {
             do {
-                if let JSON = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [Dictionary<String, String>] {
+                if let JSON = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSArray {
                     return callback(JSON)
                 }
             } catch {
@@ -90,9 +90,9 @@ struct API {
             .responseJSON { response in
                 print(response.response ?? "response.response") // URL response
                 print(response.data ?? "response.data")     // server data
-                print(response.result)   // result of response serialization
+                print(response.result.value ?? "empty")   // result of response serialization
                 Potatso.sharedUserDefaults().set(response.data, forKey: kCloudProxySets)
-                if let JSON = response.result.value as? [Dictionary<String, String>] {
+                if let JSON = response.result.value as? NSArray {
                     Crashlytics.sharedInstance().setObjectValue(JSON, forKey: "getProxySets")
                     callback(JSON)
                 } else {

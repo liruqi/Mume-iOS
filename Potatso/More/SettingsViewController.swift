@@ -166,13 +166,13 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
             section <<< ActionRow() {
                 $0.title = "Join Telegram Group".localized()
                 $0.value = "telegram.me/mumevpn"
-                }.onCellSelection({ [unowned self] (cell, row) -> () in
+                }.onCellSelection({ (_, _) in
                     UIApplication.shared.openURL(tgUrl)
                 })
             telegram = true
         }
         if (Locale.preferredLanguages[0].lowercased().hasPrefix("zh") || telegram == false),
-            let qq = DataInitializer.serverConfigurations["qq"] {
+            let qq = DataInitializer.serverConfigurations["qq"] as? String {
             section <<< ActionRow() {
                 $0.title = "Mume QQ群".localized()
                 $0.value = qq
