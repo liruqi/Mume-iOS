@@ -17,11 +17,12 @@ class ProxyUtils {
             let mmdb = self.mmdb,
             let info = mmdb.lookup(ip) {
             var lang = AppEnv.languageCode
+            let ipstr = (DataInitializer.serverConfigurations["ip"] != nil) ? ip : ""
             if let name = info.names[lang] {
-                return info.isoCode.emojiFlag() + name
+                return info.isoCode.emojiFlag() + name + " " + ipstr
             }
             lang = lang + "-" + AppEnv.countryCode
-            let name = info.names[lang] ?? info.isoCode
+            let name = (info.names[lang] ?? info.isoCode) + " " + ipstr
             return info.isoCode.emojiFlag() + name
         }
         return ""

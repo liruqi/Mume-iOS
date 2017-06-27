@@ -36,8 +36,7 @@
 @implementation PacketTunnelProvider
 
 - (void)startTunnelWithOptions:(NSDictionary *)options completionHandler:(void (^)(NSError *))completionHandler {
-    [self openLog];
-    NSLog(@"starting mume tunnel...");
+    mumeLog(@"starting Mume tunnel...");
     [self updateUserDefaults];
     NSError *error = [TunnelInterface setupWithPacketTunnelFlow:self.packetFlow];
     if (error) {
@@ -68,7 +67,7 @@
         [weakSelf.wormhole passMessageObject:@"ok" identifier:@"tunnelStatus"];
     }];
     [self.wormhole listenForMessageWithIdentifier:@"stopTunnel" listener:^(id  _Nullable messageObject) {
-        NSLog(@"received message: stopTunnel");
+        mumeLog(@"received message: stopTunnel");
         [weakSelf stop];
     }];
     [self.wormhole listenForMessageWithIdentifier:@"getTunnelConnectionRecords" listener:^(id  _Nullable messageObject) {
@@ -134,7 +133,7 @@
         proxyError = [TunnelError errorWithMessage:@"timeout"];
     }
     if (proxyError) {
-        NSLog(@"start proxy: %@ error: %@", name, [proxyError localizedDescription]);
+        mumeLog(@"start proxy: %@ error: %@", name, [proxyError localizedDescription]);
         exit(1);
         return;
     }
@@ -143,7 +142,7 @@
 - (void)startShadowsocks {
     [self syncStartProxy: @"shadowsocks" completion:^(dispatch_group_t g, NSError *__autoreleasing *proxyError) {
         [[ProxyManager sharedManager] startShadowsocks:^(int port, NSError *error) {
-            NSLog(@"startShadowsocks - port: %d error:%@", port, error);
+            mumeLog(@"startShadowsocks - port: %d error:%@", port, error);
             *proxyError = error;
             dispatch_group_leave(g);
         }];
@@ -194,10 +193,10 @@
     NSArray *dnsServers;
     if (dns.length) {
         dnsServers = [dns componentsSeparatedByString:@","];
-        NSLog(@"custom dns servers: %@", dnsServers);
+        mumeLog(@"custom dns servers: %@", dnsServers);
     }else {
         dnsServers = [DNSConfig getSystemDnsServers];
-        NSLog(@"system dns servers: %@", dnsServers);
+        mumeLog(@"system dns servers: %@", dnsServers);
     }
     ipv4Settings.includedRoutes = @[[NEIPv4Route defaultRoute]];
     NEPacketTunnelNetworkSettings *settings = [[NEPacketTunnelNetworkSettings alloc] initWithTunnelRemoteAddress:@"192.0.2.2"];
@@ -230,25 +229,13 @@
     }];
 }
 
-- (void)openLog {
-    if ([Potatso logLevel] != 1) {
-        return;
-    }
-    NSString *logFilePath = [Potatso sharedLogUrl].path;
-    [[NSFileManager defaultManager] createFileAtPath:logFilePath contents:nil attributes:nil];
-    freopen([logFilePath cStringUsingEncoding:NSASCIIStringEncoding], "w+", stderr);
-    logFilePath = [logFilePath stringByAppendingString: @".stdout"];
-    [[NSFileManager defaultManager] createFileAtPath:logFilePath contents:nil attributes:nil];
-    freopen([logFilePath cStringUsingEncoding:NSASCIIStringEncoding], "w+", stdout);
-}
-
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
     if ([keyPath isEqualToString:@"defaultPath"]) {
         if (self.defaultPath.status == NWPathStatusSatisfied && ![self.defaultPath isEqualToPath:self.lastPath]) {
             if (!self.lastPath) {
                 self.lastPath = self.defaultPath;
             }else {
-                NSLog(@"received network change notifcation");
+                mumeLog(@"received network change notifcation");
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [self startVPNWithOptions:nil completionHandler:nil];
                 });
@@ -262,13 +249,13 @@
 - (void)stopTunnelWithReason:(NEProviderStopReason)reason completionHandler:(void (^)(void))completionHandler
 {
 	// Add code here to start the process of stopping the tunnel
-    NSLog(@"stopTunnelWithReason: %ld", (long)reason);
+    mumeLog(@"stopTunnelWithReason: %ld", (long)reason);
     self.pendingStopCompletion = completionHandler;
     [self stop];
 }
 
 - (void)stop {
-    NSLog(@"stoping potatso tunnel...");
+    mumeLog(@"stoping Mume tunnel...");
     [[Potatso sharedUserDefaults] setObject:@(0) forKey:@"tunnelStatusPort"];
     [[Potatso sharedUserDefaults] synchronize];
     [TunnelInterface stop];
@@ -285,19 +272,19 @@
 }
 
 - (void)handleAppMessage:(NSData *)messageData completionHandler:(void (^)(NSData *))completionHandler {
-    NSLog(@"handleAppMessage: %@", [[NSString alloc] initWithData:messageData encoding:NSUTF8StringEncoding]);
+    mumeLog(@"handleAppMessage: %@", [[NSString alloc] initWithData:messageData encoding:NSUTF8StringEncoding]);
     if (completionHandler != nil) {
-        completionHandler(nil);
+        completionHandler([@"Hello from PT" dataUsingEncoding:NSUTF8StringEncoding]);
     }
 }
 
 - (void)sleepWithCompletionHandler:(void (^)(void))completionHandler {
-    NSLog(@"sleeping potatso tunnel...");
+    mumeLog(@"sleeping Mume tunnel...");
 	completionHandler();
 }
 
 - (void)wake {
-    NSLog(@"waking potatso tunnel...");
+    mumeLog(@"waking Mume tunnel...");
 }
 
 #pragma mark - GCDAsyncSocket Delegate 

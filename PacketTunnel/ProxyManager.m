@@ -37,11 +37,40 @@ int sock_port (int fd) {
     struct sockaddr_in sin;
     socklen_t len = sizeof(sin);
     if (getsockname(fd, (struct sockaddr *)&sin, &len) < 0) {
-        NSLog(@"getsock_port(%d) error: %s",
+        mumeLog(@"getsock_port(%d) error: %s",
               fd, strerror (errno));
         return 0;
     }else{
         return ntohs(sin.sin_port);
+    }
+}
+
+void mumeLog(NSString* fmt, ...) {
+    if ([Potatso logLevel] != 1) {
+        return;
+    }
+    
+    va_list args;
+    va_start(args, fmt);
+    NSString *content = [[NSString alloc] initWithFormat: [fmt stringByAppendingString:@"\n"] arguments:args];
+    NSString *logFilePath = [Potatso sharedLogUrl].path;
+    
+    static dispatch_once_t onceToken;
+    static NSFileHandle *fileHandle = nil;
+    dispatch_once(&onceToken, ^{
+        [content writeToFile:logFilePath
+                  atomically:NO
+                    encoding:NSStringEncodingConversionAllowLossy
+                       error:nil];
+        fileHandle = [NSFileHandle fileHandleForWritingAtPath:logFilePath];
+        [fileHandle seekToEndOfFile];
+    });
+    
+    if (fileHandle) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            [fileHandle writeData:[content dataUsingEncoding:NSUTF8StringEncoding]];
+            [fileHandle synchronizeFile];
+        });
     }
 }
 

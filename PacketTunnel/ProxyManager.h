@@ -13,6 +13,8 @@ typedef void(^ShadowsocksProxyCompletion)(int port, NSError *error);
 
 extern int sock_port (int fd);
 
+void mumeLog(NSString* fmt, ...);
+
 @interface ProxyManager : NSObject
 
 + (ProxyManager *)sharedManager;

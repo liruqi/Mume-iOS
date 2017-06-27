@@ -432,7 +432,9 @@ extension Manager {
             {
                 do {
                     try session.sendProviderMessage(message) { response in
-                        
+                        if let response = response {
+                            print("Received from T: " + (String(data: response, encoding: .utf8) ?? ""))
+                        }
                     }
                 } catch {
                     print("Failed to send a message to the provider")

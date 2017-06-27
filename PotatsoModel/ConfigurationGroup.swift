@@ -51,9 +51,6 @@ open class ConfigurationGroup: BaseModel {
     open override var description: String {
         return name
     }
-}
-
-extension ConfigurationGroup {
     
     public convenience init(dictionary: [String: AnyObject], inRealm realm: Realm) throws {
         self.init()
@@ -61,10 +58,10 @@ extension ConfigurationGroup {
             throw ConfigurationGroupError.invalidConfigurationGroup
         }
         self.name = name
-        if realm.objects(RuleSet).filter("name = '\(name)'").first != nil {
+        if realm.objects(RuleSet.self).filter("name = '\(name)'").first != nil {
             self.name = "\(name) \(ConfigurationGroup.dateFormatter.string(from: Date()))"
         }
-        if let proxyName = dictionary["proxy"] as? String, let proxy = realm.objects(Proxy).filter("name = '\(proxyName)'").first {
+        if let proxyName = dictionary["proxy"] as? String, let proxy = realm.objects(Proxy.self).filter("name = '\(proxyName)'").first {
             self.proxies.removeAll()
             self.proxies.append(proxy)
         }
