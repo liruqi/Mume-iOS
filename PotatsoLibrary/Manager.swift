@@ -141,6 +141,14 @@ open class Manager {
     func copyGEOIPData() throws {
         let toURL = Potatso.sharedUrl().appendingPathComponent("GeoLite2-Country.mmdb")
 
+        if !FileManager.default.fileExists(atPath: toURL.path) {
+            let maxminddbPath = Bundle(for: MMDB.self).path(forResource: "GeoLite2-Country", ofType: "mmdb") ?? ""
+            if FileManager.default.fileExists(atPath: maxminddbPath) {
+                try FileManager.default.copyItem(atPath: maxminddbPath, toPath: toURL.path)
+                return
+            }
+        }
+        
             let MaxmindLastModifiedKey = "MaxmindLastModifiedKey"
             let lastM = Potatso.sharedUserDefaults().string(forKey: MaxmindLastModifiedKey) ?? "Sun, 25 Jun 2017 00:07:41 GMT"
             
@@ -260,7 +268,12 @@ extension Manager {
         let confURL = Potatso.sharedGeneralConfUrl()
         let json: NSDictionary = ["dns": defaultConfigGroup.dns]
         do {
-            try json.jsonString()?.write(to: confURL, atomically: true, encoding: String.Encoding.utf8)
+            if let str = json.jsonString() {
+                print("generateGeneralConfig: " + str)
+                try str.write(to: confURL, atomically: true, encoding: String.Encoding.utf8)
+            } else {
+                print("generateGeneralConfig: empty str")
+            }
         } catch {
             print("generateGeneralConfig error")
         }
@@ -370,7 +383,9 @@ extension Manager {
         actionContent.append(contentsOf: Pollution.dnsList.map({ "DNS-IP-CIDR, \($0)/32, PROXY" }))
 
         let userActionString = actionContent.joined(separator: "\n")
+        print("[generateHttpProxyConfig] " + userActionUrl.path + ": " + userActionString)
         try userActionString.write(toFile: userActionUrl.path, atomically: true, encoding: .utf8)
+        print("[generateHttpProxyConfig] " + directDomainsUrl.path + ": " + directDomainRules.joined(separator: "\n"))
         try directDomainRules.joined(separator: "\n").write(to: directDomainsUrl, atomically: true, encoding: .utf8)
     }
 
@@ -425,10 +440,10 @@ extension Manager {
         }
     }
     
-    public func postMessage() {
+    public func postToNETunnel(message: String) {
         loadProviderManager { (manager) -> Void in
             if let session = manager?.connection as? NETunnelProviderSession,
-                let message = "Hello".data(using: String.Encoding.utf8), manager?.connection.status != .invalid
+                let message = message.data(using: String.Encoding.utf8), manager?.connection.status != .invalid
             {
                 do {
                     try session.sendProviderMessage(message) { response in

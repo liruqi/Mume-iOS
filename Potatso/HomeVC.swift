@@ -66,8 +66,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         super.viewWillAppear(animated)
         self.navigationItem.titleView = titleButton
         // Post an empty message so we could attach to packet tunnel process
-        Manager.sharedManager.postMessage()
-//        handleRefreshUI(nil)
+        Manager.sharedManager.postToNETunnel(message: "Hello")
         updateForm()
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: "List".templateImage, style: .plain, target: presenter, action: #selector(HomePresenter.chooseConfigGroups))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addProxy(_:)))

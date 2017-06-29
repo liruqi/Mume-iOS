@@ -20,8 +20,9 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
     static var serverConfigurations = NSMutableDictionary()
     static let reachabilityManager = NetworkReachabilityManager(host:"mumevpn.com")
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        Manager.sharedManager.setup()
-        sync()
+        Async.background {
+            Manager.sharedManager.setup()
+        }
         self.updateMumeServers()
         API.getRuleSets() { (result) in
             guard result.count > 0 else {

@@ -136,6 +136,8 @@
         mumeLog(@"start proxy: %@ error: %@", name, [proxyError localizedDescription]);
         exit(1);
         return;
+    } else {
+        mumeLog(@"start proxy: %@ OK", name);
     }
 }
 
