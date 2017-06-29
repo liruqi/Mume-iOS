@@ -11,6 +11,7 @@ import PotatsoLibrary
 import PotatsoModel
 import Eureka
 import Cartography
+import Async
 
 private let kFormName = "name"
 private let kFormDNS = "dns"
@@ -33,7 +34,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     }
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        self.status = Manager.sharedManager.vpnStatus
+        self.status = Manager.shared.vpnStatus
         print ("HomeVC.init: ", self.status.rawValue)
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         presenter.bindToVC(self)
@@ -66,7 +67,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         super.viewWillAppear(animated)
         self.navigationItem.titleView = titleButton
         // Post an empty message so we could attach to packet tunnel process
-        Manager.sharedManager.postToNETunnel(message: "Hello")
+        Manager.shared.postToNETunnel(message: "Hello")
         updateForm()
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: "List".templateImage, style: .plain, target: presenter, action: #selector(HomePresenter.chooseConfigGroups))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addProxy(_:)))
@@ -108,7 +109,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
 
     func handleRefreshUI(_ error: Error?) {
         if presenter.group.isDefault {
-            let vpnStatus = Manager.sharedManager.vpnStatus
+            let vpnStatus = Manager.shared.vpnStatus
             if status == .connecting {
                 if nil == error {
                     if vpnStatus == .off {
@@ -334,7 +335,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                 }
                 form[indexPath].hidden = true
                 form[indexPath].evaluateHidden()
-                Manager.sharedManager.setDefaultConfigGroup(group.uuid, name: group.name)
+                Manager.shared.setDefaultConfigGroup(group.uuid, name: group.name)
             } catch {
                 self.showTextHUD("\("Fail to delete item".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
             }

@@ -16,6 +16,7 @@
 #import "tun2socks/tun2socks.h"
 @import CocoaAsyncSocket;
 
+#define TCP_DATA_LOG_ENABLE DEBUG
 #define kTunnelInterfaceErrorDomain @"info.liruqi.mume.TunnelInterface"
 
 @interface TunnelInterface () <GCDAsyncUdpSocketDelegate>

@@ -21,7 +21,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, GCDAsyncSocketDe
     
     let constrainGroup = ConstraintGroup()
     
-    let wormhole = Manager.sharedManager.wormhole
+    let wormhole = Manager.shared.wormhole
     
     var timer: Timer?
     

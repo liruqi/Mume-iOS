@@ -40,7 +40,7 @@ class DashboardVC: FormViewController {
         
         if Potatso.logLevel() > 0 {
             section <<< LabelRow() {
-                $0.title = "stderr".localized()
+                $0.title = "PacketTunnel".localized()
                 }.cellSetup({ (cell, row) -> () in
                     cell.accessoryType = .disclosureIndicator
                     cell.selectionStyle = .default
@@ -83,7 +83,7 @@ class DashboardVC: FormViewController {
     }
 
     func showLogs() {
-        print ("stderr log: %@", Potatso.sharedLogUrl())
+        print ("tunnel log: %@", Potatso.sharedLogUrl())
         navigationController?.pushViewController(LogDetailViewController(path: Potatso.sharedLogUrl().path), animated: true)
     }
 

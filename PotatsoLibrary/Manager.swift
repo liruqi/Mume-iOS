@@ -35,7 +35,7 @@ public let kProxyServiceVPNStatusNotification = "kProxyServiceVPNStatusNotificat
 
 open class Manager {
     
-    open static let sharedManager = Manager()
+    open static let shared = Manager()
     
     open fileprivate(set) var vpnStatus = VPNStatus.off {
         didSet {
@@ -62,6 +62,17 @@ open class Manager {
                         })
                 }
             }
+        }
+        setupDefaultReaml()
+        do {
+            try copyGEOIPData()
+        }catch{
+            print("copyGEOIPData fail")
+        }
+        do {
+            try copyTemplateData()
+        } catch {
+            print("copyTemplateData fail")
         }
     }
     
@@ -121,20 +132,6 @@ open class Manager {
     open func switchVPNFromTodayWidget(_ context: NSExtensionContext) {
         if let url = URL(string: "mume://switch") {
             context.open(url, completionHandler: nil)
-        }
-    }
-    
-    open func setup() {
-        setupDefaultReaml()
-        do {
-            try copyGEOIPData()
-        }catch{
-            print("copyGEOIPData fail")
-        }
-        do {
-            try copyTemplateData()
-        }catch{
-            print("copyTemplateData fail")
         }
     }
 
@@ -247,7 +244,7 @@ open class Manager {
 extension ConfigurationGroup {
 
     public var isDefault: Bool {
-        let defaultUUID = Manager.sharedManager.defaultConfigGroup.uuid
+        let defaultUUID = Manager.shared.defaultConfigGroup.uuid
         let isDefault = defaultUUID == uuid
         return isDefault
     }
@@ -400,7 +397,7 @@ extension Manager {
     fileprivate func startVPNWithOptions(_ options: [String : NSObject]?, complete: ((NETunnelProviderManager?, Error?) -> Void)? = nil) {
         // regenerate config files
         do {
-            try Manager.sharedManager.regenerateConfigFiles()
+            try Manager.shared.regenerateConfigFiles()
         }catch {
             complete?(nil, error)
             return

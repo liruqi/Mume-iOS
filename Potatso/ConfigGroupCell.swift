@@ -36,7 +36,7 @@ class ConfigGroupCell: UITableViewCell {
         ruleSetsLabel.text = group.ruleSets.count > 0 ? "\(desc)" : "None".localized()
         leftColorHintView.backgroundColor = hintColor
         statusLabel.isHidden = true
-        if group.isDefault && Manager.sharedManager.vpnStatus == .on {
+        if group.isDefault && Manager.shared.vpnStatus == .on {
             statusLabel.isHidden = false
         }
     }

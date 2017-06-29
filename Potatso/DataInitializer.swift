@@ -20,8 +20,8 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
     static var serverConfigurations = NSMutableDictionary()
     static let reachabilityManager = NetworkReachabilityManager(host:"mumevpn.com")
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        Async.background {
-            Manager.sharedManager.setup()
+        Async.userInitiated {
+            let _ = Manager.shared
         }
         self.updateMumeServers()
         API.getRuleSets() { (result) in
@@ -42,7 +42,7 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
     
     func applicationDidEnterBackground(_ application: UIApplication) {
         self.updateMumeServers()
-        _ = try? Manager.sharedManager.regenerateConfigFiles()
+        _ = try? Manager.shared.regenerateConfigFiles()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

@@ -170,7 +170,7 @@ class ConfigGroupChooseVC: UIViewController, UITableViewDataSource, UITableViewD
             return false
         }
         let group = groups[indexPath.row]
-        if group.isDefault && Manager.sharedManager.vpnStatus != .off {
+        if group.isDefault && Manager.shared.vpnStatus != .off {
             return false
         }
         return groups.count > 1

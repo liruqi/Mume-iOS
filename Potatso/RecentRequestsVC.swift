@@ -20,7 +20,7 @@ private let kRecentRequestCachedIdentifier = "requestsCached"
 class RecentRequestsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     var requests: [Request] = []
-    let wormhole = Manager.sharedManager.wormhole
+    let wormhole = Manager.shared.wormhole
     var timer: Timer?
     var appear = false
     var stopped = false
@@ -38,7 +38,7 @@ class RecentRequestsVC: UIViewController, UITableViewDataSource, UITableViewDele
             return
         }
         self.updateUI(Potatso.sharedUserDefaults().string(forKey: kRecentRequestCachedIdentifier))
-        if Manager.sharedManager.vpnStatus == .off {
+        if Manager.shared.vpnStatus == .off {
             showingCache = true
         }
     }
@@ -54,7 +54,7 @@ class RecentRequestsVC: UIViewController, UITableViewDataSource, UITableViewDele
     }
     
     func refresh() {
-        let on = [VPNStatus.on, VPNStatus.connecting].contains(Manager.sharedManager.vpnStatus)
+        let on = [VPNStatus.on, VPNStatus.connecting].contains(Manager.shared.vpnStatus)
         if on {
             wormhole.passMessageObject(NSString(), identifier: "getTunnelConnectionRecords")
         } else {
@@ -73,7 +73,7 @@ class RecentRequestsVC: UIViewController, UITableViewDataSource, UITableViewDele
     }
     
     func onVPNStatusChanged() {
-        let on = [VPNStatus.on, VPNStatus.connecting].contains(Manager.sharedManager.vpnStatus)
+        let on = [VPNStatus.on, VPNStatus.connecting].contains(Manager.shared.vpnStatus)
         hintLabel.isHidden = on
         if on {
             tableView.triggerPullToRefresh()

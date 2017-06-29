@@ -118,7 +118,7 @@ class HomePresenter: NSObject {
         }
         do {
             try ConfigurationGroup.appendRuleSet(forGroupId: group.uuid, rulesetId: ruleSet.uuid)
-            Manager.sharedManager.setDefaultConfigGroup(group.uuid, name: group.name)
+            Manager.shared.setDefaultConfigGroup(group.uuid, name: group.name)
             self.delegate?.handleRefreshUI(nil)
         }catch {
             self.vc.showTextHUD("\("Fail to add ruleset".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
@@ -182,7 +182,7 @@ class CurrentGroupManager {
     static let shared = CurrentGroupManager()
 
     fileprivate init() {
-        _groupUUID = Manager.sharedManager.defaultConfigGroup.uuid
+        _groupUUID = Manager.shared.defaultConfigGroup.uuid
     }
 
     var onChange: ((ConfigurationGroup?) -> Void)?
@@ -197,7 +197,7 @@ class CurrentGroupManager {
         if let group = DBUtils.get(_groupUUID, type: ConfigurationGroup.self) {
             return group
         } else {
-            let defaultGroup = Manager.sharedManager.defaultConfigGroup
+            let defaultGroup = Manager.shared.defaultConfigGroup
             setConfigGroupId(defaultGroup.uuid)
             return defaultGroup
         }
@@ -207,7 +207,7 @@ class CurrentGroupManager {
         if let _ = DBUtils.get(id, type: ConfigurationGroup.self) {
             _groupUUID = id
         } else {
-            _groupUUID = Manager.sharedManager.defaultConfigGroup.uuid
+            _groupUUID = Manager.shared.defaultConfigGroup.uuid
         }
     }
     
