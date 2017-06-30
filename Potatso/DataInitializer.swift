@@ -20,9 +20,8 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
     static var serverConfigurations = NSMutableDictionary()
     static let reachabilityManager = NetworkReachabilityManager(host:"mumevpn.com")
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        Async.userInitiated {
-            let _ = Manager.shared
-        }
+        let _ = Manager.shared
+        
         self.updateMumeServers()
         API.getRuleSets() { (result) in
             guard result.count > 0 else {
@@ -65,7 +64,8 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
                                 print ("Proxy exists: " + dic.description)
                             }
                         }*/
-                        try DBUtils.add(proxy) // can do modification with same key
+                        try DBUtils.hardDelete(proxy.uuid, type: Proxy.self)
+                        try DBUtils.add(proxy)
                         NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
                     } else if let dict = dic as? NSDictionary, let mdict = dict.mutableCopy() as? NSMutableDictionary {
                         #if DEBUG
