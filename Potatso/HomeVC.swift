@@ -67,7 +67,11 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         super.viewWillAppear(animated)
         self.navigationItem.titleView = titleButton
         // Post an empty message so we could attach to packet tunnel process
-        Manager.shared.postToNETunnel(message: "Hello")
+        Manager.shared.postToNETunnel(message: "Hello", complete: { code, data in
+            if let data = data {
+                print(code, String(data: data, encoding: .utf8) ?? "")
+            }
+        })
         updateForm()
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: "List".templateImage, style: .plain, target: presenter, action: #selector(HomePresenter.chooseConfigGroups))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addProxy(_:)))
@@ -141,7 +145,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         form.delegate = nil
         form.removeAll()
         
-        form +++ generateProxySection()
+        form +++ generateConnectionSection()
 
         let section = Section("Proxy".localized())
         defer {
@@ -174,14 +178,24 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                     }.cellSetup({ (cell, row) -> () in
                         cell.selectionStyle = .none
                         if (self.presenter.proxy?.uuid == proxy.uuid) {
-                            cell.accessoryType = .checkmark
+                            cell.imageView?.isHidden = false
                         } else {
-                            cell.accessoryType = .none
+                            cell.imageView?.isHidden = true
                         }
+                        cell.accessoryType = .disclosureIndicator
                     }).onCellSelection({ [unowned self] (cell, row) in
-                        let proxy = row.value
+                        guard let proxy = row.value else {
+                            return
+                        }
+                        if (self.presenter.proxy?.uuid == proxy.uuid) {
+                            if proxy.type != .none {
+                                let vc = ProxyConfigurationViewController(upstreamProxy: proxy)
+                                self.navigationController?.pushViewController(vc, animated: true)
+                            }
+                            return
+                        }
                         do {
-                            try ConfigurationGroup.changeProxy(forGroupId: self.presenter.group.uuid, proxyId: proxy?.uuid)
+                            try ConfigurationGroup.changeProxy(forGroupId: self.presenter.group.uuid, proxyId: proxy.uuid)
                             self.updateTitle()
                             self.updateForm()
                             //TODO: reconnect here
@@ -198,7 +212,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
 
     // MARK: - Form
 
-    func generateProxySection() -> Section {
+    func generateConnectionSection() -> Section {
         let proxySection = Section("Connect".localized())
         var reloading = true
 
@@ -344,6 +358,12 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
 
     func tableView(_ tableView: UITableView, editingStyleForRowAtIndexPath indexPath: IndexPath) -> UITableViewCellEditingStyle {
         return .delete
+    }
+    
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        let proxy = self.proxies[indexPath.row]
+        let vc = ProxyConfigurationViewController(upstreamProxy: proxy)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 
     // MARK: - TextRow

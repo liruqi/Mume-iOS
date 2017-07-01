@@ -14,7 +14,6 @@ public enum ProxyType: String {
     case ShadowsocksR = "ShadowsocksR"
     //case Https = "HTTPS"
     case Socks5 = "SOCKS5"
-    case None = "NONE"
 }
 
 extension ProxyType: CustomStringConvertible {

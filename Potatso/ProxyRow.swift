@@ -42,8 +42,7 @@ class ProxyRowCell: Cell<Proxy>, CellType {
         if let proxy = row.value {
             self.textLabel?.text = proxy.description
             self.detailTextLabel?.text = proxy.subTitle()
-            self.imageView?.isHidden = false
-            self.imageView?.image = UIImage(named: "Shadowsocks")
+            self.imageView?.image = UIImage(named: "Selected")
         } else {
             self.textLabel?.text = "None".localized()
             self.imageView?.isHidden = true

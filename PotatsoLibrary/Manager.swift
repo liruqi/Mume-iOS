@@ -276,7 +276,7 @@ extension Manager {
         }
     }
     
-    func generateShadowsocksConfig() throws {
+    open func generateShadowsocksConfig() throws {
         let confURL = Potatso.sharedProxyConfUrl()
         var content = ""
         if let upstreamProxy = upstreamProxy {
@@ -437,20 +437,28 @@ extension Manager {
         }
     }
     
-    public func postToNETunnel(message: String) {
+    public func postToNETunnel(message: String, complete: @escaping (Int, Data?) -> Void) {
         loadProviderManager { (manager) -> Void in
             if let session = manager?.connection as? NETunnelProviderSession,
-                let message = message.data(using: String.Encoding.utf8), manager?.connection.status != .invalid
+                let data = message.data(using: String.Encoding.utf8), manager?.connection.status != .invalid
             {
                 do {
-                    try session.sendProviderMessage(message) { response in
+                    print("postToNETunnel: " + message);
+                    try session.sendProviderMessage(data) { response in
                         if let response = response {
                             print("Received from T: " + (String(data: response, encoding: .utf8) ?? ""))
+                            complete(0, response)
+                        } else {
+                            print("Received from T: empty");
+                            complete(1, nil)
                         }
                     }
                 } catch {
+                    complete(2, nil)
                     print("Failed to send a message to the provider")
                 }
+            } else {
+                complete(4, nil)
             }
         }
     }
