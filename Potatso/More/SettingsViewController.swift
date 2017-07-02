@@ -8,7 +8,6 @@
 
 import UIKit
 import Eureka
-import Appirater
 import ICSMainFramework
 import MessageUI
 import SafariServices

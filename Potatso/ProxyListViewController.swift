@@ -62,6 +62,9 @@ class ProxyListViewController: FormViewController {
                     $0.value = proxy
                 }.cellSetup({ (cell, row) -> () in
                     cell.selectionStyle = .none
+                    cell.accessoryType = .disclosureIndicator
+                    cell.imageView?.image = nil
+                    cell.imageView?.isHidden = true
                 }).onCellSelection({ [unowned self] (cell, row) in
                     cell.setSelected(false, animated: true)
                     let proxy = row.value
@@ -85,6 +88,9 @@ class ProxyListViewController: FormViewController {
                         $0.value = proxy
                         }.cellSetup({ (cell, row) -> () in
                             cell.selectionStyle = .none
+                            cell.accessoryType = .disclosureIndicator
+                            cell.imageView?.image = nil
+                            cell.imageView?.isHidden = true
                         }).onCellSelection({ [weak self] (cell, row) in
                             cell.setSelected(false, animated: true)
                             let proxy = row.value

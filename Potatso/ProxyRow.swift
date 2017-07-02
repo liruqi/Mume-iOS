@@ -15,6 +15,7 @@ final class ProxyRow: Row<ProxyRowCell>, RowType {
 
     required init(tag: String?) {
         super.init(tag: tag)
+        self.cellStyle = UITableViewCellStyle.subtitle
         displayValueFor = nil
     }
 }

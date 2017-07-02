@@ -163,7 +163,8 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                     $0.cellStyle = UITableViewCellStyle.subtitle
                     }.cellSetup({ (cell, row) -> () in
                         cell.selectionStyle = .none
-                        cell.accessoryType = .checkmark
+                        cell.accessoryType = .none
+                        cell.imageView?.isHidden = false
                     })
             return
         }
