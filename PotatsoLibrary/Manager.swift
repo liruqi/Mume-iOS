@@ -261,7 +261,7 @@ extension Manager {
         return upstreamProxy != nil && defaultConfigGroup.defaultToProxy
     }
     
-    func generateGeneralConfig() throws {
+    open func generateGeneralConfig() throws {
         let confURL = Potatso.sharedGeneralConfUrl()
         let json: NSDictionary = ["dns": defaultConfigGroup.dns]
         do {
@@ -395,13 +395,6 @@ extension Manager {
     }
     
     fileprivate func startVPNWithOptions(_ options: [String : NSObject]?, complete: ((NETunnelProviderManager?, Error?) -> Void)? = nil) {
-        // regenerate config files
-        do {
-            try Manager.shared.regenerateConfigFiles()
-        }catch {
-            complete?(nil, error)
-            return
-        }
         // Load provider
         loadAndCreateProviderManager { (manager, error) -> Void in
             if let error = error {
@@ -427,14 +420,18 @@ extension Manager {
         }
     }
     
-    public func stopVPN() {
+    public func stopVPN() -> Bool {
         // Stop provider
+        if self.vpnStatus == .off {
+            return false
+        }
         loadProviderManager { (manager) -> Void in
             guard let manager = manager else {
                 return
             }
             manager.connection.stopVPNTunnel()
         }
+        return true
     }
     
     public func postToNETunnel(message: String, complete: @escaping (Int, Data?) -> Void) {

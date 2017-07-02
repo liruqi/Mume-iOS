@@ -11,6 +11,22 @@ import PotatsoModel
 import Alamofire
 import ObjectMapper
 
+extension NetworkReachabilityManager.NetworkReachabilityStatus {
+    func description() -> String {
+        switch self {
+        case .notReachable:
+            return "notReachable"
+        case .unknown:
+            return "unknown"
+        case .reachable(.wwan):
+            return "wwan"
+        case .reachable(.ethernetOrWiFi):
+            return "ethernetOrWiFi"
+        }
+        return ""
+    }
+}
+
 struct API {
 
     static let URL = "https://api.liruqi.info/"
@@ -79,15 +95,16 @@ struct API {
         if (DataInitializer.reachabilityManager?.isReachableOnEthernetOrWiFi == false),
             let data = Potatso.sharedUserDefaults().data(forKey: kCloudProxySets) {
             do {
-                if let JSON = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSArray {
-                    return callback(JSON)
+                if let arr = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSArray,  arr.count > 3 {
+                    return callback(arr)
                 }
             } catch {
                 print("Local deserialization failed")
             }
         }
+        let network = (DataInitializer.reachabilityManager?.networkReachabilityStatus.description()) ?? ""
         let vi = (UIDevice.current.identifierForVendor?.uuidString) ?? ""
-        Alamofire.request("https://mumevpn.com/shared.php", parameters: ["lang": lang, "version": versionCode, "identifierForVendor": vi])
+        Alamofire.request("https://mumevpn.com/shared.php", parameters: ["lang": lang, "version": versionCode, "identifierForVendor": vi, "network": network])
             .responseJSON { response in
                 print(response.response ?? "response.response") // URL response
                 print(response.data ?? "response.data")     // server data

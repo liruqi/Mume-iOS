@@ -17,7 +17,7 @@ class HomePresenter: NSObject {
 
     static var kAddConfigGroup = "AddConfigGroup"
     static var errorCnt = 0
-    
+    var configError = 0
     var vc: UIViewController!
 
     var group: ConfigurationGroup {
@@ -37,9 +37,9 @@ class HomePresenter: NSObject {
         CurrentGroupManager.shared.onChange = { group in
             self.delegate?.handleRefreshUI(nil)
         }
-        Async.userInitiated {
+        //Async.userInitiated {
             try? Manager.shared.regenerateConfigFiles()
-        }
+        //}
     }
 
     deinit {
@@ -53,6 +53,16 @@ class HomePresenter: NSObject {
     // MARK: - Actions
 
     func switchVPN() {
+        if self.configError > 0 {
+            do {
+                try Manager.shared.regenerateConfigFiles()
+                self.configError = 0
+            } catch {
+                print("switchVPN failed: ", error)
+                self.configError += 1
+                return
+            }
+        }
         VPN.switchVPN(group) { [unowned self] (error) in
             if let error = error as NSError? {
                 HomePresenter.errorCnt += 1
@@ -72,12 +82,35 @@ class HomePresenter: NSObject {
             print("HomePresenter.change(proxy): not changed");
             return
         }
-        try? ConfigurationGroup.changeProxy(forGroupId: self.group.uuid, proxyId: proxy.uuid)
+        try? DBUtils.modify(ConfigurationGroup.self, id: self.group.uuid) { (realm, group) -> Error? in
+            group.proxies.removeAll()
+            group.proxies.append(proxy)
+            return nil
+        }
+        
         // apply changes
-        Async.userInitiated {
-            try? Manager.shared.generateShadowsocksConfig()
-            if (status.onOrConnectiong()) {
-                //
+        //Async.userInitiated {
+            do {
+                try Manager.shared.generateShadowsocksConfig()
+                self.restartVPN()
+            } catch {
+                print(error)
+                self.configError += 1
+            }
+//        }
+    }
+    
+    func restartVPN() {
+        guard Manager.shared.stopVPN() else {
+            return
+        }
+        Async.main(after: 1) {
+            Manager.shared.switchVPN { (manager, error) in
+                if let _ = manager {
+                    Async.background(after: 2, { () -> Void in
+                        Appirater.userDidSignificantEvent(false)
+                    })
+                }
             }
         }
     }
@@ -139,7 +172,9 @@ class HomePresenter: NSObject {
             try ConfigurationGroup.appendRuleSet(forGroupId: group.uuid, rulesetId: ruleSet.uuid)
             Manager.shared.setDefaultConfigGroup(group.uuid, name: group.name)
             self.delegate?.handleRefreshUI(nil)
-        }catch {
+            restartVPN()
+        } catch {
+            self.configError += 1
             self.vc.showTextHUD("\("Fail to add ruleset".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
         }
     }
@@ -164,6 +199,7 @@ class HomePresenter: NSObject {
         }
         do {
             try ConfigurationGroup.changeDNS(forGroupId: group.uuid, dns: dns)
+            self.configError += 1
         }catch {
             self.vc.showTextHUD("\("Fail to change dns".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
         }
