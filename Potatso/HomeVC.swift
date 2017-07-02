@@ -168,7 +168,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
             return
         }
         if nil == self.presenter.proxy {
-            try? ConfigurationGroup.changeProxy(forGroupId: self.presenter.group.uuid, proxyId: proxies[0].uuid)
+            self.presenter.change(proxy: proxies[0], status: self.status)
         }
         for proxy in proxies {
             section
@@ -195,7 +195,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                             return
                         }
                         do {
-                            try ConfigurationGroup.changeProxy(forGroupId: self.presenter.group.uuid, proxyId: proxy.uuid)
+                            self.presenter.change(proxy: proxy, status: self.status)
                             self.updateTitle()
                             self.updateForm()
                             //TODO: reconnect here

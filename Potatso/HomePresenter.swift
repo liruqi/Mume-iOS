@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Async
 
 protocol HomePresenterProtocol: class {
     func handleRefreshUI(_ error: Error?)
@@ -36,6 +37,9 @@ class HomePresenter: NSObject {
         CurrentGroupManager.shared.onChange = { group in
             self.delegate?.handleRefreshUI(nil)
         }
+        Async.userInitiated {
+            try? Manager.shared.regenerateConfigFiles()
+        }
     }
 
     deinit {
@@ -63,6 +67,21 @@ class HomePresenter: NSObject {
         }
     }
 
+    func change(proxy: Proxy, status: VPNStatus) {
+        if (proxy.uuid == self.proxy?.uuid) {
+            print("HomePresenter.change(proxy): not changed");
+            return
+        }
+        try? ConfigurationGroup.changeProxy(forGroupId: self.group.uuid, proxyId: proxy.uuid)
+        // apply changes
+        Async.userInitiated {
+            try? Manager.shared.generateShadowsocksConfig()
+            if (status.onOrConnectiong()) {
+                //
+            }
+        }
+    }
+    
     func chooseConfigGroups() {
         ConfigGroupChooseManager.shared.show()
     }

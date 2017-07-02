@@ -1,6 +1,5 @@
 PODS:
   - Alamofire (4.4.0)
-  - Appirater (2.1.2)
   - Aspects (0.0.1)
   - AsyncSwift (2.0.1)
   - CallbackURLKit (1.0.0):
@@ -45,7 +44,6 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
-  - Appirater
   - Aspects (from `./Library/Aspects/`)
   - AsyncSwift
   - CallbackURLKit
@@ -80,7 +78,6 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
-  Appirater: f1c9e53e8b612193e6256144f6a0fd2e31f4340d
   Aspects: 35254a4a73948e7bc1118ce0554674f77467a80b
   AsyncSwift: 632138e42ead868b53c745fcde9bf733ce1527ad
   CallbackURLKit: 1a56181ef8d6a1491865041b2192dd8c9a364669
@@ -101,6 +98,6 @@ SPEC CHECKSUMS:
   SVPullToRefresh: ba2e718695a43253d8bea6852d2960097dc15d8c
   SwiftColor: c240d8cb2e1a29d731ae8deca8739eac6b9c56bd
 
-PODFILE CHECKSUM: eb9ae6ac8fb05db2ea270d79caafaeb05776deb3
+PODFILE CHECKSUM: 5fc22edc9072669c629b927937053a8b7a691227
 
 COCOAPODS: 1.2.1

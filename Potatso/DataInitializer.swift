@@ -49,6 +49,7 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
+        Appirater.appEnteredForeground(true)
     }
     
     func updateMumeServers() {

@@ -9,7 +9,6 @@
 import Foundation
 import Async
 import PotatsoModel
-import Appirater
 import PotatsoLibrary
 
 class VPN {

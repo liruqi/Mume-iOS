@@ -8,7 +8,6 @@
 
 import Foundation
 import ICSMainFramework
-import Appirater
 import Fabric
 
 let appID = "1144787928"
@@ -25,6 +24,14 @@ class AppInitializer: NSObject, AppLifeCycleProtocol {
 
     func configAppirater() {
         Appirater.setAppId(appID)
+        Appirater.appLaunched(true)
+        Appirater.setDaysUntilPrompt(1)
+        Appirater.setUsesUntilPrompt(3)
+        Appirater.setSignificantEventsUntilPrompt(1)
+        Appirater.setAlwaysUseMainBundle(true)
+        #if DEBUG
+        Appirater.setDebug(true)
+        #endif
     }
     
 }

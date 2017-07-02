@@ -28,7 +28,6 @@ target "Potatso" do
     pod 'Cartography'
     pod 'AsyncSwift'
     pod 'SwiftColor'
-    pod 'Appirater'
     pod 'Eureka', '~> 2'
     pod 'MBProgressHUD'
     pod 'CallbackURLKit'
