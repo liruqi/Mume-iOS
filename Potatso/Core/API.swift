@@ -86,7 +86,8 @@ struct API {
                 print("Local deserialization failed")
             }
         }
-        Alamofire.request("https://mumevpn.com/shared.php", parameters: ["lang": lang, "version": versionCode])
+        let vi = (UIDevice.current.identifierForVendor?.uuidString) ?? ""
+        Alamofire.request("https://mumevpn.com/shared.php", parameters: ["lang": lang, "version": versionCode, "identifierForVendor": vi])
             .responseJSON { response in
                 print(response.response ?? "response.response") // URL response
                 print(response.data ?? "response.data")     // server data
