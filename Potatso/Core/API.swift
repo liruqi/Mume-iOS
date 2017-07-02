@@ -10,6 +10,7 @@ import Foundation
 import PotatsoModel
 import Alamofire
 import ObjectMapper
+import CoreTelephony
 
 extension NetworkReachabilityManager.NetworkReachabilityStatus {
     func description() -> String {
@@ -92,29 +93,39 @@ struct API {
         let kCloudProxySets = "kCloudProxySets" + versionCode
         NSLog("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
         
-        if (DataInitializer.reachabilityManager?.isReachableOnEthernetOrWiFi == false),
-            let data = Potatso.sharedUserDefaults().data(forKey: kCloudProxySets) {
-            do {
-                if let arr = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSArray,  arr.count > 3 {
-                    return callback(arr)
-                }
-            } catch {
-                print("Local deserialization failed")
-            }
-        }
         let network = (DataInitializer.reachabilityManager?.networkReachabilityStatus.description()) ?? ""
         let vi = (UIDevice.current.identifierForVendor?.uuidString) ?? ""
-        Alamofire.request("https://mumevpn.com/shared.php", parameters: ["lang": lang, "version": versionCode, "identifierForVendor": vi, "network": network])
+        var parameters: Parameters = ["lang": lang, "version": versionCode, "identifierForVendor": vi, "network": network]
+        
+        let networkInfo = CTTelephonyNetworkInfo()
+        if let carrier = networkInfo.subscriberCellularProvider {
+            parameters["carrierName"] = carrier.carrierName
+            parameters["mobileCountryCode"] = carrier.mobileCountryCode
+            parameters["mobileNetworkCode"] = carrier.mobileNetworkCode
+            parameters["isoCountryCode"] = carrier.isoCountryCode
+        }
+        Alamofire.request("https://mumevpn.com/shared.php", parameters: parameters)
             .responseJSON { response in
                 print(response.response ?? "response.response") // URL response
                 print(response.data ?? "response.data")     // server data
                 print(response.result.value ?? "empty")   // result of response serialization
-                Potatso.sharedUserDefaults().set(response.data, forKey: kCloudProxySets)
                 if let JSON = response.result.value as? NSArray {
+                    Potatso.sharedUserDefaults().set(response.data, forKey: kCloudProxySets)
                     Crashlytics.sharedInstance().setObjectValue(JSON, forKey: "getProxySets")
                     callback(JSON)
-                } else {
-                    Crashlytics.sharedInstance().setObjectValue(response.data ?? "response.data", forKey: "getProxySetsFailed")
+                    return
+                }
+                
+                Crashlytics.sharedInstance().setObjectValue(response.data ?? "response.data", forKey: "getProxySetsFailed")
+                if let data = Potatso.sharedUserDefaults().data(forKey: kCloudProxySets) {
+                    do {
+                        if let JSON = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSArray {
+                            callback(JSON)
+                            return
+                        }
+                    } catch {
+                        print("Local deserialization failed")
+                    }
                 }
         }
     }

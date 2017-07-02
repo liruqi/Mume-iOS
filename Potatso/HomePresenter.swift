@@ -37,9 +37,7 @@ class HomePresenter: NSObject {
         CurrentGroupManager.shared.onChange = { group in
             self.delegate?.handleRefreshUI(nil)
         }
-        //Async.userInitiated {
-            try? Manager.shared.regenerateConfigFiles()
-        //}
+        try? Manager.shared.regenerateConfigFiles()
     }
 
     deinit {
@@ -89,15 +87,13 @@ class HomePresenter: NSObject {
         }
         
         // apply changes
-        //Async.userInitiated {
-            do {
-                try Manager.shared.generateShadowsocksConfig()
-                self.restartVPN()
-            } catch {
-                print(error)
-                self.configError += 1
-            }
-//        }
+        do {
+            try Manager.shared.generateShadowsocksConfig()
+            self.restartVPN()
+        } catch {
+            print(error)
+            self.configError += 1
+        }
     }
     
     func restartVPN() {

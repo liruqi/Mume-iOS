@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreTelephony
 
 public struct AppEnv {
     // App Name
@@ -32,6 +33,12 @@ public struct AppEnv {
         return (Locale.current as NSLocale).object(forKey: NSLocale.Key.languageCode) as? String ?? "en"
     }
     
+    public static var carrierName: String {
+        let networkInfo = CTTelephonyNetworkInfo()
+        let carrier = networkInfo.subscriberCellularProvider
+        return (carrier?.carrierName) ?? ""
+    }
+
     public static var appName: String {
         return Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String
     }
