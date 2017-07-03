@@ -142,6 +142,7 @@ class ProxyConfigurationViewController: FormViewController {
                 })
             }.cellSetup { cell, row in
                 cell.textField.placeholder = "Proxy Password".localized()
+                cell.textField.isSecureTextEntry = self.readOnly
             }
             <<< SwitchRow(kProxyFormOta) {
                 $0.title = "One Time Auth".localized()
