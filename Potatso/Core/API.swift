@@ -97,7 +97,9 @@ struct API {
         let network = (DataInitializer.reachabilityManager?.networkReachabilityStatus.description()) ?? ""
         let vi = (UIDevice.current.identifierForVendor?.uuidString) ?? ""
         var parameters: Parameters = ["lang": lang, "version": versionCode, "identifierForVendor": vi, "network": network, "appstore": AppEnv.isAppStore]
-        
+        #if DEBUG
+        parameters["debug"] = 1
+        #endif
         let networkInfo = CTTelephonyNetworkInfo()
         if let carrier = networkInfo.subscriberCellularProvider {
             parameters["carrierName"] = carrier.carrierName
