@@ -97,7 +97,7 @@
 "Please set name for the new proxy" = "请设置代理名称";
 "Port" = "端口";
 "Port can't be empty" = "端口不能为空";
-"Mume is not connected" = "Mume 已断开";
+"Mume is not connected" = "VPN 已断开";
 "Protocol" = "协议插件(protocol)";
 "Proxy" = "代理";
 "Proxy Connection" = "代理连接";

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		234575943B38F4EAD3E2B481 /* Pods_Potatso.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E558CCABD311741F0CF9DD9 /* Pods_Potatso.framework */; };
+		551AE8471F0A435C009265E2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 551AE8451F0A435C009265E2 /* InfoPlist.strings */; };
 		553D95BB1D63FE6700B193B7 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553D95BA1D63FE6700B193B7 /* NetworkExtension.framework */; };
 		553D95BC1D63FECA00B193B7 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553D95BA1D63FE6700B193B7 /* NetworkExtension.framework */; };
 		553D95BD1D63FEDF00B193B7 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553D95BA1D63FE6700B193B7 /* NetworkExtension.framework */; };
@@ -289,6 +290,9 @@
 		310645853592796E08924EB3 /* Pods_PacketProcessor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PacketProcessor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		50F18DE964A0791935D07268 /* Pods-PacketTunnel.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PacketTunnel.release.xcconfig"; path = "Pods/Target Support Files/Pods-PacketTunnel/Pods-PacketTunnel.release.xcconfig"; sourceTree = "<group>"; };
 		5230B5D70A0595F06A9F15F8 /* Pods-PotatsoLibraryTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PotatsoLibraryTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PotatsoLibraryTests/Pods-PotatsoLibraryTests.debug.xcconfig"; sourceTree = "<group>"; };
+		551AE8461F0A435C009265E2 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		551AE84A1F0A436B009265E2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		551AE84B1F0A4395009265E2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		553D95B91D63FE5A00B193B7 /* Potatso.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Potatso.entitlements; sourceTree = "<group>"; };
 		553D95BA1D63FE6700B193B7 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		556E68E91EFFA76E00BD84ED /* ProxyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProxyUtils.swift; sourceTree = "<group>"; };
@@ -1021,6 +1025,7 @@
 		9B0CFA0D1C1C0B1B007BD7C6 /* Potatso */ = {
 			isa = PBXGroup;
 			children = (
+				551AE8451F0A435C009265E2 /* InfoPlist.strings */,
 				553D95B91D63FE5A00B193B7 /* Potatso.entitlements */,
 				9BC8589F1C33B00200992032 /* Potatso-Bridge-Header.h */,
 				9B0CFA0E1C1C0B1B007BD7C6 /* AppDelegate.swift */,
@@ -2299,6 +2304,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9B1F745E1C2F83AD0028C1A6 /* config.plist in Resources */,
+				551AE8471F0A435C009265E2 /* InfoPlist.strings in Resources */,
 				9B0CFA191C1C0B1B007BD7C6 /* LaunchScreen.storyboard in Resources */,
 				55B980391F08D3C9007E96BE /* AppiraterLocalizable.strings in Resources */,
 				B8319A0D1D1BD696001E50C2 /* Localizable.strings in Resources */,
@@ -2839,6 +2845,16 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		551AE8451F0A435C009265E2 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				551AE8461F0A435C009265E2 /* zh-Hans */,
+				551AE84A1F0A436B009265E2 /* zh-Hant */,
+				551AE84B1F0A4395009265E2 /* Base */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		55B980211F08D3C9007E96BE /* AppiraterLocalizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

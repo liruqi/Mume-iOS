@@ -117,12 +117,24 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
                     }
                 }))
                 alert.addAction(UIAlertAction(title: "CANCEL".localized(), style: .cancel, handler: nil))
+                if let presenter = alert.popoverPresentationController {
+                    presenter.sourceView = cell
+                    presenter.sourceRect = cell.bounds
+                }
                 self.present(alert, animated: true, completion: nil)
             })
             <<< ActionRow() {
                 $0.title = "Share with friends".localized()
             }.onCellSelection({ [unowned self] (cell, row) -> () in
-                self.shareWithFriends()
+                var shareItems: [AnyObject] = [self]
+                shareItems.append("Mume: https://itunes.apple.com/app/id1144787928" as AnyObject)
+                shareItems.append(UIImage(named: "AppIcon60x60")!)
+                let shareVC = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
+                if let presenter = shareVC.popoverPresentationController {
+                    presenter.sourceView = cell
+                    presenter.sourceRect = cell.bounds
+                }
+                self.present(shareVC, animated: true, completion: nil)
             })
         return section
     }
@@ -197,14 +209,6 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
 
     func followTwitter() {
         UIApplication.shared.openURL(URL(string: "https://twitter.com/intent/user?screen_name=mumevpn")!)
-    }
-
-    func shareWithFriends() {
-        var shareItems: [AnyObject] = [self]
-        shareItems.append("Mume: https://itunes.apple.com/app/id1144787928" as AnyObject)
-        shareItems.append(UIImage(named: "AppIcon60x60")!)
-        let shareVC = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
-        self.present(shareVC, animated: true, completion: nil)
     }
 
     @objc func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
