@@ -11,6 +11,7 @@ import PotatsoModel
 import Alamofire
 import ObjectMapper
 import CoreTelephony
+import ICSMainFramework
 
 extension NetworkReachabilityManager.NetworkReachabilityStatus {
     func description() -> String {
@@ -95,7 +96,7 @@ struct API {
         
         let network = (DataInitializer.reachabilityManager?.networkReachabilityStatus.description()) ?? ""
         let vi = (UIDevice.current.identifierForVendor?.uuidString) ?? ""
-        var parameters: Parameters = ["lang": lang, "version": versionCode, "identifierForVendor": vi, "network": network]
+        var parameters: Parameters = ["lang": lang, "version": versionCode, "identifierForVendor": vi, "network": network, "appstore": AppEnv.isAppStore]
         
         let networkInfo = CTTelephonyNetworkInfo()
         if let carrier = networkInfo.subscriberCellularProvider {

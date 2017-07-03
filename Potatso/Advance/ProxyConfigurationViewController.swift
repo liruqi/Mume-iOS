@@ -36,7 +36,10 @@ class ProxyConfigurationViewController: FormViewController {
             self.upstreamProxy = Proxy(value: proxy)
             self.isEdit = true
             if (self.upstreamProxy.host.hasSuffix("mume.site")) {
+                #if DEBUG
+                #else
                 self.readOnly = true
+                #endif
             }
         } else {
             self.upstreamProxy = Proxy()
