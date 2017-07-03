@@ -300,7 +300,7 @@ extension Manager {
         try content.write(to: confURL, atomically: true, encoding: String.Encoding.utf8)
     }
     
-    func generateHttpProxyConfig() throws {
+    open func generateHttpProxyConfig() throws {
         let rootUrl = Potatso.sharedUrl()
         let confDirUrl = rootUrl.appendingPathComponent("httpconf")
         let templateDirPath = rootUrl.appendingPathComponent("httptemplate").path
