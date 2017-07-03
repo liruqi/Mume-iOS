@@ -19,6 +19,8 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
     static var cloudProxies: [Proxy] = []
     static var serverConfigurations = NSMutableDictionary()
     static let reachabilityManager = NetworkReachabilityManager(host:"mumevpn.com")
+    static var vpnStatus: VPNStatus = .off
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         let _ = Manager.shared
         
@@ -53,6 +55,9 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
     }
     
     func updateMumeServers() {
+        guard DataInitializer.vpnStatus == .off else {
+            return
+        }
         API.getProxySets() { (response) in
             do {
                 for dic in response {

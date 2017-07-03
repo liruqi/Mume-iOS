@@ -30,6 +30,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     var status: VPNStatus {
         didSet(o) {
             updateConnectButton()
+            DataInitializer.vpnStatus = o
         }
     }
 
