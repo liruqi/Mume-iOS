@@ -222,15 +222,16 @@ open class Manager {
         }
     }
     
-    open func setDefaultConfigGroup(_ id: String, name: String) {
-        do {
-            try regenerateConfigFiles()
-        } catch {
-
-        }
+    open func setDefaultConfigGroup(_ id: String, name: String) -> Bool {
         Potatso.sharedUserDefaults().set(id, forKey: kDefaultGroupIdentifier)
         Potatso.sharedUserDefaults().set(name, forKey: kDefaultGroupName)
         Potatso.sharedUserDefaults().synchronize()
+        do {
+            try regenerateConfigFiles()
+            return true
+        } catch {
+            return false
+        }
     }
     
     open func regenerateConfigFiles() throws {

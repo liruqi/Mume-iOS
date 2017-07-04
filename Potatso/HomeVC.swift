@@ -196,15 +196,11 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                             }
                             return
                         }
-                        do {
-                            self.presenter.change(proxy: proxy, status: self.status)
+                        if self.presenter.change(proxy: proxy, status: self.status) {
                             self.updateTitle()
                             self.updateForm()
-                            //TODO: reconnect here
-                        }catch {
-                            self.showTextHUD("\("Fail to change proxy".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
                         }
-                        })
+                    })
         }
     }
 
@@ -353,7 +349,9 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                 }
                 form[indexPath].hidden = true
                 form[indexPath].evaluateHidden()
-                Manager.shared.setDefaultConfigGroup(group.uuid, name: group.name)
+                if Manager.shared.setDefaultConfigGroup(group.uuid, name: group.name) {
+                    self.presenter.restartVPN()
+                }
             } catch {
                 self.showTextHUD("\("Fail to delete item".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
             }

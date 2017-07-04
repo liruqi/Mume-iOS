@@ -75,10 +75,10 @@ class HomePresenter: NSObject {
         }
     }
 
-    func change(proxy: Proxy, status: VPNStatus) {
+    func change(proxy: Proxy, status: VPNStatus) -> Bool {
         if (proxy.uuid == self.proxy?.uuid) {
             print("HomePresenter.change(proxy): not changed");
-            return
+            return false
         }
         try? DBUtils.modify(ConfigurationGroup.self, id: self.group.uuid) { (realm, group) -> Error? in
             group.proxies.removeAll()
@@ -90,9 +90,11 @@ class HomePresenter: NSObject {
         do {
             try Manager.shared.generateShadowsocksConfig()
             self.restartVPN()
+            return true
         } catch {
             print(error)
             self.configError += 1
+            return false
         }
     }
     
