@@ -174,11 +174,8 @@
 		B87B98041D3B423B00FA66BF /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B87B98031D3B423B00FA66BF /* PaddingLabel.swift */; };
 		B87B980A1D3B64BE00FA66BF /* RequestEventRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B87B98091D3B64BE00FA66BF /* RequestEventRow.swift */; };
 		B88096B21D0652F0008BEB87 /* RuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88096B11D0652F0008BEB87 /* RuleCell.swift */; };
-		B88559EB1D21319D00B1243E /* YAML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88559EA1D21319D00B1243E /* YAML.framework */; };
-		B88559EC1D21319D00B1243E /* YAML.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B88559EA1D21319D00B1243E /* YAML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B88559F01D21371A00B1243E /* PotatsoModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BC6FFEA1CB28B4B00E5EA61 /* PotatsoModel.framework */; };
 		B88874491D18186100AEF002 /* ShadowPath.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B86B08E91D17F84900613014 /* ShadowPath.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B8AD81681D4AF9FB00C12FC1 /* YAML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88559EA1D21319D00B1243E /* YAML.framework */; };
 		B8C256B01D1A957A0074D3B1 /* HomePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C256AF1D1A957A0074D3B1 /* HomePresenter.swift */; };
 		B8CCC6DD1CFD5D5D000E7E2E /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CCC6DC1CFD5D5D000E7E2E /* CollectionViewController.swift */; };
 		B8CCC6E11CFDCADC000E7E2E /* RuleSetListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CCC6E01CFDCADC000E7E2E /* RuleSetListViewController.swift */; };
@@ -273,7 +270,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				B88874491D18186100AEF002 /* ShadowPath.framework in Embed Frameworks */,
-				B88559EC1D21319D00B1243E /* YAML.framework in Embed Frameworks */,
 				9BC6FFF21CB28B4B00E5EA61 /* PotatsoModel.framework in Embed Frameworks */,
 				9B9B15C51C21595B000B6541 /* PotatsoLibrary.framework in Embed Frameworks */,
 				9BC600251CB2921C00E5EA61 /* PotatsoBase.framework in Embed Frameworks */,
@@ -879,7 +875,6 @@
 				9BDA62621CAE2576007F2581 /* PacketProcessor.framework in Frameworks */,
 				9B9B15C41C21595B000B6541 /* PotatsoLibrary.framework in Frameworks */,
 				9BC6FFF11CB28B4B00E5EA61 /* PotatsoModel.framework in Frameworks */,
-				B88559EB1D21319D00B1243E /* YAML.framework in Frameworks */,
 				553D95BB1D63FE6700B193B7 /* NetworkExtension.framework in Frameworks */,
 				234575943B38F4EAD3E2B481 /* Pods_Potatso.framework in Frameworks */,
 			);
@@ -917,7 +912,6 @@
 			files = (
 				9BC600351CB29AEE00E5EA61 /* PotatsoBase.framework in Frameworks */,
 				9BC6FFF61CB28C4500E5EA61 /* PotatsoModel.framework in Frameworks */,
-				B8AD81681D4AF9FB00C12FC1 /* YAML.framework in Frameworks */,
 				FE9B3692D19B03821360B886 /* Pods_PotatsoLibrary.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2008,7 +2002,6 @@
 				9B0CFA091C1C0B1A007BD7C6 /* Resources */,
 				9B8706081C1D788F00651424 /* Embed App Extensions */,
 				9B9B15821C1ECADF000B6541 /* Embed Frameworks */,
-				9B9E946C1CBA6F0A003FBC47 /* Cartahge */,
 				9B9C520E1CA7A19E00681FE7 /* Fabric */,
 				EE2DCE01E31A764A094282A4 /* [CP] Embed Pods Frameworks */,
 				7F5FECF0328ABB93E7B81EF0 /* [CP] Copy Pods Resources */,
@@ -2525,21 +2518,6 @@
 			shellPath = /bin/sh;
 			shellScript = "FABRIC_API_KEY=$(/usr/libexec/PlistBuddy -c \"Print :Fabric:APIKey\" \"${PROJECT_DIR}/Potatso/Info.plist\")\n\necho $FABRIC_API_KEY\n\"${PODS_ROOT}/Fabric/run\" $FABRIC_API_KEY 8f47d6d3f80d6bb69f86dc4ceb4c560f17648cadff3540bafadc2c59c5f199a3";
 		};
-		9B9E946C1CBA6F0A003FBC47 /* Cartahge */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/YAML.framework",
-			);
-			name = Cartahge;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
 		9BC858AF1C34C5AA00992032 /* Framework Hack */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3026,7 +3004,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/PotatsoLibrary",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -3077,7 +3054,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/PotatsoLibrary",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Library/ShadowPath/ShadowPath/libopenssl/include/\"",
@@ -3120,10 +3096,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: li ruqi (AF4AJ5CG3B)";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = M54LAUT7S6;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = TodayWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -3146,10 +3119,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: LI RUQI (M54LAUT7S6)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: LI RUQI (M54LAUT7S6)";
 				DEVELOPMENT_TEAM = M54LAUT7S6;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = TodayWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -3267,7 +3237,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/PotatsoLibrary",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = PotatsoLibrary/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -3301,7 +3270,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/PotatsoLibrary",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = PotatsoLibrary/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
