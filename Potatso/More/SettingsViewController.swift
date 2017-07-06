@@ -98,7 +98,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
                         let composer = MFMailComposeViewController()
                         composer.mailComposeDelegate = self
                         composer.setToRecipients(["mume@mumevpn.com"])
-                        composer.setSubject("Feedback for Mume " + AppEnv.fullVersion)
+                        composer.setSubject("Feedback for " + AppEnv.appName + AppEnv.fullVersion)
                         
                         let currentDevice = UIDevice.current
                         var body = [String]()
@@ -175,7 +175,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
         if let tgUrl = URL(string: "tg://resolve?domain=mumevpn"),
             UIApplication.shared.canOpenURL(tgUrl) {
             section <<< ActionRow() {
-                $0.title = "Join Telegram Group".localized()
+                $0.title = "Telegram Group".localized()
                 $0.value = "telegram.me/mumevpn"
                 }.onCellSelection({ (_, _) in
                     UIApplication.shared.openURL(tgUrl)
@@ -185,7 +185,7 @@ class SettingsViewController: FormViewController, MFMailComposeViewControllerDel
         if (Locale.preferredLanguages[0].lowercased().hasPrefix("zh") || telegram == false),
             let qq = DataInitializer.serverConfigurations["qq"] as? String {
             section <<< ActionRow() {
-                $0.title = "Mume QQ群".localized()
+                $0.title = "QQ群".localized()
                 $0.value = qq
                 }.onCellSelection({ [unowned self] (cell, row) -> () in
                     let pasteBoard = UIPasteboard.general
