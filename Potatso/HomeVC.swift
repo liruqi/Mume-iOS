@@ -31,6 +31,9 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         didSet(o) {
             updateConnectButton()
             DataInitializer.vpnStatus = self.status
+            if let proxy = self.presenter.proxy {
+                DataInitializer.selectedProxy = proxy
+            }
         }
     }
 
@@ -436,9 +439,9 @@ extension VPNStatus {
                 let difference = (Calendar.current as NSCalendar).components(flags, from: time, to: Date(), options: NSCalendar.Options.matchFirst)
                 let f = DateComponentsFormatter()
                 f.unitsStyle = .abbreviated
-                return  "Connected".localized() + " - " + f.string(from: difference)!
+                return  (DataInitializer.selectedProxy?.description ?? "Connected".localized()) + " - " + f.string(from: difference)!
             }
-            return "Connected".localized()
+            return (DataInitializer.selectedProxy?.description) ?? "Connected".localized()
         case .disconnecting:
             return "Disconnecting...".localized()
         case .off:
