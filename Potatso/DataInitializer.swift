@@ -20,7 +20,7 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
     static var serverConfigurations = NSMutableDictionary()
     static let reachabilityManager = NetworkReachabilityManager(host:"mumevpn.com")
     static var vpnStatus: VPNStatus = .off
-    static var selectedProxy: Proxy? = nil
+    static var selectedProxy: String? = nil
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         let _ = Manager.shared
