@@ -26,6 +26,10 @@ class RecentRequestsVC: UIViewController, UITableViewDataSource, UITableViewDele
     var stopped = false
     var showingCache = false
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Recent Requests".localized()
