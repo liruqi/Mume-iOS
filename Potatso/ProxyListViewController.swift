@@ -97,7 +97,7 @@ class ProxyListViewController: FormViewController {
                             if let cb = self?.chooseCallback {
                                 cb(proxy)
                                 self?.close()
-                            }else {
+                            } else {
                                 if proxy?.type != .none {
                                     let vc = ProxyConfigurationViewController(upstreamProxy: proxy)
                                     vc.readOnly = true

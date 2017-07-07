@@ -182,16 +182,13 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                     $0.cellStyle = UITableViewCellStyle.subtitle
                     }.cellSetup({ (cell, row) -> () in
                         cell.selectionStyle = .none
-                        if (self.presenter.proxy?.uuid == proxy.uuid) {
-                            cell.imageView?.isHidden = false
-                        } else {
-                            cell.imageView?.isHidden = true
-                        }
+                        cell.setSelected(self.presenter.proxy?.uuid == proxy.uuid, animated: false)
                         cell.accessoryType = .disclosureIndicator
                     }).onCellSelection({ [unowned self] (cell, row) in
                         guard let proxy = row.value else {
                             return
                         }
+                        row.updateCell()
                         if (self.presenter.proxy?.uuid == proxy.uuid) {
                             if proxy.type != .none {
                                 let vc = ProxyConfigurationViewController(upstreamProxy: proxy)
