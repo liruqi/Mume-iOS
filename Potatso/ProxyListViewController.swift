@@ -128,11 +128,14 @@ class ProxyListViewController: FormViewController {
         if indexPath.section == 0 {
             return .delete
         }
-        return .none
+        return .delete
     }
 
     func tableView(_ tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: IndexPath) {
-        if editingStyle == .delete {
+        if editingStyle != .delete {
+            return
+        }
+        if indexPath.section == 0 {
             guard indexPath.row < proxies.count, let item = (form[indexPath] as? ProxyRow)?.value else {
                 return
             }
@@ -144,6 +147,20 @@ class ProxyListViewController: FormViewController {
             }catch {
                 self.showTextHUD("\("Fail to delete item".localized()): \((error as NSError).localizedDescription)", dismissAfterDelay: 1.5)
             }
+            return
+        }
+        
+        guard indexPath.row < DataInitializer.cloudProxies.count else {
+            return
+        }
+        DataInitializer.cloudProxies.remove(at: indexPath.row)
+        form[indexPath].hidden = true
+        form[indexPath].evaluateHidden()
+        let item = DataInitializer.cloudProxies[indexPath.row]
+        
+        if let xAppSharedDefaults = Mume.sharedUserDefaults() {
+            xAppSharedDefaults.set("delete", forKey: item.description)
+            xAppSharedDefaults.synchronize()
         }
     }
 

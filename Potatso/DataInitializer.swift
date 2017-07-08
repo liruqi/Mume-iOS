@@ -16,7 +16,7 @@ import RealmSwift
 import Realm
 
 class DataInitializer: NSObject, AppLifeCycleProtocol {
-    static var cloudProxies: [Proxy] = []
+    static var cloudProxies: [CloudProxy] = []
     static var serverConfigurations = NSMutableDictionary()
     static let reachabilityManager = NetworkReachabilityManager(host:"mumevpn.com")
     static var vpnStatus: VPNStatus = .off
@@ -63,21 +63,25 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
             do {
                 for dic in response {
                     if let dict = dic as? [String : String], let proxy = Proxy.proxy(dictionary: dict) {
-                        /*
-                        let proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
-                        for ep in proxies {
-                            if ep.host == proxy.host,
-                                ep.port == proxy.port {
-                                print ("Proxy exists: " + dic.description)
-                            }
-                        }*/
                         try DBUtils.hardDelete(proxy.uuid, type: Proxy.self)
-                        try DBUtils.add(proxy)
+                        Proxy.insertOrUpdate(proxy: proxy)
                         NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
                     } else if let dict = dic as? NSDictionary, let mdict = dict.mutableCopy() as? NSMutableDictionary {
                         #if DEBUG
                             mdict.setValue("true", forKey: "ip")
                         #endif
+                        if let cps = mdict["cloud"] as? NSArray {
+                            mdict.removeObject(forKey: "cloud")
+                            for cp in cps {
+                                if let cpdict = cp as? NSDictionary, let proxy = CloudProxy.cloudProxy(dictionary: cpdict) {
+                                    if let ud = Mume.sharedUserDefaults(), "delete" == ud.string(forKey: proxy.description) {
+                                        continue
+                                    }
+                                    DataInitializer.cloudProxies.append(proxy)
+                                }
+                            }
+                        }
+
                         DataInitializer.serverConfigurations = mdict
                         NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServerConfigurationUpdated), object: dic)
                     }

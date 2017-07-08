@@ -430,3 +430,23 @@ extension Proxy {
 public func ==(lhs: Proxy, rhs: Proxy) -> Bool {
     return lhs.uuid == rhs.uuid
 }
+
+open class CloudProxy: Proxy {
+    open dynamic var end = 0
+    public static func cloudProxy(dictionary: NSDictionary) -> CloudProxy? {
+        if let uriString = dictionary["uri"] as? String,
+            let p = try? CloudProxy(string: uriString.trimmingCharacters(in: CharacterSet.whitespaces)) {
+            
+            if let ip = dictionary["ip"] as? String {
+                p.ip = ip
+            }
+            if let end = dictionary["end"] as? Int {
+                p.end = end
+            } else {
+                p.end = 24*3600
+            }
+            return p
+        }
+        return nil
+    }
+}
