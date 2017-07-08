@@ -71,14 +71,18 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
                             mdict.setValue("true", forKey: "ip")
                         #endif
                         if let cps = mdict["cloud"] as? NSArray {
+                            var upstreamCloudProxies : [CloudProxy] = []
                             mdict.removeObject(forKey: "cloud")
                             for cp in cps {
                                 if let cpdict = cp as? NSDictionary, let proxy = CloudProxy.cloudProxy(dictionary: cpdict) {
                                     if let ud = Mume.sharedUserDefaults(), "delete" == ud.string(forKey: proxy.description) {
                                         continue
                                     }
-                                    DataInitializer.cloudProxies.append(proxy)
+                                    upstreamCloudProxies.append(proxy)
                                 }
+                            }
+                            if upstreamCloudProxies.count >= DataInitializer.cloudProxies.count {
+                                DataInitializer.cloudProxies = upstreamCloudProxies
                             }
                         }
 
