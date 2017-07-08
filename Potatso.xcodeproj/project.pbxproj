@@ -17,6 +17,7 @@
 		55B980381F08D3C9007E96BE /* Appirater.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B9801F1F08D3C9007E96BE /* Appirater.m */; };
 		55B980391F08D3C9007E96BE /* AppiraterLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55B980211F08D3C9007E96BE /* AppiraterLocalizable.strings */; };
 		55D4FC121F0E5A470038594D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55D4FC101F0E5A470038594D /* InfoPlist.strings */; };
+		55D8A4641F11023C001819CF /* Mume.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D8A4631F11023C001819CF /* Mume.swift */; };
 		55E14B841EDFF9DA0068F812 /* RegexUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8319A091D1B975C001E50C2 /* RegexUtils.swift */; };
 		671F4F760B4AA48CEDC1B834 /* Pods_TodayWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83D8D7B7274BAF6E28C980D9 /* Pods_TodayWidget.framework */; };
 		6BF89D48551DF9EC9D65F0BA /* Pods_PotatsoModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 972ACD00F18B9E461F9D38B1 /* Pods_PotatsoModel.framework */; };
@@ -321,6 +322,7 @@
 		55B980371F08D3C9007E96BE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/AppiraterLocalizable.strings"; sourceTree = "<group>"; };
 		55D4FC111F0E5A470038594D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		55D4FC131F0E5A500038594D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		55D8A4631F11023C001819CF /* Mume.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mume.swift; sourceTree = "<group>"; };
 		5800BF48973D41E6DFC2DF35 /* Pods-Potatso.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Potatso.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Potatso/Pods-Potatso.debug.xcconfig"; sourceTree = "<group>"; };
 		66AB52504A6434A50F434876 /* Pods-TodayWidget.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TodayWidget.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TodayWidget/Pods-TodayWidget.debug.xcconfig"; sourceTree = "<group>"; };
 		6779B40186E2772C79CE2A52 /* Pods-PotatsoModel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PotatsoModel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PotatsoModel/Pods-PotatsoModel.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1044,6 +1046,7 @@
 				9B0CFA171C1C0B1B007BD7C6 /* LaunchScreen.storyboard */,
 				9B0CFA1A1C1C0B1B007BD7C6 /* Info.plist */,
 				B8319A0F1D1BD696001E50C2 /* Localizable.strings */,
+				55D8A4631F11023C001819CF /* Mume.swift */,
 			);
 			path = Potatso;
 			sourceTree = "<group>";
@@ -2651,6 +2654,7 @@
 				9B76EEB91C911CBF002BF5D1 /* ProxySelectionViewController.swift in Sources */,
 				9BF303461CC8A1F60096588E /* LogDetailViewController.swift in Sources */,
 				9B1D9B7B1CA4C45F0078D814 /* HUDUtils.swift in Sources */,
+				55D8A4641F11023C001819CF /* Mume.swift in Sources */,
 				B8CCC6E11CFDCADC000E7E2E /* RuleSetListViewController.swift in Sources */,
 				9B2290FF1C8E5B9600EEC901 /* DataInitializer.swift in Sources */,
 				9BB62FA31C8FFC1D002ADC54 /* RuleSetConfigurationViewController.swift in Sources */,
