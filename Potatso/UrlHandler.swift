@@ -93,24 +93,26 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
     func applicationDidBecomeActive(_ application: UIApplication) {
         let pasteBoard = UIPasteboard.general
         if let content = pasteBoard.string?.trimmingCharacters(in: CharacterSet.whitespaces).trimmingCharacters(in: CharacterSet(charactersIn: " !@#$%^&*")),
-            content.characters.count > 3 {
-            if Proxy.uriIsProxy(content) {
-                do {
-                    let proxy = try Proxy(string: content)
-                    try proxy.validate()
-                    let proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
-                    for ep in proxies {
-                        if ep.host == proxy.host,
-                            ep.port == proxy.port {
-                            print ("Proxy exists: " + content)
-                            return
+            let str = content.removingPercentEncoding,
+            str.characters.count > 3 {
+            if Proxy.uriIsProxy(str) {
+                if let proxy = try? Proxy(string: str), Proxy.insertOrUpdate(proxy: proxy) {
+                    return
+                }
+                
+                let parts = str.components(separatedBy: CharacterSet(charactersIn: " ,*"))
+                var cnt = 0
+                
+                for part in parts {
+                    if let purl = URL(string: part),
+                        Proxy.schemeIsProxy(purl.scheme ?? "") {
+                        if let proxy = try? Proxy(url: purl), Proxy.insertOrUpdate(proxy: proxy) {
+                            cnt += 1
                         }
                     }
-                    try DBUtils.add(proxy)
-                    pasteBoard.string = ""
-                    NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
-                    return
-                } catch {
+                }
+                if cnt > 0 {
+                    print("Imported " + cnt.description)
                 }
             }
         }
