@@ -9,6 +9,8 @@
 import RealmSwift
 import CloudKit
 
+public let kProxyServiceAdded = "kProxyServiceAdded"
+
 public enum ProxyType: String {
     case Shadowsocks = "Shadowsocks"
     case ShadowsocksR = "ShadowsocksR"
@@ -164,6 +166,27 @@ open class Proxy: BaseModel {
         default:
             return ""
         }
+    }
+    
+    public static func insertOrUpdate(proxy: Proxy) -> Bool {
+        do {
+            try proxy.validate()
+            let proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
+            for ep in proxies {
+                if ep.host == proxy.host,
+                    ep.port == proxy.port {
+                    print ("Remove existing: " + proxy.description)
+                    try DBUtils.hardDelete(ep.uuid, type: Proxy.self)
+                }
+            }
+            try DBUtils.add(proxy)
+            NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
+            return true
+        } catch {
+            let errorDesc = "(\(error))"
+            print ("\("Fail to save config.".localized()) \(errorDesc)")
+        }
+        return false
     }
 }
 

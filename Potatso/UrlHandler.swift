@@ -12,7 +12,6 @@ import PotatsoLibrary
 import Async
 import CallbackURLKit
 
-public let kProxyServiceAdded = "kProxyServiceAdded"
 
 class UrlHandler: NSObject, AppLifeCycleProtocol {
     
@@ -42,24 +41,30 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
         }
         
         if Proxy.schemeIsProxy(scheme) {
-            if let proxy = try? Proxy(url: url) {
-                do {
-                    try proxy.validate()
-                    let proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
-                    for ep in proxies {
-                        if ep.host == proxy.host,
-                            ep.port == proxy.port {
-                            print ("Proxy exists: " + url.absoluteString)
-                            return true
+            do {
+            if let proxy = try? Proxy(url: url), Proxy.insertOrUpdate(proxy: proxy) {
+                return true
+            }
+            
+            if let str = url.absoluteString.removingPercentEncoding {
+                let parts = str.components(separatedBy: CharacterSet(charactersIn: " ,*"))
+                var cnt = 0
+                
+                for part in parts {
+                    if let purl = URL(string: part),
+                        Proxy.schemeIsProxy(purl.scheme ?? "") {
+                        let proxy = try Proxy(url: purl)
+                        if Proxy.insertOrUpdate(proxy: proxy) {
+                            cnt += 1
                         }
                     }
-                    try DBUtils.add(proxy)
-                    NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
-                    return true
-                } catch {
-                    let errorDesc = "(\(error))"
-                    print ("\("Fail to save config.".localized()) \(errorDesc)")
                 }
+                if cnt > 0 {
+                    return true
+                }
+            }
+            } catch {
+                
             }
             return false
         }
