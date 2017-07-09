@@ -432,7 +432,9 @@ public func ==(lhs: Proxy, rhs: Proxy) -> Bool {
 }
 
 open class CloudProxy: Proxy {
-    open dynamic var end = 0
+    open dynamic var due = ""
+    open dynamic var provider = ""
+
     public static func cloudProxy(dictionary: NSDictionary) -> CloudProxy? {
         if let uriString = dictionary["uri"] as? String,
             let p = try? CloudProxy(string: uriString.trimmingCharacters(in: CharacterSet.whitespaces)) {
@@ -440,10 +442,8 @@ open class CloudProxy: Proxy {
             if let ip = dictionary["ip"] as? String {
                 p.ip = ip
             }
-            if let end = dictionary["end"] as? Int {
-                p.end = end
-            } else {
-                p.end = 24*3600
+            if let due = dictionary["due"] as? String {
+                p.due = due
             }
             return p
         }

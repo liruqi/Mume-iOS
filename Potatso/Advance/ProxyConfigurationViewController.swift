@@ -20,13 +20,16 @@ private let kProxyFormOta = "ota"
 private let kProxyFormObfs = "obfs"
 private let kProxyFormObfsParam = "obfsParam"
 private let kProxyFormProtocol = "protocol"
-
+private let kProxyFormDue = "due"
+private let kProxyFormProvider = "provider"
 
 class ProxyConfigurationViewController: FormViewController {
     private var readOnly = false
     var upstreamProxy: Proxy
     let isEdit: Bool
-    var endTime = 0
+    var due = ""
+    var provider = ""
+    
     override convenience init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         self.init()
     }
@@ -36,7 +39,8 @@ class ProxyConfigurationViewController: FormViewController {
             self.upstreamProxy = Proxy(value: proxy)
             self.isEdit = true
             if let cp = proxy as? CloudProxy {
-                self.endTime = cp.end
+                self.due = cp.due
+                self.provider = cp.provider
                 self.readOnly = true
             } else if (self.upstreamProxy.host.hasSuffix("mume.site")) {
                 #if DEBUG
@@ -60,7 +64,7 @@ class ProxyConfigurationViewController: FormViewController {
         super.viewDidLoad()
         if self.readOnly {
             self.navigationItem.title = "View Proxy".localized()
-            if self.endTime > 0 {
+            if self.due.provider.count > 0 {
                 self.navigationItem.title = "Add Proxy".localized()
             }
         } else if isEdit {
@@ -75,7 +79,7 @@ class ProxyConfigurationViewController: FormViewController {
     }
     
     func generateForm() {
-        form +++ Section()
+        let section = Section()
             <<< PushRow<ProxyType>(kProxyFormType) {
                 $0.title = "Proxy Type".localized()
                 $0.options = [ProxyType.Shadowsocks, ProxyType.ShadowsocksR, ProxyType.Socks5]
@@ -200,6 +204,34 @@ class ProxyConfigurationViewController: FormViewController {
                 cell.textField.autocapitalizationType = .none
             }
         
+        if (self.due.characters.count > 0) {
+            section <<< TextRow(kProxyFormDue) {
+                $0.title = "Due".localized()
+                $0.value = self.due
+                $0.disabled = Condition.function([], { _ in
+                    return true
+                })
+                }.cellSetup { cell, row in
+                    cell.textField.keyboardType = .URL
+                    cell.textField.autocorrectionType = .no
+                    cell.textField.autocapitalizationType = .none
+            }
+        }
+        if (self.provider.characters.count > 0) {
+            section <<< TextRow(kProxyFormProvider) {
+                $0.title = "Provider".localized()
+                $0.value = self.provider
+                $0.disabled = Condition.function([], { _ in
+                    return true
+                })
+                }.cellSetup { cell, row in
+                    cell.textField.keyboardType = .URL
+                    cell.textField.autocorrectionType = .no
+                    cell.textField.autocapitalizationType = .none
+            }
+        }
+        
+        form +++ section
         if self.readOnly {
             return
         }
