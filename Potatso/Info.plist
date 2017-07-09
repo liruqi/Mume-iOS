@@ -92,6 +92,16 @@
 				<string>socks5</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>mss</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>mss</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>192</string>
