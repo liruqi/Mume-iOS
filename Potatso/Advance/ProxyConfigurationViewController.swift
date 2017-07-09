@@ -64,7 +64,7 @@ class ProxyConfigurationViewController: FormViewController {
         super.viewDidLoad()
         if self.readOnly {
             self.navigationItem.title = "View Proxy".localized()
-            if self.due.provider.count > 0 {
+            if self.provider.count > 0 {
                 self.navigationItem.title = "Add Proxy".localized()
             }
         } else if isEdit {
