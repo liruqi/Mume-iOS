@@ -25,7 +25,7 @@ class SegmentPageVC: UIViewController {
         fatalError()
     }
 
-    func onSegmentedChanged(_ seg: UISegmentedControl) {
+    @objc func onSegmentedChanged(_ seg: UISegmentedControl) {
         showPage(seg.selectedSegmentIndex)
     }
 
@@ -57,7 +57,7 @@ class SegmentPageVC: UIViewController {
 
     lazy var segmentedControl: UISegmentedControl = {
         let v = UISegmentedControl(items: self.segmentsForSegmentPageVC())
-        v.addTarget(self, action: #selector(CollectionViewController.onSegmentedChanged(_:)), for: .valueChanged)
+        v.addTarget(self, action: #selector(onSegmentedChanged(_:)), for: .valueChanged)
         return v
     }()
     

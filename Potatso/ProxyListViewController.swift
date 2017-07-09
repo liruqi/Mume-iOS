@@ -93,14 +93,12 @@ class ProxyListViewController: FormViewController {
                             cell.imageView?.isHidden = true
                         }).onCellSelection({ [weak self] (cell, row) in
                             cell.setSelected(false, animated: true)
-                            let proxy = row.value
                             if let cb = self?.chooseCallback {
                                 cb(proxy)
                                 self?.close()
                             } else {
-                                if proxy?.type != .none {
+                                if proxy.type != .none {
                                     let vc = ProxyConfigurationViewController(upstreamProxy: proxy)
-                                    vc.readOnly = true
                                     self?.navigationController?.pushViewController(vc, animated: true)
                                 }
                             }

@@ -23,10 +23,10 @@ private let kProxyFormProtocol = "protocol"
 
 
 class ProxyConfigurationViewController: FormViewController {
-    var readOnly = false
+    private var readOnly = false
     var upstreamProxy: Proxy
     let isEdit: Bool
-    
+    var endTime = 0
     override convenience init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         self.init()
     }
@@ -35,7 +35,10 @@ class ProxyConfigurationViewController: FormViewController {
         if let proxy = upstreamProxy {
             self.upstreamProxy = Proxy(value: proxy)
             self.isEdit = true
-            if (self.upstreamProxy.host.hasSuffix("mume.site")) {
+            if let cp = proxy as? CloudProxy {
+                self.endTime = cp.end
+                self.readOnly = true
+            } else if (self.upstreamProxy.host.hasSuffix("mume.site")) {
                 #if DEBUG
                 #else
                 self.readOnly = true
@@ -57,10 +60,11 @@ class ProxyConfigurationViewController: FormViewController {
         super.viewDidLoad()
         if self.readOnly {
             self.navigationItem.title = "View Proxy".localized()
+            if self.endTime > 0 {
+                self.navigationItem.title = "Add Proxy".localized()
+            }
         } else if isEdit {
             self.navigationItem.title = "Edit Proxy".localized()
-        } else {
-            self.navigationItem.title = "Add Proxy".localized()
         }
         generateForm()
     }

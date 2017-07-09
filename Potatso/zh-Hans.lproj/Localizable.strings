@@ -27,7 +27,7 @@
 "Choose encryption method" = "选择加密";
 "Choose type of rule" = "选择类型";
 "Clear Photo" = "清除图片";
-"Cloud Set" = "云集";
+"Cloud" = "云端";
 "Connect" = "连接";
 "Connected" = "已连接";
 "Connection" = "连接";
@@ -77,6 +77,7 @@
 "Invalid port" = "无效的端口";
 "Logging is disabled" = "日志已禁用";
 "Logs" = "日志";
+"Local" = "本地";
 "Manage" = "管理";
 "More" = "更多";
 "Name" = "名称";
