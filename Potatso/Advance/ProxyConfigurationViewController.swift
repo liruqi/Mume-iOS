@@ -273,7 +273,16 @@ class ProxyConfigurationViewController: FormViewController {
             upstreamProxy.ssrProtocol = values[kProxyFormProtocol] as? String
             upstreamProxy.ssrObfs = values[kProxyFormObfs] as? String
             upstreamProxy.ssrObfsParam = values[kProxyFormObfsParam] as? String
-            try DBUtils.add(upstreamProxy)
+            if let _ = upstreamProxy.ip {
+                try DBUtils.add(upstreamProxy)
+            } else {
+                ProxyUtils.resolve(host: host) { ip in
+                    DispatchQueue.main.async {
+                        self.upstreamProxy.ip = ip
+                        try? DBUtils.add(self.upstreamProxy)
+                    }
+                }
+            }
             close()
         }catch {
             showTextHUD("\(error)", dismissAfterDelay: 1.0)

@@ -27,21 +27,12 @@ class ProxyUtils {
         }
         return ""
     }
-}
-
-extension Proxy {
-    open func subTitle() -> String {
-        if let ip = self.ip {
-            return ProxyUtils.country(ip: ip) + " " + self.type.description
-        }
-        self.resolve()
-        return self.type.description
-    }
+    
     
     // https://stackoverflow.com/questions/25890533/
-    func resolve() {
+    static func resolve(host: String, completion: @escaping ((String) -> Void)) {
         let queue = DispatchQueue.global(qos: .background)
-        let host = self.host
+        let host = host
         queue.async {
             let host = CFHostCreateWithName(nil, host as CFString).takeRetainedValue()
             CFHostStartInfoResolution(host, .addresses, nil)
@@ -53,19 +44,32 @@ extension Proxy {
                                &hostname, socklen_t(hostname.count), nil, 0, NI_NUMERICHOST) == 0 {
                     let numAddress = String(cString: hostname)
                     print(numAddress)
-                    DispatchQueue.main.async {
-                        do {
-                            try DBUtils.modify(Proxy.self, id: self.uuid) { (realm, proxy) -> Error? in
-                                proxy.ip = numAddress
-                                NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
-                                return nil
-                            }
-                        } catch {
-                            print("Failed to update ip in proxy db")
-                        }
-                    }
+                    completion(numAddress)
                 }
             }
         }
     }
+}
+
+extension Proxy {
+    open func subTitle() -> String {
+        if let ip = self.ip {
+            return ProxyUtils.country(ip: ip) + " " + self.type.description
+        }
+        ProxyUtils.resolve(host: self.host) { ip in
+            DispatchQueue.main.async {
+                do {
+                    try DBUtils.modify(Proxy.self, id: self.uuid) { (realm, proxy) -> Error? in
+                        proxy.ip = ip
+                        //NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
+                        return nil
+                    }
+                } catch {
+                    print("Failed to update ip in proxy db")
+                }
+            }
+        }
+        return self.type.description
+    }
+    
 }
