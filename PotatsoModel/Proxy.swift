@@ -445,6 +445,9 @@ open class CloudProxy: Proxy {
             if let due = dictionary["due"] as? String {
                 p.due = due
             }
+            if let provider = dictionary["provider"] as? String {
+                p.provider = due
+            }
             return p
         }
         return nil
