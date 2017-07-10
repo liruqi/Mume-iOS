@@ -10,7 +10,7 @@ import RealmSwift
 import PotatsoBase
 import CloudKit
 
-private let version: UInt64 = 22
+private let version: UInt64 = 23
 public var defaultRealm: Realm!
 
 public func setupDefaultReaml() {
