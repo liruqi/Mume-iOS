@@ -66,7 +66,7 @@ class ProxyConfigurationViewController: FormViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(save))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(onSave))
     }
     
     func generateForm() {
@@ -224,7 +224,7 @@ class ProxyConfigurationViewController: FormViewController {
     }
     
     func onSave() {
-        if let error = self.save(to: self.upstreamProxy) {
+        if let error = self.save(to: &self.upstreamProxy) {
             showTextHUD("\(error)", dismissAfterDelay: 1.0)
             return
         }
@@ -242,7 +242,7 @@ class ProxyConfigurationViewController: FormViewController {
         close()
     }
     
-    func save(to: Proxy) -> Error? {
+    func save(to: inout Proxy) -> Error? {
         do {
             let values = form.values()
             guard let type = values[kProxyFormType] as? ProxyType else {
