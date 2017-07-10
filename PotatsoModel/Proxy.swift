@@ -432,9 +432,9 @@ public func ==(lhs: Proxy, rhs: Proxy) -> Bool {
 }
 
 open class CloudProxy: Proxy {
-    open dynamic var due = ""
-    open dynamic var provider = ""
-    open dynamic var link = ""
+    open dynamic var due: String?
+    open dynamic var provider: String?
+    open dynamic var link: String?
 
     public static func cloudProxy(dictionary: NSDictionary) -> CloudProxy? {
         if let uriString = dictionary["uri"] as? String,

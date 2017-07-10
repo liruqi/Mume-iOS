@@ -18,6 +18,7 @@
 		55B980391F08D3C9007E96BE /* AppiraterLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55B980211F08D3C9007E96BE /* AppiraterLocalizable.strings */; };
 		55D4FC121F0E5A470038594D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55D4FC101F0E5A470038594D /* InfoPlist.strings */; };
 		55D8A4641F11023C001819CF /* Mume.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D8A4631F11023C001819CF /* Mume.swift */; };
+		55D8A4841F139BD8001819CF /* CloudProxyDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D8A4831F139BD8001819CF /* CloudProxyDetailViewController.swift */; };
 		55E14B841EDFF9DA0068F812 /* RegexUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8319A091D1B975C001E50C2 /* RegexUtils.swift */; };
 		671F4F760B4AA48CEDC1B834 /* Pods_TodayWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83D8D7B7274BAF6E28C980D9 /* Pods_TodayWidget.framework */; };
 		6BF89D48551DF9EC9D65F0BA /* Pods_PotatsoModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 972ACD00F18B9E461F9D38B1 /* Pods_PotatsoModel.framework */; };
@@ -323,6 +324,7 @@
 		55D4FC111F0E5A470038594D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		55D4FC131F0E5A500038594D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		55D8A4631F11023C001819CF /* Mume.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mume.swift; sourceTree = "<group>"; };
+		55D8A4831F139BD8001819CF /* CloudProxyDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CloudProxyDetailViewController.swift; path = Advance/CloudProxyDetailViewController.swift; sourceTree = "<group>"; };
 		5800BF48973D41E6DFC2DF35 /* Pods-Potatso.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Potatso.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Potatso/Pods-Potatso.debug.xcconfig"; sourceTree = "<group>"; };
 		66AB52504A6434A50F434876 /* Pods-TodayWidget.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TodayWidget.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TodayWidget/Pods-TodayWidget.debug.xcconfig"; sourceTree = "<group>"; };
 		6779B40186E2772C79CE2A52 /* Pods-PotatsoModel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PotatsoModel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PotatsoModel/Pods-PotatsoModel.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1077,6 +1079,7 @@
 		9B3247841CC0D00D00A3BAFF /* Edit */ = {
 			isa = PBXGroup;
 			children = (
+				55D8A4831F139BD8001819CF /* CloudProxyDetailViewController.swift */,
 				9B5E13B91C897870007DFE0A /* ProxyConfigurationViewController.swift */,
 				9BB62FA21C8FFC1D002ADC54 /* RuleSetConfigurationViewController.swift */,
 				9B76EEAC1C9005D2002BF5D1 /* RuleConfigurationViewController.swift */,
@@ -2623,6 +2626,7 @@
 			files = (
 				55B980381F08D3C9007E96BE /* Appirater.m in Sources */,
 				B821B0F31D5334D50061E7B9 /* ActionRow.swift in Sources */,
+				55D8A4841F139BD8001819CF /* CloudProxyDetailViewController.swift in Sources */,
 				B83AA5701D38E6F7007905B4 /* RequestDetailVC.swift in Sources */,
 				B8CCC6DD1CFD5D5D000E7E2E /* CollectionViewController.swift in Sources */,
 				B88096B21D0652F0008BEB87 /* RuleCell.swift in Sources */,

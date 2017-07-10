@@ -98,7 +98,7 @@ class ProxyListViewController: FormViewController {
                                 self?.close()
                             } else {
                                 if proxy.type != .none {
-                                    let vc = ProxyConfigurationViewController(upstreamProxy: proxy)
+                                    let vc = CloudProxyDetailViewController(cloudProxy: proxy)
                                     self?.navigationController?.pushViewController(vc, animated: true)
                                 }
                             }
