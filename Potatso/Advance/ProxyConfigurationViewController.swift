@@ -223,7 +223,26 @@ class ProxyConfigurationViewController: FormViewController {
         }
     }
     
-    func save() {
+    func onSave() {
+        if let error = self.save(to: self.upstreamProxy) {
+            showTextHUD("\(error)", dismissAfterDelay: 1.0)
+            return
+        }
+        
+        if let _ = self.upstreamProxy.ip {
+            try? DBUtils.add(upstreamProxy)
+        } else {
+            ProxyUtils.resolve(host: self.upstreamProxy.host) { ip in
+                DispatchQueue.main.async {
+                    self.upstreamProxy.ip = ip
+                    try? DBUtils.add(self.upstreamProxy)
+                }
+            }
+        }
+        close()
+    }
+    
+    func save(to: Proxy) -> Error? {
         do {
             let values = form.values()
             guard let type = values[kProxyFormType] as? ProxyType else {
@@ -260,29 +279,19 @@ class ProxyConfigurationViewController: FormViewController {
                 break
             }
             let ota = values[kProxyFormOta] as? Bool ?? false
-            upstreamProxy.type = type
-            upstreamProxy.host = host
-            upstreamProxy.port = port
-            upstreamProxy.authscheme = authscheme
-            upstreamProxy.user = user
-            upstreamProxy.password = password
-            upstreamProxy.ota = ota
-            upstreamProxy.ssrProtocol = values[kProxyFormProtocol] as? String
-            upstreamProxy.ssrObfs = values[kProxyFormObfs] as? String
-            upstreamProxy.ssrObfsParam = values[kProxyFormObfsParam] as? String
-            if let _ = upstreamProxy.ip {
-                try DBUtils.add(upstreamProxy)
-            } else {
-                ProxyUtils.resolve(host: host) { ip in
-                    DispatchQueue.main.async {
-                        self.upstreamProxy.ip = ip
-                        try? DBUtils.add(self.upstreamProxy)
-                    }
-                }
-            }
-            close()
-        }catch {
-            showTextHUD("\(error)", dismissAfterDelay: 1.0)
+            to.type = type
+            to.host = host
+            to.port = port
+            to.authscheme = authscheme
+            to.user = user
+            to.password = password
+            to.ota = ota
+            to.ssrProtocol = values[kProxyFormProtocol] as? String
+            to.ssrObfs = values[kProxyFormObfs] as? String
+            to.ssrObfsParam = values[kProxyFormObfsParam] as? String
+            return nil
+        } catch {
+            return error
         }
     }
 

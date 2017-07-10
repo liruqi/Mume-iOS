@@ -151,10 +151,10 @@ class ProxyListViewController: FormViewController {
         guard indexPath.row < DataInitializer.cloudProxies.count else {
             return
         }
+        let item = DataInitializer.cloudProxies[indexPath.row]
         DataInitializer.cloudProxies.remove(at: indexPath.row)
         form[indexPath].hidden = true
         form[indexPath].evaluateHidden()
-        let item = DataInitializer.cloudProxies[indexPath.row]
         
         if let xAppSharedDefaults = Mume.sharedUserDefaults() {
             xAppSharedDefaults.set("delete", forKey: item.description)
