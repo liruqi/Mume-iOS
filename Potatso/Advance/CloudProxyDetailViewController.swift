@@ -40,16 +40,12 @@ class CloudProxyDetailViewController: ProxyConfigurationViewController {
         }
         if let due = self.cloudProxy.due, due.characters.count > 0 {
             section <<< TextRow(kProxyFormDue) {
-                $0.title = "Due".localized()
+                $0.title = "Expiry date".localized()
                 $0.value = due
                 $0.disabled = Condition.function([], { _ in
                     return true
                 })
-                }.cellSetup { cell, row in
-                    cell.textField.keyboardType = .URL
-                    cell.textField.autocorrectionType = .no
-                    cell.textField.autocapitalizationType = .none
-            }
+                }
         }
         if let provider = self.cloudProxy.provider, provider.characters.count > 0 {
             section <<< TextRow(kProxyFormProvider) {
@@ -58,10 +54,10 @@ class CloudProxyDetailViewController: ProxyConfigurationViewController {
                 $0.disabled = Condition.function([], { _ in
                     return true
                 })
-                }.cellSetup { cell, row in
-                    cell.textField.keyboardType = .URL
-                    cell.textField.autocorrectionType = .no
-                    cell.textField.autocapitalizationType = .none
+                }.onCellSelection { cell, row in
+                    if let link = self.cloudProxy.link, let url = URL(string: link) {
+                        UIApplication.shared.openURL(url)
+                    }
             }
         }
     }
