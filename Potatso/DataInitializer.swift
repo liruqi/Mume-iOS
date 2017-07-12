@@ -64,7 +64,7 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy.MM.dd"
             if let due = cp.due, let date = dateFormatter.date(from: due) {
-                if (date.timeIntervalSinceNow > 0) {
+                if (date.timeIntervalSinceNow < 0) {
                     Proxy.delete(proxy: cp)
                     try? DBUtils.hardDelete(cp.uuid, type: CloudProxy.self)
                 }
