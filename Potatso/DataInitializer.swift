@@ -66,7 +66,7 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
             if let due = cp.due, let date = dateFormatter.date(from: due) {
                 if (date.timeIntervalSinceNow > 0) {
                     Proxy.delete(proxy: cp)
-                    DBUtils.hardDelete(cp.uuid, type: CloudProxy.self)
+                    try? DBUtils.hardDelete(cp.uuid, type: CloudProxy.self)
                 }
             }
         }
