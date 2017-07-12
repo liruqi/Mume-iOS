@@ -88,6 +88,11 @@ extension DBUtils {
         return res.first
     }
 
+    public static func search<T: BaseModel>(type: T.Type, filters: [String], sorted: String? = nil, inRealm realm: Realm? = nil) -> Results<T> {
+        let mFilter = filters.joined(separator: " && ")
+        return self.all(type, filter: mFilter, sorted: sorted, inRealm: realm)
+    }
+    
     public static func modify<T: BaseModel>(_ type: T.Type, id: String, inRealm realm: Realm? = nil, modifyBlock: ((Realm, T) -> Error?)) throws {
         let mRealm = currentRealm(realm)
         guard let object: T = DBUtils.get(id, type: type, inRealm: mRealm) else {
