@@ -168,17 +168,21 @@ open class Proxy: BaseModel {
         }
     }
     
+    public static func delete(proxy: Proxy) {
+        let proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
+        for ep in proxies {
+            if ep.host == proxy.host,
+                ep.port == proxy.port {
+                print ("Remove existing: " + proxy.description)
+                try? DBUtils.hardDelete(ep.uuid, type: Proxy.self)
+            }
+        }
+    }
+    
     public static func insertOrUpdate(proxy: Proxy) -> Bool {
         do {
             try proxy.validate()
-            let proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
-            for ep in proxies {
-                if ep.host == proxy.host,
-                    ep.port == proxy.port {
-                    print ("Remove existing: " + proxy.description)
-                    try DBUtils.hardDelete(ep.uuid, type: Proxy.self)
-                }
-            }
+            self.delete(proxy: proxy)
             try DBUtils.add(proxy)
             NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: kProxyServiceAdded), object: nil)
             return true

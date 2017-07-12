@@ -59,6 +59,17 @@ class DataInitializer: NSObject, AppLifeCycleProtocol {
         guard DataInitializer.vpnStatus == .off else {
             return
         }
+        let cloudProxies = DBUtils.all(CloudProxy.self, sorted: "createAt").map({ $0 })
+        for cp in cloudProxies {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy.MM.dd"
+            if let due = cp.due, let date = dateFormatter.date(from: due) {
+                if (date.timeIntervalSinceNow > 0) {
+                    Proxy.delete(proxy: cp)
+                }
+            }
+        }
+        
         API.getProxySets() { (response) in
             do {
                 for dic in response {
