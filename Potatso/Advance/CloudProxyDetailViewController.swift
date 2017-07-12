@@ -19,7 +19,7 @@ class CloudProxyDetailViewController: ProxyConfigurationViewController {
     
     convenience init(cloudProxy: CloudProxy) {
         self.init(upstreamProxy: cloudProxy)
-        self.cloudProxy = CloudProxy(value: cloudProxy)
+        self.cloudProxy = cloudProxy
     }
 
     override init(upstreamProxy: Proxy?) {
@@ -62,4 +62,11 @@ class CloudProxyDetailViewController: ProxyConfigurationViewController {
         }
     }
     
+    override func onSave() {
+        try? DBUtils.add(self.cloudProxy)
+        if let ip = self.cloudProxy.ip {
+            self.upstreamProxy.ip = ip
+        }
+        super.onSave()
+    }
 }
