@@ -418,7 +418,14 @@ extension Proxy {
     }
 
     public static func schemeIsProxy(_ scheme: String) -> Bool {
-        return (scheme == Proxy.ssUriMethod)  || (scheme == Proxy.ssrUriMethod) || (scheme == "mume") || (scheme == "shadowsocks") || (scheme == "shadowsocksr") || (scheme == "mss")
+        return (scheme == Proxy.ssUriMethod)
+            || (scheme == Proxy.ssrUriMethod)
+            || (scheme == "mume")
+            || (scheme == "shadowsocks")
+            || (scheme == "shadowsocksr")
+            || (scheme == "mss")
+            || (scheme == "socks5")
+            || (scheme == "socks")
     }
 
     public static func uriIsProxy(_ uri: String) -> Bool {

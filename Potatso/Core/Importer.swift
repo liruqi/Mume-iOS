@@ -53,6 +53,14 @@ struct Importer {
     }
     
     func onImportInput(_ result: String) {
+        if result.hasPrefix("#") {
+            let q = result.trimmingCharacters(in: CharacterSet(charactersIn: "#.,/?;'[]"))
+            if q.characters.count > 0,
+                let eq = q.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) {
+                importConfig("https://mumevpn.com/import.php?q=" + eq, isURL: true)
+            }
+            return
+        }
         if Proxy.uriIsProxy(result) {
             importSS(source: result)
         } else {
@@ -79,7 +87,6 @@ struct Importer {
     func importConfig(_ source: String, isURL: Bool) {
         viewController?.showProgreeHUD("Importing Config...".localized())
         Async.background(after: 1) {
-            let config = Config()
             do {
                 if isURL, let url = URL(string: source), (url.scheme == "https" || url.scheme == "http") {
                     API.getImportData(url: url, callback: { data, error in
@@ -93,6 +100,7 @@ struct Importer {
                                     self.importSS(source: result)
                                     return
                                 }
+                                let config = Config()
                                 try config.setup(string: result)
                                 try config.save()
                                 self.onConfigSaveCallback(true, error: nil)
@@ -103,6 +111,7 @@ struct Importer {
                         self.onConfigSaveCallback(false, error: error)
                     })
                 } else {
+                    let config = Config()
                     try config.setup(string: source)
                     try config.save()
                     self.onConfigSaveCallback(true, error: nil)
