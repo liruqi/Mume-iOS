@@ -27,10 +27,15 @@ class RecentRequestsVC: UIViewController, UITableViewDataSource, UITableViewDele
     var showingCache = false
     
     deinit {
+        tableView.showsPullToRefresh = false
+        wormhole.stopListeningForMessage(withIdentifier: "tunnelConnectionRecords")
         NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidLoad() {
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
+
         super.viewDidLoad()
         navigationItem.title = "Recent Requests".localized()
         NotificationCenter.default.addObserver(self, selector: #selector(onVPNStatusChanged), name: NSNotification.Name(rawValue: kProxyServiceVPNStatusNotification), object: nil)
@@ -57,6 +62,11 @@ class RecentRequestsVC: UIViewController, UITableViewDataSource, UITableViewDele
         tableView.triggerPullToRefresh()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tableView.showsPullToRefresh = false
+    }
+    
     func refresh() {
         let on = [VPNStatus.on, VPNStatus.connecting].contains(Manager.shared.vpnStatus)
         if on {
@@ -79,12 +89,6 @@ class RecentRequestsVC: UIViewController, UITableViewDataSource, UITableViewDele
     func onVPNStatusChanged() {
         let on = [VPNStatus.on, VPNStatus.connecting].contains(Manager.shared.vpnStatus)
         hintLabel.isHidden = on
-        if on {
-            tableView.triggerPullToRefresh()
-            tableView.showsPullToRefresh = true;
-        } else {
-            tableView.showsPullToRefresh = false;
-        }
         if on && showingCache {
             updateUI(nil)
         }
@@ -136,10 +140,8 @@ class RecentRequestsVC: UIViewController, UITableViewDataSource, UITableViewDele
         }
     }
     
-    lazy var tableView: UITableView = {
+    var tableView: UITableView = {
         let v = UITableView(frame: CGRect.zero, style: .plain)
-        v.dataSource = self
-        v.delegate = self
         v.tableFooterView = UIView()
         v.tableHeaderView = UIView()
         v.separatorStyle = .singleLine
