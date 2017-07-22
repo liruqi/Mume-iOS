@@ -14,8 +14,8 @@ private let rowHeight: CGFloat = 135
 class CollectionViewController: SegmentPageVC {
 
     let pageVCs = [
-        RuleSetListViewController(existing: []),
         ProxyListViewController(),
+        RuleSetListViewController(existing: []),
     ]
 
     override func pageViewControllersForSegmentPageVC() -> [UIViewController] {
@@ -37,10 +37,10 @@ class CollectionViewController: SegmentPageVC {
 
     func add() {
         switch segmentedControl.selectedSegmentIndex {
-        case 0:
+        case 1:
             let vc = RuleSetConfigurationViewController(ruleSet: nil)
             navigationController?.pushViewController(vc, animated: true)
-        case 1:
+        case 0:
             let alert = UIAlertController(title: "Add Proxy".localized(), message: nil, preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "Import From QRCode".localized(), style: .default, handler: { (action) in
                 let importer = Importer(vc: self)
