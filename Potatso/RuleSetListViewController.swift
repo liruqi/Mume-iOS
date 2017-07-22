@@ -92,13 +92,10 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: kRuleSetCellIdentifier, for: indexPath) as! RuleSetCell
-        cell.setRuleSet(ruleSets[indexPath.row], showSubscribe: true)
+        heightAtIndex[indexPath.row] = cell.setRuleSet(ruleSets[indexPath.row])
         return cell
     }
 
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        heightAtIndex[indexPath.row] = cell.frame.size.height
-    }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -110,13 +107,13 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
             showRuleSetConfiguration(ruleSet)
         }
     }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let h = RuleSetCell.caculateRSCellLayoutHeight(ruleSet: ruleSets[indexPath.row])
         if let height = heightAtIndex[indexPath.row] {
-            return height
-        } else {
-            return UITableViewAutomaticDimension
+            print("Caculated: %lf real: %lf".localizedFormat(Double(h), Double(height)))
         }
+        return h
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

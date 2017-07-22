@@ -12,8 +12,6 @@ import PotatsoModel
 
 class RuleSetCell: UITableViewCell {
 
-    let group = ConstraintGroup()
-
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         preservesSuperviewLayoutMargins = false
@@ -24,46 +22,60 @@ class RuleSetCell: UITableViewCell {
         contentView.addSubview(leftHintView)
         contentView.addSubview(descLabel)
         contentView.addSubview(subscribeFlagLabel)
+        self.translatesAutoresizingMaskIntoConstraints = false
 //        contentView.addSubview(avatarImageView)
 //        contentView.addSubview(authorNameLabel)
 //        contentView.addSubview(updateAtLabel)
-        constrain(contentView, self) { contentView, superview in
-            contentView.edges == superview.edges
-        }
         countLabel.setContentHuggingPriority(UILayoutPriorityRequired, for: .horizontal)
         countLabel.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .horizontal)
-        constrain(titleLabel, countLabel, contentView) { titleLabel, countLabel, contentView in
-            titleLabel.leading == contentView.leading + 15
-            titleLabel.top == contentView.top + 13
-            countLabel.leading == titleLabel.trailing + 15
-
-            countLabel.trailing == contentView.trailing - 15
-            countLabel.centerY == titleLabel.centerY
-        }
-        constrain(descLabel, leftHintView, titleLabel, countLabel) { descLabel, leftHintView, titleLabel, countLabel in
-            leftHintView.leading == titleLabel.leading
-            leftHintView.top == titleLabel.bottom + 11
-            leftHintView.width == 2
-
-            descLabel.leading == leftHintView.trailing + 5
-            descLabel.top == leftHintView.top
-            descLabel.bottom == leftHintView.bottom
-            descLabel.trailing == countLabel.trailing
-        }
-        constrain(leftHintView, subscribeFlagLabel) { leftHintView, subscribeFlagLabel in
-            subscribeFlagLabel.leading == leftHintView.leading
-            subscribeFlagLabel.top == leftHintView.bottom + 8
-        }
-        constrain(subscribeFlagLabel) { subscribeFlagLabel in
-            subscribeFlagLabel.height == 20
-        }
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setRuleSet(_ ruleSet: RuleSet, showFullDescription: Bool = false, showSubscribe: Bool = false) {
+    func updateRSCellLayout(subscribe: Bool) -> CGFloat {
+        var rootFrame = self.bounds
+        self.contentView.frame = rootFrame
+        let topFrame = CGRect(x: 15, y: 13, width: rootFrame.width - 30, height: 24)
+        self.titleLabel.frame = topFrame
+        self.countLabel.frame = topFrame
+        var y: CGFloat = 24 + 13 + 11
+        self.descLabel.frame = CGRect(x: 15 + 2 + 5, y: y, width: topFrame.width - 7, height: 89)
+        self.descLabel.sizeToFit()
+        let descFrame = self.descLabel.frame
+        let hintFrame = CGRect(x: 15, y: y, width: 2, height: descFrame.height)
+        self.leftHintView.frame = hintFrame
+        y += descFrame.height
+        subscribeFlagLabel.isHidden = !subscribe
+        if subscribe {
+            y += 8
+            self.subscribeFlagLabel.frame = CGRect(x: 15, y: y, width: topFrame.width, height: 20)
+            self.subscribeFlagLabel.sizeToFit()
+            self.subscribeFlagLabel.frame.size = CGSize(width: self.subscribeFlagLabel.frame.width + 20, height: 20)
+            y += 20
+        } else {
+            print ("not subscribe")
+        }
+        rootFrame.size.height = y + 13
+        self.contentView.frame = rootFrame
+        return rootFrame.height
+    }
+    
+    static func caculateRSCellLayoutHeight(ruleSet: RuleSet) -> CGFloat {
+        let screenWidth = UIScreen.main.bounds.width
+        var y: CGFloat = 24 + 13 + 11
+        let desc = ruleSet.desc as NSString
+        let rect = desc.boundingRect(with: CGSize(width: screenWidth - 30 - 7, height: 128), options: .usesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 13)], context: nil)
+        y += rect.height
+        
+        if ruleSet.isSubscribe {
+            y += 8 + 20
+        }
+        return y + 13
+    }
+    
+    func setRuleSet(_ ruleSet: RuleSet, showFullDescription: Bool = false) -> CGFloat {
         titleLabel.text = ruleSet.name
         var count = 0
         if ruleSet.ruleCount > 0 {
@@ -78,22 +90,8 @@ class RuleSetCell: UITableViewCell {
         }
         descLabel.text = ruleSet.desc
         descLabel.numberOfLines = showFullDescription ? 0 : 2
-        let bottomView: UIView
-        if showSubscribe && ruleSet.isSubscribe {
-            subscribeFlagLabel.isHidden = false
-            bottomView = subscribeFlagLabel
-        } else {
-            subscribeFlagLabel.isHidden = true
-            if ruleSet.desc.characters.count > 0 {
-                bottomView = descLabel
-            }else{
-                bottomView = countLabel
-            }
-        }
         subscribeFlagLabel.text = "Default".localized()
-        constrain(bottomView, contentView, replace: group) { bottom, contentView in
-            bottom.bottom == contentView.bottom - 15
-        }
+        return self.updateRSCellLayout(subscribe: ruleSet.isSubscribe)
     }
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
@@ -112,6 +110,7 @@ class RuleSetCell: UITableViewCell {
         let v = UILabel()
         v.textColor = "000".color
         v.font = UIFont.systemFont(ofSize: 17)
+        v.textAlignment = .left
         return v
     }()
 
@@ -119,6 +118,7 @@ class RuleSetCell: UITableViewCell {
         let v = UILabel()
         v.textColor = "404040".color
         v.font = UIFont.systemFont(ofSize: 14)
+        v.textAlignment = .right
         return v
     }()
 
