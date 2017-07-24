@@ -22,13 +22,18 @@ class CloudProxyDetailViewController: ProxyConfigurationViewController {
         self.cloudProxy = cloudProxy
     }
 
-    override init(upstreamProxy: Proxy?) {
+    override init(upstreamProxy: Proxy?, readOnly: Bool = true) {
         self.cloudProxy = CloudProxy()
-        super.init(upstreamProxy: upstreamProxy)
+        super.init(upstreamProxy: upstreamProxy, readOnly: readOnly)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(onSave))
     }
     
     // MARK: - View Life Cycle

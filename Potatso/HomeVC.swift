@@ -191,7 +191,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
                         row.updateCell()
                         if (self.presenter.proxy?.uuid == proxy.uuid) {
                             if proxy.type != .none {
-                                let vc = ProxyConfigurationViewController(upstreamProxy: proxy)
+                                let vc = ProxyConfigurationViewController(upstreamProxy: proxy, readOnly: true)
                                 self.navigationController?.pushViewController(vc, animated: true)
                             }
                             return

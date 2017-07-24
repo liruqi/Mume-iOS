@@ -30,10 +30,11 @@ class ProxyConfigurationViewController: FormViewController {
         self.init()
     }
     
-    init(upstreamProxy: Proxy? = nil) {
+    init(upstreamProxy: Proxy? = nil, readOnly: Bool = false) {
         if let proxy = upstreamProxy {
             self.upstreamProxy = Proxy(value: proxy)
             self.isEdit = true
+            self.readOnly = readOnly
             if let _ = proxy as? CloudProxy {
                 self.readOnly = true
             } else if (self.upstreamProxy.host.hasSuffix("mume.site")) {
@@ -66,6 +67,9 @@ class ProxyConfigurationViewController: FormViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if self.readOnly {
+            return
+        }
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(onSave))
     }
     
@@ -289,6 +293,7 @@ class ProxyConfigurationViewController: FormViewController {
             to.ssrProtocol = values[kProxyFormProtocol] as? String
             to.ssrObfs = values[kProxyFormObfs] as? String
             to.ssrObfsParam = values[kProxyFormObfsParam] as? String
+            to.ip = nil
             return nil
         } catch {
             return error
