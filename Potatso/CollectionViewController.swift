@@ -23,7 +23,7 @@ class CollectionViewController: SegmentPageVC {
     }
 
     override func segmentsForSegmentPageVC() -> [String] {
-        return ["Rule Set".localized(), "Proxy".localized()]
+        return ["Proxy".localized(), "Rule Set".localized()]
     }
 
     override func showPage(_ index: Int) {
