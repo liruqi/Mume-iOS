@@ -71,9 +71,9 @@ open class Config {
     }
     
     func setupProxies() throws {
-        if let proxiesConfig = configDict["proxies"] as? [[String: String]] {
+        if let proxiesConfig = configDict["proxies"] as? [NSDictionary] {
             proxies = proxiesConfig.map({ (config) -> Proxy? in
-                return Proxy.proxy(dictionary: config)
+                return Proxy.nsproxy(dictionary: config)
             }).filter { $0 != nil }.map { $0! }
             try proxies.forEach {
                 try $0.validate()

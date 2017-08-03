@@ -370,6 +370,40 @@ extension Proxy {
         try validate()
     }
     
+    public static func nsproxy(dictionary: NSDictionary) -> Proxy? {
+        do {
+            if let uriString = dictionary["uri"] as? String {
+                
+                let p = try Proxy(string: uriString.trimmingCharacters(in: CharacterSet.whitespaces))
+                if let ip = dictionary["ip"] as? String {
+                    p.ip = ip
+                } else {
+                    
+                }
+                return p
+            }
+            
+            guard let host = dictionary["host"] as? String else {
+                return nil
+            }
+            guard let typeRaw = dictionary["type"] as? String, let type = ProxyType(rawValue: typeRaw) else {
+                throw ProxyError.invalidType
+            }
+            guard let port = dictionary["port"] as? Int else {
+                throw ProxyError.invalidPort
+            }
+            guard let encryption = dictionary["encryption"] as? String else {
+                throw ProxyError.invalidAuthScheme
+            }
+            guard let password = dictionary["password"] as? String else {
+                throw ProxyError.invalidPassword
+            }
+            return try Proxy(host: host, port: port, authscheme: encryption, password: password, type: type)
+        } catch {
+        }
+        return nil
+    }
+
     public static func proxy(dictionary: [String: String]) -> Proxy? {
         do {
             if let uriString = dictionary["uri"] {
