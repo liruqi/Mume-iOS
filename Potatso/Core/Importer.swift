@@ -102,7 +102,6 @@ struct Importer {
                                 }
                                 let config = Config()
                                 try config.setup(string: result)
-                                try config.save()
                                 self.onConfigSaveCallback(true, error: nil)
                                 return
                             }
@@ -113,7 +112,6 @@ struct Importer {
                 } else {
                     let config = Config()
                     try config.setup(string: source)
-                    try config.save()
                     self.onConfigSaveCallback(true, error: nil)
                 }
             } catch {

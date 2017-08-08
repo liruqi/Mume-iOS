@@ -50,22 +50,12 @@ open class Config {
         try setupModels()
     }
     
-    open func save() throws {
-        do {
-            try realm.commitWrite()
-        }catch {
-            throw error
-        }
-    }
-    
     func setupModels() throws {
-        realm.beginWrite()
         do {
             try setupProxies()
             try setupRuleSets()
             try setupConfigGroups()
-        }catch {
-            realm.cancelWrite()
+        } catch {
             throw error
         }
     }
@@ -77,7 +67,7 @@ open class Config {
             }).filter { $0 != nil }.map { $0! }
             try proxies.forEach {
                 try $0.validate()
-                realm.add($0)
+                try DBUtils.add($0, inRealm: realm)
             }
         }
     }
@@ -89,7 +79,7 @@ open class Config {
             }).filter { $0 != nil }.map { $0! }
             try ruleSets.forEach {
                 try $0.validate(inRealm: realm)
-                realm.add($0)
+                try DBUtils.add($0, inRealm: realm)
             }
         }
     }
@@ -101,7 +91,7 @@ open class Config {
             }).filter { $0 != nil }.map { $0! }
             try groups.forEach {
                 try $0.validate()
-                realm.add($0)
+                try DBUtils.add($0, inRealm: realm)
             }
         }
     }
