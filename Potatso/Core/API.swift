@@ -134,32 +134,6 @@ struct API {
     }
 }
 
-extension RuleSet: Mappable {
-
-    public convenience init?(map: Map) {
-        self.init()
-        guard let rulesJSON = map.JSON["rules"] else {
-            return
-        }
-        var rules: [Rule] = []
-        if let parsedObject = Mapper<Rule>().mapArray(JSONObject: rulesJSON){
-            rules.append(contentsOf: parsedObject)
-        }
-        self.rules = rules
-    }
-
-    // Mappable
-    public func mapping(map: Map) {
-        uuid      <- map["id"]
-        name      <- map["name"]
-        createAt  <- (map["created_at"], DateTransform())
-        remoteUpdatedAt  <- (map["updated_at"], DateTransform())
-        desc      <- map["description"]
-        ruleCount <- map["rule_count"]
-        isOfficial <- map["is_official"]
-    }
-}
-
 extension RuleSet {
 
     static func addRemoteObject(_ ruleset: RuleSet, update: Bool = true) throws {
@@ -184,53 +158,6 @@ extension RuleSet {
 
 }
 
-extension Rule: Mappable {
-
-    public convenience init?(map: Map) {
-        guard let pattern = map.JSON["pattern"] as? String else {
-            return nil
-        }
-        guard let actionStr = map.JSON["action"] as? String, let action = RuleAction(rawValue: actionStr) else {
-            return nil
-        }
-        guard let typeStr = map.JSON["type"] as? String, let type = MMRuleType(rawValue: typeStr) else {
-            return nil
-        }
-        self.init(type: type, action: action, value: pattern)
-    }
-    
-    public func mapping(map: Map) {
-    }
-}
-
-
-
-struct DateTransform: TransformType {
-
-    func transformFromJSON(_ value: Any?) -> Double? {
-        guard let dateStr = value as? String else {
-            return Date().timeIntervalSince1970
-        }
-        if #available(iOS 10.0, *) {
-            return ISO8601DateFormatter().date(from: dateStr)?.timeIntervalSince1970
-        } else {
-            return Date().timeIntervalSince1970
-        }
-    }
-
-    func transformToJSON(_ value: Double?) -> Any? {
-        guard let v = value else {
-            return nil
-        }
-        let date = Date(timeIntervalSince1970: v)
-        if #available(iOS 10.0, *) {
-            return ISO8601DateFormatter().string(from: date)
-        } else {
-            return nil
-        }
-    }
-
-}
 
 extension Alamofire.Request {
     fileprivate static func logError(_ error: NSError, request: NSURLRequest, response: URLResponse?) {

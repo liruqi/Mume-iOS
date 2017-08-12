@@ -25,15 +25,7 @@ PODS:
     - MMWormhole/Core (= 2.0.0)
   - MMWormhole/Core (2.0.0)
   - ObjectMapper (2.2.7)
-  - PSOperations (3.0.0):
-    - PSOperations/Core (= 3.0.0)
-    - PSOperations/Health (= 3.0.0)
-    - PSOperations/Passbook (= 3.0.0)
   - PSOperations/Core (3.0.0)
-  - PSOperations/Health (3.0.0):
-    - PSOperations/Core
-  - PSOperations/Passbook (3.0.0):
-    - PSOperations/Core
   - Realm (2.8.0):
     - Realm/Headers (= 2.8.0)
   - Realm/Headers (2.8.0)
@@ -58,7 +50,7 @@ DEPENDENCIES:
   - MMDB-Swift
   - MMWormhole (~> 2.0.0)
   - ObjectMapper
-  - PSOperations
+  - PSOperations/Core
   - RealmSwift
   - SVPullToRefresh (from `https://github.com/samvermette/SVPullToRefresh`)
   - SwiftColor
@@ -98,6 +90,6 @@ SPEC CHECKSUMS:
   SVPullToRefresh: ba2e718695a43253d8bea6852d2960097dc15d8c
   SwiftColor: c240d8cb2e1a29d731ae8deca8739eac6b9c56bd
 
-PODFILE CHECKSUM: 5fc22edc9072669c629b927937053a8b7a691227
+PODFILE CHECKSUM: 5fe2b625e608c25da5573f20ee5b2dd8b3ca4dc7
 
 COCOAPODS: 1.2.1

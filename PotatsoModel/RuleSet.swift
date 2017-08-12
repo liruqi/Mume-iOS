@@ -7,6 +7,7 @@
 //
 
 import RealmSwift
+import ObjectMapper
 
 public enum RuleSetError: Error {
     case invalidRuleSet
@@ -96,9 +97,6 @@ public final class RuleSet: BaseModel {
         insertRule(rule, atIndex: toIndex)
         rules = newRules
     }
-}
-
-extension RuleSet {
     
     public override static func indexedProperties() -> [String] {
         return ["name"]
@@ -106,25 +104,61 @@ extension RuleSet {
     
 }
 
-extension RuleSet {
+public func ==(lhs: RuleSet, rhs: RuleSet) -> Bool {
+    return lhs.uuid == rhs.uuid
+}
+
+extension RuleSet: Mappable {
     
-    public convenience init(dictionary: [String: AnyObject], inRealm realm: Realm) throws {
+    public convenience init?(map: Map) {
         self.init()
-        guard let name = dictionary["name"] as? String else {
-            throw RuleSetError.invalidRuleSet
+        guard let rulesJSON = map.JSON["rules"] else {
+            return
         }
-        self.name = name
-        if realm.objects(RuleSet.self).filter("name = '\(name)'").first != nil {
-            self.name = "\(name) \(RuleSet.dateFormatter.string(from: Date()))"
+        var rules: [Rule] = []
+        if let parsedObject = Mapper<Rule>().mapArray(JSONObject: rulesJSON){
+            rules.append(contentsOf: parsedObject)
         }
-        guard let rulesStr = dictionary["rules"] as? [String] else {
-            throw RuleSetError.invalidRuleSet
+        self.rules = rules
+    }
+    
+    // Mappable
+    public func mapping(map: Map) {
+        uuid      <- map["id"]
+        name      <- map["name"]
+        createAt  <- (map["created_at"], DateTransform())
+        remoteUpdatedAt  <- (map["updated_at"], DateTransform())
+        desc      <- map["description"]
+        ruleCount <- map["rule_count"]
+        isOfficial <- map["is_official"]
+    }
+}
+
+
+struct DateTransform: TransformType {
+    
+    func transformFromJSON(_ value: Any?) -> Double? {
+        guard let dateStr = value as? String else {
+            return Date().timeIntervalSince1970
         }
-        rules = try rulesStr.map({ try Rule(str: $0) })
+        if #available(iOS 10.0, *) {
+            return ISO8601DateFormatter().date(from: dateStr)?.timeIntervalSince1970
+        } else {
+            return Date().timeIntervalSince1970
+        }
+    }
+    
+    func transformToJSON(_ value: Double?) -> Any? {
+        guard let v = value else {
+            return nil
+        }
+        let date = Date(timeIntervalSince1970: v)
+        if #available(iOS 10.0, *) {
+            return ISO8601DateFormatter().string(from: date)
+        } else {
+            return nil
+        }
     }
     
 }
 
-public func ==(lhs: RuleSet, rhs: RuleSet) -> Bool {
-    return lhs.uuid == rhs.uuid
-}

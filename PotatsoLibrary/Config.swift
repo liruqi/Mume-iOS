@@ -6,8 +6,9 @@
 //  Copyright © 2016 TouchingApp. All rights reserved.
 //
 
-import RealmSwift
+import ObjectMapper
 import PotatsoModel
+import RealmSwift
 
 public enum ConfigError: Error {
     case downloadFail
@@ -72,11 +73,9 @@ open class Config {
         }
     }
     
-    func setupRuleSets() throws{
-        if let proxiesConfig = configDict["ruleSets"] as? [[String: AnyObject]] {
-            ruleSets = try proxiesConfig.map({ (config) -> RuleSet? in
-                return try RuleSet(dictionary: config, inRealm: realm)
-            }).filter { $0 != nil }.map { $0! }
+    func setupRuleSets() throws {
+        if let JSON = configDict["ruleSets"] as? [[String: Any]] {
+            ruleSets = Mapper<RuleSet>().mapArray(JSONArray: JSON)
             try ruleSets.forEach {
                 try $0.validate(inRealm: realm)
                 try DBUtils.add($0, inRealm: realm)

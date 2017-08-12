@@ -8,6 +8,7 @@
 
 import RealmSwift
 import PotatsoBase
+import ObjectMapper
 
 private let ruleValueKey = "value";
 private let ruleActionKey = "action";
@@ -182,8 +183,23 @@ public final class Rule {
         return ["type": type.rawValue as AnyObject, "value": value as AnyObject, "action": action.rawValue as AnyObject]
     }
 }
-//
-//
-//public func ==(lhs: Rule, rhs: Rule) -> Bool {
-//    return lhs.uuid == rhs.uuid
-//}
+
+extension Rule: Mappable {
+    
+    public convenience init?(map: Map) {
+        guard let pattern = map.JSON["pattern"] as? String else {
+            return nil
+        }
+        guard let actionStr = map.JSON["action"] as? String, let action = RuleAction(rawValue: actionStr) else {
+            return nil
+        }
+        guard let typeStr = map.JSON["type"] as? String, let type = MMRuleType(rawValue: typeStr) else {
+            return nil
+        }
+        self.init(type: type, action: action, value: pattern)
+    }
+    
+    public func mapping(map: Map) {
+    }
+}
+

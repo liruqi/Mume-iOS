@@ -20,6 +20,7 @@ end
 
 def model
     pod 'RealmSwift'
+    pod 'ObjectMapper'
 end
 
 target "Potatso" do
@@ -33,7 +34,7 @@ target "Potatso" do
     pod 'CallbackURLKit'
     pod 'SVPullToRefresh', :git => 'https://github.com/samvermette/SVPullToRefresh'
     pod 'ObjectMapper'
-    pod 'PSOperations'
+    pod 'PSOperations/Core'
     pod 'Fabric'
     pod 'Crashlytics'
     pod "EFQRCode", '~> 1.2.5'
