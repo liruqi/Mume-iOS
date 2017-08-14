@@ -278,6 +278,23 @@ extension Proxy {
                 throw ProxyError.invalidUri
             }
             self.type = .Shadowsocks
+
+            // SIP002 Spec
+            if let b64MP = rawUri.user,
+                rawUri.password == nil,
+                let host = rawUri.host,
+                let port = rawUri.port {
+                let MP = base64DecodeIfNeeded(b64MP)
+                self.host = host
+                self.port = port
+                let comps = MP.components(separatedBy: ":")
+                if comps.count > 1 {
+                    self.authscheme = comps[0].localized()
+                    self.password = comps[1..<comps.count].joined(separator: ":")
+                    return
+                }
+            }
+        
             let proxyString = base64DecodeIfNeeded(undecodedString)
             let detailsParser = "([a-zA-Z0-9-_]+):(.*)@([a-zA-Z0-9-_.]+):(\\d+)"
             if let regex = try? Regex(detailsParser),
