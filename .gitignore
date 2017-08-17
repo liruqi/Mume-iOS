@@ -46,10 +46,5 @@ Pods/
 # Carthage
 Carthage/Build
 
-# fastlane
-fastlane
-
 Gemfile.lock
 
-Confidential/
-Confidential.h
