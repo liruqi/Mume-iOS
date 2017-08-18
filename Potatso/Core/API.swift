@@ -71,7 +71,16 @@ struct API {
         let lang = Locale.preferredLanguages[0]
         let versionCode = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? ""
         NSLog("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
-        let parameters: Parameters = ["lang": lang, "version": versionCode]
+        let network = (DataInitializer.reachabilityManager?.networkReachabilityStatus.description()) ?? ""
+        let vi = (UIDevice.current.identifierForVendor?.uuidString) ?? ""
+        var parameters: Parameters = ["lang": lang, "version": versionCode, "identifierForVendor": vi, "network": network, "appstore": AppEnv.isAppStore]
+        let networkInfo = CTTelephonyNetworkInfo()
+        if let carrier = networkInfo.subscriberCellularProvider {
+            parameters["carrierName"] = carrier.carrierName
+            parameters["mobileCountryCode"] = carrier.mobileCountryCode
+            parameters["mobileNetworkCode"] = carrier.mobileNetworkCode
+            parameters["isoCountryCode"] = carrier.isoCountryCode
+        }
         Alamofire.SessionManager.default.request(Path.ruleSets.url, parameters: parameters)
             .responseJSON { response in
                 if let JSON = response.result.value {
