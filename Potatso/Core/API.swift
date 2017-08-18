@@ -69,11 +69,9 @@ struct API {
     
     static func getRuleSets(_ callback: @escaping ([RuleSet]) -> Void) {
         let lang = Locale.preferredLanguages[0]
-        let versionCode = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? ""
-        NSLog("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
         let network = (DataInitializer.reachabilityManager?.networkReachabilityStatus.description()) ?? ""
         let vi = (UIDevice.current.identifierForVendor?.uuidString) ?? ""
-        var parameters: Parameters = ["lang": lang, "version": versionCode, "identifierForVendor": vi, "network": network, "appstore": AppEnv.isAppStore]
+        var parameters: Parameters = ["lang": lang, "version": AppEnv.version, "build": AppEnv.build, "identifierForVendor": vi, "network": network, "appstore": AppEnv.isAppStore]
         let networkInfo = CTTelephonyNetworkInfo()
         if let carrier = networkInfo.subscriberCellularProvider {
             parameters["carrierName"] = carrier.carrierName
@@ -99,13 +97,11 @@ struct API {
     
     static func getProxySets(_ callback: @escaping (NSArray) -> Void) {
         let lang = Locale.preferredLanguages[0]
-        let versionCode = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? ""
-        let kCloudProxySets = "kCloudProxySets" + versionCode
-        NSLog("API.getRuleSets ===> lang: \(lang), version: \(versionCode)")
+        let kCloudProxySets = "kCloudProxySets" + AppEnv.version
         
         let network = (DataInitializer.reachabilityManager?.networkReachabilityStatus.description()) ?? ""
         let vi = (UIDevice.current.identifierForVendor?.uuidString) ?? ""
-        var parameters: Parameters = ["lang": lang, "version": versionCode, "identifierForVendor": vi, "network": network, "appstore": AppEnv.isAppStore]
+        var parameters: Parameters = ["lang": lang, "version": AppEnv.version, "build": AppEnv.build, "identifierForVendor": vi, "network": network, "appstore": AppEnv.isAppStore]
         #if DEBUG
         parameters["debug"] = 1
         #endif
