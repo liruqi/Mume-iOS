@@ -29,9 +29,6 @@ class AppInitializer: NSObject, AppLifeCycleProtocol {
         Appirater.setUsesUntilPrompt(3)
         Appirater.setSignificantEventsUntilPrompt(1)
         Appirater.setAlwaysUseMainBundle(true)
-        #if DEBUG
-        Appirater.setDebug(true)
-        #endif
     }
     
 }
