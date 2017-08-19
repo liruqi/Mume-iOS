@@ -24,6 +24,6 @@ extern NSString * _Nonnull privoxyLogFile;
 + (NSURL * _Nonnull)sharedHttpProxyConfUrl;
 + (NSURL * _Nonnull)sharedLogUrl;
 
-+ (int) logLevel;
-+ (void) setLogLevel:(int) ll;
++ (NSInteger) logLevel;
++ (void) setLogLevel:(NSInteger) ll;
 @end

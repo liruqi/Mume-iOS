@@ -42,11 +42,11 @@ NSString *privoxyLogFile = @"privoxy.log";
     return [[Potatso sharedUrl] URLByAppendingPathComponent:@"tunnel.log"  isDirectory:NO];
 }
 
-+ (int) logLevel {
++ (NSInteger) logLevel {
     return [[Potatso sharedUserDefaults] integerForKey:kLoggingLevel];
 }
 
-+ (void) setLogLevel:(int) ll {
++ (void) setLogLevel:(NSInteger) ll {
     [[Potatso sharedUserDefaults] setInteger:ll forKey:kLoggingLevel];
 }
 @end
