@@ -62,7 +62,7 @@ cork_managed_buffer_new(const void *buf, size_t size,
                         cork_managed_buffer_freer free)
 {
     /*
-    DEBUG("Creating new struct cork_managed_buffer [%p:%zu], refcount now 1",
+    SP_DEBUG("Creating new struct cork_managed_buffer [%p:%zu], refcount now 1",
           buf, size);
     */
 
@@ -123,7 +123,7 @@ static void
 cork_managed_buffer_free(struct cork_managed_buffer *self)
 {
     /*
-    DEBUG("Freeing struct cork_managed_buffer [%p:%zu]", self->buf, self->size);
+    SP_DEBUG("Freeing struct cork_managed_buffer [%p:%zu]", self->buf, self->size);
     */
 
     self->iface->free(self);
@@ -135,7 +135,7 @@ cork_managed_buffer_ref(struct cork_managed_buffer *self)
 {
     /*
     int  old_count = self->ref_count++;
-    DEBUG("Referencing struct cork_managed_buffer [%p:%zu], refcount now %d",
+    SP_DEBUG("Referencing struct cork_managed_buffer [%p:%zu], refcount now %d",
           self->buf, self->size, old_count + 1);
     */
 
@@ -149,7 +149,7 @@ cork_managed_buffer_unref(struct cork_managed_buffer *self)
 {
     /*
     int  old_count = self->ref_count--;
-    DEBUG("Dereferencing struct cork_managed_buffer [%p:%zu], refcount now %d",
+    SP_DEBUG("Dereferencing struct cork_managed_buffer [%p:%zu], refcount now %d",
           self->buf, self->size, old_count - 1);
     */
 
@@ -198,7 +198,7 @@ cork_managed_buffer_slice(struct cork_slice *dest,
         (offset <= buffer->size) &&
         ((offset + length) <= buffer->size)) {
         /*
-        DEBUG("Slicing [%p:%zu] at %zu:%zu, gives <%p:%zu>",
+        SP_DEBUG("Slicing [%p:%zu] at %zu:%zu, gives <%p:%zu>",
               buffer->buf, buffer->size,
               offset, length,
               buffer->buf + offset, length);
@@ -212,7 +212,7 @@ cork_managed_buffer_slice(struct cork_slice *dest,
 
     else {
         /*
-        DEBUG("Cannot slice [%p:%zu] at %zu:%zu",
+        SP_DEBUG("Cannot slice [%p:%zu] at %zu:%zu",
               buffer->buf, buffer->size,
               offset, length);
         */

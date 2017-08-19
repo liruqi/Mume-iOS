@@ -21,12 +21,12 @@
 
 #if CORK_IP_ADDRESS_DEBUG
 #include <stdio.h>
-#define DEBUG(...) \
+#define SP_DEBUG(...) \
     do { \
         fprintf(stderr, __VA_ARGS__); \
     } while (0)
 #else
-#define DEBUG(...) /* nothing */
+#define SP_DEBUG(...) /* nothing */
 #endif
 
 
@@ -46,16 +46,16 @@ cork_ipv4_parse(struct cork_ipv4 *addr, const char *str)
     uint8_t  result[4];
 
     for (ch = str; *ch != '\0'; ch++) {
-        DEBUG("%2u: %c\t", (unsigned int) (ch-str), *ch);
+        SP_DEBUG("%2u: %c\t", (unsigned int) (ch-str), *ch);
         switch (*ch) {
             case '0': case '1': case '2': case '3': case '4':
             case '5': case '6': case '7': case '8': case '9':
                 seen_digit_in_octet = true;
                 digit *= 10;
                 digit += (*ch - '0');
-                DEBUG("digit = %u\n", digit);
+                SP_DEBUG("digit = %u\n", digit);
                 if (CORK_UNLIKELY(digit > 255)) {
-                    DEBUG("\t");
+                    SP_DEBUG("\t");
                     goto parse_error;
                 }
                 break;
@@ -66,7 +66,7 @@ cork_ipv4_parse(struct cork_ipv4 *addr, const char *str)
                 if (CORK_UNLIKELY(octets == 3)) {
                     goto parse_error;
                 }
-                DEBUG("octet %u = %u\n", octets, digit);
+                SP_DEBUG("octet %u = %u\n", octets, digit);
                 result[octets] = digit;
                 digit = 0;
                 octets++;
@@ -81,23 +81,23 @@ cork_ipv4_parse(struct cork_ipv4 *addr, const char *str)
 
     /* If we have a valid octet at the end, and that would be the fourth octet,
      * then we've got a valid final parse. */
-    DEBUG("%2u:\t", (unsigned int) (ch-str));
+    SP_DEBUG("%2u:\t", (unsigned int) (ch-str));
     if (CORK_LIKELY(seen_digit_in_octet && octets == 3)) {
 #if CORK_IP_ADDRESS_DEBUG
         char  parsed_ipv4[CORK_IPV4_STRING_LENGTH];
 #endif
-        DEBUG("octet %u = %u\n", octets, digit);
+        SP_DEBUG("octet %u = %u\n", octets, digit);
         result[octets] = digit;
         cork_ipv4_copy(addr, result);
 #if CORK_IP_ADDRESS_DEBUG
         cork_ipv4_to_raw_string(addr, parsed_ipv4);
-        DEBUG("\tParsed address: %s\n", parsed_ipv4);
+        SP_DEBUG("\tParsed address: %s\n", parsed_ipv4);
 #endif
         return ch;
     }
 
 parse_error:
-    DEBUG("parse error\n");
+    SP_DEBUG("parse error\n");
     cork_parse_error("Invalid IPv4 address: \"%s\"", str);
     return NULL;
 }
@@ -161,7 +161,7 @@ cork_ipv6_init(struct cork_ipv6 *addr, const char *str)
     bool  just_saw_colon = false;
 
     for (ch = str; *ch != '\0'; ch++) {
-        DEBUG("%2u: %c\t", (unsigned int) (ch-str), *ch);
+        SP_DEBUG("%2u: %c\t", (unsigned int) (ch-str), *ch);
         switch (*ch) {
 #define process_digit(base) \
                 /* Make sure a digit is allowed here. */ \
@@ -178,7 +178,7 @@ cork_ipv6_init(struct cork_ipv6 *addr, const char *str)
                 just_saw_colon = false; \
                 digit <<= 4; \
                 digit |= (*ch - (base)); \
-                DEBUG("digit = %04x\n", digit);
+                SP_DEBUG("digit = %04x\n", digit);
 
             case '0': case '1': case '2': case '3': case '4':
             case '5': case '6': case '7': case '8': case '9':
@@ -205,7 +205,7 @@ cork_ipv6_init(struct cork_ipv6 *addr, const char *str)
                 /* If this is a double-colon, start parsing hextets into our
                  * second array. */
                 if (just_saw_colon) {
-                    DEBUG("double-colon\n");
+                    SP_DEBUG("double-colon\n");
                     colon_allowed = false;
                     digit_allowed = true;
                     another_required = false;
@@ -225,7 +225,7 @@ cork_ipv6_init(struct cork_ipv6 *addr, const char *str)
                 /* If this is the very beginning of the string, then we can only
                  * have a double-colon, not a single colon. */
                 if (digits_seen == 0 && hextets_seen == 0) {
-                    DEBUG("initial colon\n");
+                    SP_DEBUG("initial colon\n");
                     colon_allowed = true;
                     digit_allowed = false;
                     just_saw_colon = true;
@@ -234,7 +234,7 @@ cork_ipv6_init(struct cork_ipv6 *addr, const char *str)
                 }
 
                 /* Otherwise this ends the current hextet. */
-                DEBUG("hextet %u = %04x\n", hextets_seen, digit);
+                SP_DEBUG("hextet %u = %04x\n", hextets_seen, digit);
                 *(dest++) = CORK_UINT16_HOST_TO_BIG(digit);
                 digit = 0;
                 hextets_seen++;
@@ -249,7 +249,7 @@ cork_ipv6_init(struct cork_ipv6 *addr, const char *str)
                 /* If we see a period, then we must be in the middle of an IPv4
                  * address at the end of the IPv6 address. */
                 struct cork_ipv4  *ipv4 = (struct cork_ipv4 *) dest;
-                DEBUG("Detected IPv4 address %s\n", ch-digits_seen);
+                SP_DEBUG("Detected IPv4 address %s\n", ch-digits_seen);
 
                 /* Ensure that we have space for the two hextets that the IPv4
                  * address will take up. */
@@ -284,9 +284,9 @@ cork_ipv6_init(struct cork_ipv6 *addr, const char *str)
     /* If we have a valid hextet at the end, and we've either seen a
      * double-colon, or we have eight hextets in total, then we've got a valid
      * final parse. */
-    DEBUG("%2u:\t", (unsigned int) (ch-str));
+    SP_DEBUG("%2u:\t", (unsigned int) (ch-str));
     if (CORK_LIKELY(digits_seen > 0)) {
-        DEBUG("hextet %u = %04x\n\t", hextets_seen, digit);
+        SP_DEBUG("hextet %u = %04x\n\t", hextets_seen, digit);
         *(dest++) = CORK_UINT16_HOST_TO_BIG(digit);
         hextets_seen++;
     } else if (CORK_UNLIKELY(another_required)) {
@@ -300,7 +300,7 @@ cork_ipv6_init(struct cork_ipv6 *addr, const char *str)
         char  parsed_result[CORK_IPV6_STRING_LENGTH];
 #endif
         unsigned int  after_count = hextets_seen - before_count;
-        DEBUG("Saw double-colon; %u hextets before, %u after\n",
+        SP_DEBUG("Saw double-colon; %u hextets before, %u after\n",
               before_count, after_count);
         memset(addr, 0, sizeof(struct cork_ipv6));
         memcpy(addr, before_double_colon,
@@ -309,7 +309,7 @@ cork_ipv6_init(struct cork_ipv6 *addr, const char *str)
                sizeof(uint16_t) * after_count);
 #if CORK_IP_ADDRESS_DEBUG
         cork_ipv6_to_raw_string(addr, parsed_result);
-        DEBUG("\tParsed address: %s\n", parsed_result);
+        SP_DEBUG("\tParsed address: %s\n", parsed_result);
 #endif
         return 0;
     } else if (hextets_seen == 8) {
@@ -317,17 +317,17 @@ cork_ipv6_init(struct cork_ipv6 *addr, const char *str)
 #if CORK_IP_ADDRESS_DEBUG
         char  parsed_result[CORK_IPV6_STRING_LENGTH];
 #endif
-        DEBUG("No double-colon\n");
+        SP_DEBUG("No double-colon\n");
         cork_ipv6_copy(addr, before_double_colon);
 #if CORK_IP_ADDRESS_DEBUG
         cork_ipv6_to_raw_string(addr, parsed_result);
-        DEBUG("\tParsed address: %s\n", parsed_result);
+        SP_DEBUG("\tParsed address: %s\n", parsed_result);
 #endif
         return 0;
     }
 
 parse_error:
-    DEBUG("parse error\n");
+    SP_DEBUG("parse error\n");
     cork_parse_error("Invalid IPv6 address: \"%s\"", str);
     return -1;
 }

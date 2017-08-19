@@ -25,13 +25,13 @@
 
 #if CORK_HASH_TABLE_DEBUG
 #include <stdio.h>
-#define DEBUG(...) \
+#define SP_DEBUG(...) \
     do { \
         fprintf(stderr, __VA_ARGS__); \
         fprintf(stderr, "\n"); \
     } while (0)
 #else
-#define DEBUG(...) /* nothing */
+#define SP_DEBUG(...) /* nothing */
 #endif
 
 
@@ -109,7 +109,7 @@ cork_hash_table_allocate_bins(struct cork_hash_table *table,
 
     table->bin_count = cork_hash_table_new_size(desired_count);
     table->bin_mask = table->bin_count - 1;
-    DEBUG("Allocate %zu bins", table->bin_count);
+    SP_DEBUG("Allocate %zu bins", table->bin_count);
     table->bins = cork_calloc(table->bin_count, sizeof(struct cork_dllist));
     for (i = 0; i < table->bin_count; i++) {
         cork_dllist_init(&table->bins[i]);
@@ -172,7 +172,7 @@ cork_hash_table_clear(struct cork_hash_table *table)
     struct cork_dllist_item  *curr;
     struct cork_dllist_item  *next;
 
-    DEBUG("(clear) Remove all entries");
+    SP_DEBUG("(clear) Remove all entries");
     for (curr = cork_dllist_start(&table->insertion_order);
          !cork_dllist_is_end(&table->insertion_order, curr);
          curr = next) {
@@ -184,9 +184,9 @@ cork_hash_table_clear(struct cork_hash_table *table)
     }
     cork_dllist_init(&table->insertion_order);
 
-    DEBUG("(clear) Clear bins");
+    SP_DEBUG("(clear) Clear bins");
     for (i = 0; i < table->bin_count; i++) {
-        DEBUG("  Bin %zu", i);
+        SP_DEBUG("  Bin %zu", i);
         cork_dllist_init(&table->bins[i]);
     }
 
@@ -262,7 +262,7 @@ cork_hash_table_ensure_size(struct cork_hash_table *table, size_t desired_count)
                     struct cork_dllist_item  *next = curr->next;
 
                     size_t  bin_index = bin_index(table, entry->public.hash);
-                    DEBUG("      Rehash %p from bin %zu to bin %zu",
+                    SP_DEBUG("      Rehash %p from bin %zu to bin %zu",
                           entry, i, bin_index);
                     cork_dllist_add(&table->bins[bin_index], curr);
 
@@ -279,7 +279,7 @@ cork_hash_table_ensure_size(struct cork_hash_table *table, size_t desired_count)
 static void
 cork_hash_table_rehash(struct cork_hash_table *table)
 {
-    DEBUG("    Reached maximum density; rehash");
+    SP_DEBUG("    Reached maximum density; rehash");
     cork_hash_table_ensure_size(table, table->bin_count + 1);
 }
 
@@ -293,14 +293,14 @@ cork_hash_table_get_entry_hash(const struct cork_hash_table *table,
     struct cork_dllist_item  *curr;
 
     if (table->bin_count == 0) {
-        DEBUG("(get) Empty table when searching for key %p "
+        SP_DEBUG("(get) Empty table when searching for key %p "
               "(hash 0x%08" PRIx32 ")",
               key, hash);
         return NULL;
     }
 
     bin_index = bin_index(table, hash);
-    DEBUG("(get) Search for key %p (hash 0x%08" PRIx32 ", bin %zu)",
+    SP_DEBUG("(get) Search for key %p (hash 0x%08" PRIx32 ", bin %zu)",
           key, hash, bin_index);
 
     bin = &table->bins[bin_index];
@@ -310,16 +310,16 @@ cork_hash_table_get_entry_hash(const struct cork_hash_table *table,
             cork_container_of
             (curr, struct cork_hash_table_entry_priv, in_bucket);
 
-        DEBUG("  Check entry %p", entry);
+        SP_DEBUG("  Check entry %p", entry);
         if (table->equals(table->user_data, key, entry->public.key)) {
-            DEBUG("  Match");
+            SP_DEBUG("  Match");
             return &entry->public;
         }
 
         curr = curr->next;
     }
 
-    DEBUG("  Entry not found");
+    SP_DEBUG("  Entry not found");
     return NULL;
 }
 
@@ -339,7 +339,7 @@ cork_hash_table_get_hash(const struct cork_hash_table *table,
     if (entry == NULL) {
         return NULL;
     } else {
-        DEBUG("  Extract value pointer %p", entry->value);
+        SP_DEBUG("  Extract value pointer %p", entry->value);
         return entry->value;
     }
 }
@@ -352,7 +352,7 @@ cork_hash_table_get(const struct cork_hash_table *table, const void *key)
     if (entry == NULL) {
         return NULL;
     } else {
-        DEBUG("  Extract value pointer %p", entry->value);
+        SP_DEBUG("  Extract value pointer %p", entry->value);
         return entry->value;
     }
 }
@@ -370,7 +370,7 @@ cork_hash_table_get_or_create_hash(struct cork_hash_table *table,
         struct cork_dllist_item  *curr;
 
         bin_index = bin_index(table, hash);
-        DEBUG("(get_or_create) Search for key %p "
+        SP_DEBUG("(get_or_create) Search for key %p "
               "(hash 0x%08" PRIx32 ", bin %zu)",
               key, hash, bin_index);
 
@@ -381,10 +381,10 @@ cork_hash_table_get_or_create_hash(struct cork_hash_table *table,
                 cork_container_of
                 (curr, struct cork_hash_table_entry_priv, in_bucket);
 
-            DEBUG("  Check entry %p", entry);
+            SP_DEBUG("  Check entry %p", entry);
             if (table->equals(table->user_data, key, entry->public.key)) {
-                DEBUG("    Match");
-                DEBUG("    Return value pointer %p", entry->public.value);
+                SP_DEBUG("    Match");
+                SP_DEBUG("    Return value pointer %p", entry->public.value);
                 *is_new = false;
                 return &entry->public;
             }
@@ -393,7 +393,7 @@ cork_hash_table_get_or_create_hash(struct cork_hash_table *table,
         }
 
         /* create a new entry */
-        DEBUG("  Entry not found");
+        SP_DEBUG("  Entry not found");
 
         if ((table->entry_count / table->bin_count) >
             CORK_HASH_TABLE_MAX_DENSITY) {
@@ -401,18 +401,18 @@ cork_hash_table_get_or_create_hash(struct cork_hash_table *table,
             bin_index = bin_index(table, hash);
         }
     } else {
-        DEBUG("(get_or_create) Search for key %p (hash 0x%08" PRIx32 ")",
+        SP_DEBUG("(get_or_create) Search for key %p (hash 0x%08" PRIx32 ")",
               key, hash);
-        DEBUG("  Empty table");
+        SP_DEBUG("  Empty table");
         cork_hash_table_rehash(table);
         bin_index = bin_index(table, hash);
     }
 
-    DEBUG("    Allocate new entry");
+    SP_DEBUG("    Allocate new entry");
     entry = cork_hash_table_new_entry(table, hash, key, NULL);
-    DEBUG("    Created new entry %p", entry);
+    SP_DEBUG("    Created new entry %p", entry);
 
-    DEBUG("    Add entry into bin %zu", bin_index);
+    SP_DEBUG("    Add entry into bin %zu", bin_index);
     cork_dllist_add(&table->bins[bin_index], &entry->in_bucket);
 
     table->entry_count++;
@@ -442,7 +442,7 @@ cork_hash_table_put_hash(struct cork_hash_table *table,
         struct cork_dllist_item  *curr;
 
         bin_index = bin_index(table, hash);
-        DEBUG("(put) Search for key %p (hash 0x%08" PRIx32 ", bin %zu)",
+        SP_DEBUG("(put) Search for key %p (hash 0x%08" PRIx32 ", bin %zu)",
               key, hash, bin_index);
 
         bin = &table->bins[bin_index];
@@ -452,20 +452,20 @@ cork_hash_table_put_hash(struct cork_hash_table *table,
                 cork_container_of
                 (curr, struct cork_hash_table_entry_priv, in_bucket);
 
-            DEBUG("  Check entry %p", entry);
+            SP_DEBUG("  Check entry %p", entry);
             if (table->equals(table->user_data, key, entry->public.key)) {
-                DEBUG("    Found existing entry; overwriting");
-                DEBUG("    Return old key %p", entry->public.key);
+                SP_DEBUG("    Found existing entry; overwriting");
+                SP_DEBUG("    Return old key %p", entry->public.key);
                 if (old_key != NULL) {
                     *old_key = entry->public.key;
                 }
-                DEBUG("    Return old value %p", entry->public.value);
+                SP_DEBUG("    Return old value %p", entry->public.value);
                 if (old_value != NULL) {
                     *old_value = entry->public.value;
                 }
-                DEBUG("    Copy key %p into entry", key);
+                SP_DEBUG("    Copy key %p into entry", key);
                 entry->public.key = key;
-                DEBUG("    Copy value %p into entry", value);
+                SP_DEBUG("    Copy value %p into entry", value);
                 entry->public.value = value;
                 if (is_new != NULL) {
                     *is_new = false;
@@ -477,25 +477,25 @@ cork_hash_table_put_hash(struct cork_hash_table *table,
         }
 
         /* create a new entry */
-        DEBUG("  Entry not found");
+        SP_DEBUG("  Entry not found");
         if ((table->entry_count / table->bin_count) >
             CORK_HASH_TABLE_MAX_DENSITY) {
             cork_hash_table_rehash(table);
             bin_index = bin_index(table, hash);
         }
     } else {
-        DEBUG("(put) Search for key %p (hash 0x%08" PRIx32 ")",
+        SP_DEBUG("(put) Search for key %p (hash 0x%08" PRIx32 ")",
               key, hash);
-        DEBUG("  Empty table");
+        SP_DEBUG("  Empty table");
         cork_hash_table_rehash(table);
         bin_index = bin_index(table, hash);
     }
 
-    DEBUG("    Allocate new entry");
+    SP_DEBUG("    Allocate new entry");
     entry = cork_hash_table_new_entry(table, hash, key, value);
-    DEBUG("    Created new entry %p", entry);
+    SP_DEBUG("    Created new entry %p", entry);
 
-    DEBUG("    Add entry into bin %zu", bin_index);
+    SP_DEBUG("    Add entry into bin %zu", bin_index);
     cork_dllist_add(&table->bins[bin_index], &entry->in_bucket);
 
     table->entry_count++;
@@ -543,14 +543,14 @@ cork_hash_table_delete_hash(struct cork_hash_table *table,
     struct cork_dllist_item  *curr;
 
     if (table->bin_count == 0) {
-        DEBUG("(delete) Empty table when searching for key %p "
+        SP_DEBUG("(delete) Empty table when searching for key %p "
               "(hash 0x%08" PRIx32 ")",
               key, hash);
         return false;
     }
 
     bin_index = bin_index(table, hash);
-    DEBUG("(delete) Search for key %p (hash 0x%08" PRIx32 ", bin %zu)",
+    SP_DEBUG("(delete) Search for key %p (hash 0x%08" PRIx32 ", bin %zu)",
           key, hash, bin_index);
 
     bin = &table->bins[bin_index];
@@ -560,9 +560,9 @@ cork_hash_table_delete_hash(struct cork_hash_table *table,
             cork_container_of
             (curr, struct cork_hash_table_entry_priv, in_bucket);
 
-        DEBUG("  Check entry %p", entry);
+        SP_DEBUG("  Check entry %p", entry);
         if (table->equals(table->user_data, key, entry->public.key)) {
-            DEBUG("    Match");
+            SP_DEBUG("    Match");
             if (deleted_key != NULL) {
                 *deleted_key = entry->public.key;
             }
@@ -570,11 +570,11 @@ cork_hash_table_delete_hash(struct cork_hash_table *table,
                 *deleted_value = entry->public.value;
             }
 
-            DEBUG("    Remove entry from hash bin %zu", bin_index);
+            SP_DEBUG("    Remove entry from hash bin %zu", bin_index);
             cork_dllist_remove(curr);
             table->entry_count--;
 
-            DEBUG("    Free entry %p", entry);
+            SP_DEBUG("    Free entry %p", entry);
             cork_hash_table_free_entry(table, entry);
             return true;
         }
@@ -582,7 +582,7 @@ cork_hash_table_delete_hash(struct cork_hash_table *table,
         curr = curr->next;
     }
 
-    DEBUG("  Entry not found");
+    SP_DEBUG("  Entry not found");
     return false;
 }
 
@@ -601,7 +601,7 @@ cork_hash_table_map(struct cork_hash_table *table, void *user_data,
                     cork_hash_table_map_f map)
 {
     struct cork_dllist_item  *curr;
-    DEBUG("Map across hash table");
+    SP_DEBUG("Map across hash table");
 
     curr = cork_dllist_start(&table->insertion_order);
     while (!cork_dllist_is_end(&table->insertion_order, curr)) {
@@ -611,13 +611,13 @@ cork_hash_table_map(struct cork_hash_table *table, void *user_data,
         struct cork_dllist_item  *next = curr->next;
         enum cork_hash_table_map_result  result;
 
-        DEBUG("    Apply function to entry %p", entry);
+        SP_DEBUG("    Apply function to entry %p", entry);
         result = map(user_data, &entry->public);
 
         if (result == CORK_HASH_TABLE_MAP_ABORT) {
             return;
         } else if (result == CORK_HASH_TABLE_MAP_DELETE) {
-            DEBUG("      Delete requested");
+            SP_DEBUG("      Delete requested");
             cork_dllist_remove(curr);
             table->entry_count--;
             cork_hash_table_free_entry(table, entry);
@@ -632,7 +632,7 @@ void
 cork_hash_table_iterator_init(struct cork_hash_table *table,
                               struct cork_hash_table_iterator *iterator)
 {
-    DEBUG("Iterate through hash table");
+    SP_DEBUG("Iterate through hash table");
     iterator->table = table;
     iterator->priv = cork_dllist_start(&table->insertion_order);
 }
@@ -651,7 +651,7 @@ cork_hash_table_iterator_next(struct cork_hash_table_iterator *iterator)
 
     entry = cork_container_of
         (curr, struct cork_hash_table_entry_priv, insertion_order);
-    DEBUG("    Return entry %p", entry);
+    SP_DEBUG("    Return entry %p", entry);
     iterator->priv = curr->next;
     return &entry->public;
 }

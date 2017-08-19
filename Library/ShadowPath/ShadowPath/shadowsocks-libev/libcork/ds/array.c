@@ -16,18 +16,18 @@
 #include "libcork/helpers/errors.h"
 
 #ifndef CORK_ARRAY_DEBUG
-#define CORK_ARRAY_DEBUG 0
+#define CORK_ARRAY_DEBUG 1
 #endif
 
 #if CORK_ARRAY_DEBUG
 #include <stdio.h>
-#define DEBUG(...) \
+#define SP_DEBUG(...) \
     do { \
         fprintf(stderr, __VA_ARGS__); \
         fprintf(stderr, "\n"); \
     } while (0)
 #else
-#define DEBUG(...) /* nothing */
+#define SP_DEBUG(...) /* nothing */
 #endif
 
 
@@ -165,7 +165,7 @@ cork_raw_array_ensure_size(struct cork_raw_array *array, size_t desired_count)
 {
     size_t  desired_size;
 
-    DEBUG("--- Array %p: Ensure %zu %zu-byte elements",
+    SP_DEBUG("--- Array %p: Ensure %zu %zu-byte elements",
           array, desired_count, array->priv->element_size);
     desired_size = desired_count * array->priv->element_size;
 
@@ -177,7 +177,7 @@ cork_raw_array_ensure_size(struct cork_raw_array *array, size_t desired_count)
             new_size = desired_size;
         }
 
-        DEBUG("--- Array %p: Reallocating %zu->%zu bytes",
+        SP_DEBUG("--- Array %p: Reallocating %zu->%zu bytes",
               array, array->priv->allocated_size, new_size);
         array->items = cork_realloc(array->items, new_size);
 
@@ -228,7 +228,7 @@ cork_raw_array_copy(struct cork_raw_array *dest,
     size_t  reuse_count;
     char  *dest_element;
 
-    DEBUG("--- Copying %zu elements (%zu bytes) from %p to %p",
+    SP_DEBUG("--- Copying %zu elements (%zu bytes) from %p to %p",
           src->size, src->size * dest->priv->element_size, src, dest);
     assert(dest->priv->element_size == src->priv->element_size);
     cork_array_clear(dest);
@@ -242,7 +242,7 @@ cork_raw_array_copy(struct cork_raw_array *dest,
 
     dest_element = dest->items;
     if (dest->priv->reuse != NULL) {
-        DEBUG("    Calling reuse on elements 0-%zu", reuse_count);
+        SP_DEBUG("    Calling reuse on elements 0-%zu", reuse_count);
         for (i = 0; i < reuse_count; i++) {
             dest->priv->reuse(dest->priv->user_data, dest_element);
             dest_element += dest->priv->element_size;
@@ -252,7 +252,7 @@ cork_raw_array_copy(struct cork_raw_array *dest,
     }
 
     if (dest->priv->init != NULL) {
-        DEBUG("    Calling init on elements %zu-%zu", reuse_count, src->size);
+        SP_DEBUG("    Calling init on elements %zu-%zu", reuse_count, src->size);
         for (i = reuse_count; i < src->size; i++) {
             dest->priv->init(dest->priv->user_data, dest_element);
             dest_element += dest->priv->element_size;

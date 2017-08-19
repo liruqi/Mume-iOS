@@ -54,7 +54,7 @@ cork_slice_copy(struct cork_slice *dest, const struct cork_slice *slice,
         (offset <= slice->size) &&
         ((offset + length) <= slice->size)) {
         /*
-        DEBUG("Slicing <%p:%zu> at %zu:%zu, gives <%p:%zu>",
+        SP_DEBUG("Slicing <%p:%zu> at %zu:%zu, gives <%p:%zu>",
               slice->buf, slice->size,
               offset, length,
               slice->buf + offset, length);
@@ -64,7 +64,7 @@ cork_slice_copy(struct cork_slice *dest, const struct cork_slice *slice,
 
     else {
         /*
-        DEBUG("Cannot slice <%p:%zu> at %zu:%zu",
+        SP_DEBUG("Cannot slice <%p:%zu> at %zu:%zu",
               slice->buf, slice->size,
               offset, length);
         */
@@ -99,7 +99,7 @@ cork_slice_light_copy(struct cork_slice *dest, const struct cork_slice *slice,
         (offset <= slice->size) &&
         ((offset + length) <= slice->size)) {
         /*
-        DEBUG("Slicing <%p:%zu> at %zu:%zu, gives <%p:%zu>",
+        SP_DEBUG("Slicing <%p:%zu> at %zu:%zu, gives <%p:%zu>",
               slice->buf, slice->size,
               offset, length,
               slice->buf + offset, length);
@@ -109,7 +109,7 @@ cork_slice_light_copy(struct cork_slice *dest, const struct cork_slice *slice,
 
     else {
         /*
-        DEBUG("Cannot slice <%p:%zu> at %zu:%zu",
+        SP_DEBUG("Cannot slice <%p:%zu> at %zu:%zu",
               slice->buf, slice->size,
               offset, length);
         */
@@ -143,7 +143,7 @@ cork_slice_slice(struct cork_slice *slice, size_t offset, size_t length)
         (offset <= slice->size) &&
         ((offset + length) <= slice->size)) {
         /*
-        DEBUG("Slicing <%p:%zu> at %zu:%zu, gives <%p:%zu>",
+        SP_DEBUG("Slicing <%p:%zu> at %zu:%zu, gives <%p:%zu>",
               slice->buf, slice->size,
               offset, length,
               slice->buf + offset, length);
@@ -159,7 +159,7 @@ cork_slice_slice(struct cork_slice *slice, size_t offset, size_t length)
 
     else {
         /*
-        DEBUG("Cannot slice <%p:%zu> at %zu:%zu",
+        SP_DEBUG("Cannot slice <%p:%zu> at %zu:%zu",
               slice->buf, slice->size,
               offset, length);
         */
@@ -186,7 +186,7 @@ void
 cork_slice_finish(struct cork_slice *slice)
 {
     /*
-    DEBUG("Finalizing <%p:%zu>", dest->buf, dest->size);
+    SP_DEBUG("Finalizing <%p:%zu>", dest->buf, dest->size);
     */
 
     if (slice->iface != NULL && slice->iface->free != NULL) {
