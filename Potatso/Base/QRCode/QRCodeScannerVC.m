@@ -10,6 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "HMScanner.h"
 #import "Potatso-Swift.h"
+#import "Crashlytics/Crashlytics.h"
 
 #ifndef CDZWeakSelf
 #define CDZWeakSelf __weak __typeof__((__typeof__(self))self)
@@ -120,7 +121,7 @@ NSString * const CDZQRScanningErrorDomain = @"com.cdzombak.qrscanningviewcontrol
         if (input) {
             [self.avSession addInput:input];
         } else {
-            NSLog(@"QRScanningViewController: Error getting input device: %@", error);
+            CLS_LOG(@"QRScanningViewController: Error getting input device: %@", error);
             [self.avSession commitConfiguration];
             if (self.errorBlock) {
                 dispatch_async(dispatch_get_main_queue(), ^{

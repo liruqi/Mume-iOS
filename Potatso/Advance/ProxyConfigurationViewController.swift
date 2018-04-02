@@ -119,7 +119,7 @@ class ProxyConfigurationViewController: FormViewController {
             <<< PushRow<String>(kProxyFormEncryption) {
                 $0.title = "Encryption".localized()
                 $0.options = Proxy.ssSupportedEncryption
-                $0.value = self.upstreamProxy.authscheme ?? $0.options[2]
+                $0.value = self.upstreamProxy.authscheme ?? Proxy.ssSupportedEncryption[2]
                 $0.selectorTitle = "Choose encryption method".localized()
                 $0.disabled = Condition.function([], { _ in
                     return self.readOnly

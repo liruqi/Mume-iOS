@@ -36,7 +36,7 @@
 @implementation PacketTunnelProvider
 
 - (void)startTunnelWithOptions:(NSDictionary *)options completionHandler:(void (^)(NSError *))completionHandler {
-    mumeLog(@"starting Mume tunnel...");
+    mumeLog(@"starting Mume tunnel... PID: %d", [[NSProcessInfo processInfo] processIdentifier]);
     [self updateUserDefaults];
     NSError *error = [TunnelInterface setupWithPacketTunnelFlow:self.packetFlow];
     if (error) {
@@ -216,7 +216,6 @@
     proxySettings.exceptionList = [@[@"crashlytics.com", @"liruqi.info", @"mumevpn.com"] arrayByAddingObjectsFromArray:self.directDomains];
     settings.proxySettings = proxySettings;
     NEDNSSettings *dnsSettings = [[NEDNSSettings alloc] initWithServers:dnsServers];
-    dnsSettings.matchDomains = @[@""];
     settings.DNSSettings = dnsSettings;
     [self setTunnelNetworkSettings:settings completionHandler:^(NSError * _Nullable error) {
         if (error) {

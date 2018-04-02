@@ -17,7 +17,7 @@
 
 
 #if !defined(CORK_DEBUG_MEMPOOL)
-#define CORK_DEBUG_MEMPOOL  0
+#define CORK_DEBUG_MEMPOOL  1
 #endif
 
 #if CORK_DEBUG_MEMPOOL

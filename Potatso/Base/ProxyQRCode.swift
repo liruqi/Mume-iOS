@@ -9,6 +9,7 @@
 import Foundation
 import EFQRCode
 import Cartography
+import Photos
 
 class ProxyQRCode : UIView {
     var proxy: String
@@ -39,7 +40,14 @@ class ProxyQRCode : UIView {
     
     func onShare(_ sender: UITapGestureRecognizer) {
         if let image = self.image {
-            self.shareCallback(image)
+            let status = PHPhotoLibrary.authorizationStatus()
+            if status != .notDetermined {
+                self.shareCallback(image)
+                return
+            }
+            PHPhotoLibrary.requestAuthorization({ (newStatus) in
+                self.shareCallback(image)
+            })
         }
     }
     

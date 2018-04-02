@@ -72,10 +72,11 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         self.navigationItem.titleView = titleButton
         // Post an empty message so we could attach to packet tunnel process
         Manager.shared.postToNETunnel(message: "Hello", complete: { code, data in
-            if let data = data {
-                print(code, String(data: data, encoding: .utf8) ?? "")
+            if let data = data, let ip = String(data: data, encoding: .utf8) {
+                print(code, ip)
             }
         })
+        
         updateForm()
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: "List".templateImage, style: .plain, target: presenter, action: #selector(HomePresenter.chooseConfigGroups))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addProxy(_:)))
@@ -333,14 +334,14 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
     }
     // MARK: - TableView
 
-    func tableView(_ tableView: UITableView, canEditRowAtIndexPath indexPath: IndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if indexPath.section == ruleSetSection.index && indexPath.row < presenter.group.ruleSets.count {
             return true
         }
         return false
     }
 
-    func tableView(_ tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             do {
                 let group = presenter.group
@@ -358,7 +359,7 @@ class HomeVC: FormViewController, UINavigationControllerDelegate, HomePresenterP
         }
     }
 
-    func tableView(_ tableView: UITableView, editingStyleForRowAtIndexPath indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
         return .delete
     }
     

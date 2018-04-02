@@ -17,7 +17,7 @@
 
 
 #if !defined(CORK_DEBUG_PROCESS)
-#define CORK_DEBUG_PROCESS  0
+#define CORK_DEBUG_PROCESS  1
 #endif
 
 #if CORK_DEBUG_PROCESS

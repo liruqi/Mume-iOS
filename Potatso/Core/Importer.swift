@@ -86,10 +86,9 @@ struct Importer {
     
     func importConfig(_ source: String, isURL: Bool) {
         viewController?.showProgreeHUD("Importing Config...".localized())
-        Async.background(after: 1) {
             do {
                 if isURL, let url = URL(string: source), (url.scheme == "https" || url.scheme == "http") {
-                    API.getImportData(url: url, callback: { data, error in
+                    API.getJSON(url: url, callback: { data, error in
                         if let error = error {
                             self.onConfigSaveCallback(false, error: error)
                             return
@@ -117,7 +116,6 @@ struct Importer {
             } catch {
                 self.onConfigSaveCallback(false, error: error)
             }
-        }
     }
     
     func onConfigSaveCallback(_ success: Bool, error: Error?) {

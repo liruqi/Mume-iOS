@@ -16,7 +16,7 @@
 #include "libcork/core/types.h"
 
 #ifndef CORK_IP_ADDRESS_DEBUG
-#define CORK_IP_ADDRESS_DEBUG 0
+#define CORK_IP_ADDRESS_DEBUG 1
 #endif
 
 #if CORK_IP_ADDRESS_DEBUG

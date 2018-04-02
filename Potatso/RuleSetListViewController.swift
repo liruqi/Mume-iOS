@@ -23,6 +23,10 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
     var heightAtIndex: [Int: CGFloat] = [:]
     fileprivate let pageSize = 20
     
+    convenience init() {
+        self.init(existing: [])
+    }
+    
     init(existing: [String], chooseCallback: ((RuleSet?) -> Void)? = nil) {
         self.chooseCallback = chooseCallback
         self.existingRules = existing
@@ -156,7 +160,6 @@ class RuleSetListViewController: UIViewController, UITableViewDataSource, UITabl
         v.dataSource = self
         v.delegate = self
         v.tableFooterView = UIView()
-        v.tableHeaderView = UIView()
         v.separatorStyle = .singleLine
         v.rowHeight = UITableViewAutomaticDimension
         return v

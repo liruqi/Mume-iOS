@@ -10,28 +10,11 @@ import Foundation
 import PotatsoModel
 import Alamofire
 import ObjectMapper
-import CoreTelephony
 import ICSMainFramework
-
-extension NetworkReachabilityManager.NetworkReachabilityStatus {
-    func description() -> String {
-        switch self {
-        case .notReachable:
-            return "notReachable"
-        case .unknown:
-            return "unknown"
-        case .reachable(.wwan):
-            return "wwan"
-        case .reachable(.ethernetOrWiFi):
-            return "ethernetOrWiFi"
-        }
-        return ""
-    }
-}
 
 struct API {
 
-    static let URL = "https://api.liruqi.info/"
+    static let URL = "https://api.mume.red/"
 
     enum Path {
         case ruleSets
@@ -49,7 +32,7 @@ struct API {
         }
     }
     
-    static func getImportData(url: URL, callback: @escaping (Data, Error?) -> Void) {
+    static func getJSON(url: URL, callback: @escaping (Data, Error?) -> Void) {
         let lang = Locale.preferredLanguages[0]
         let versionCode = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? ""
         NSLog("API.getImportData ===> lang: \(lang), version: \(versionCode)")
@@ -90,6 +73,7 @@ struct API {
                     }
                 } else {
                     Crashlytics.sharedInstance().setObjectValue(response.data ?? "response.data", forKey: "getRuleSetsFailed")
+                    callback([])
                 }
                 
             }

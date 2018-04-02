@@ -17,13 +17,16 @@ private let kProxyCellIdentifier = "proxy"
 class ProxyListViewController: FormViewController {
 
     var proxies: [Proxy?] = []
-
-    let allowNone: Bool
+    var storeItems : [String] = []
     let chooseCallback: ((Proxy?) -> Void)?
 
-    init(allowNone: Bool = false, chooseCallback: ((Proxy?) -> Void)? = nil) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        self.chooseCallback = nil
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+
+    init(chooseCallback: ((Proxy?) -> Void)? = nil) {
         self.chooseCallback = chooseCallback
-        self.allowNone = allowNone
         super.init(style: .plain)
     }
     
@@ -33,28 +36,47 @@ class ProxyListViewController: FormViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.automaticallyAdjustsScrollViewInsets = false
+        reloadData()
         navigationItem.title = "Proxy".localized()
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(add))
-        reloadData()
+        if !SKPaymentQueue.canMakePayments() {
+            print("SKPaymentQueue.canMakePayments: false")
+            return
+        }
+        guard let store = DataInitializer.store else {
+            print("No store")
+            return
+        }
+        if store.products.count > 0 {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(onStore))
+        }
     }
 
     func add() {
         let vc = ProxyConfigurationViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func onStore() {
+        guard let store = DataInitializer.store else {
+            print("No store")
+            return
+        }
+        let vc = IAPStoreVC(products: store.products)
+        navigationController?.pushViewController(vc, animated: true)
+    }
 
     func reloadData() {
         proxies = DBUtils.all(Proxy.self, sorted: "createAt").map({ $0 })
-        if allowNone {
-            proxies.insert(nil, at: 0)
-        }
+
         form.delegate = nil
         form.removeAll()
+        if proxies.count > 0 {
         let section = DataInitializer.cloudProxies.count > 0 ? Section("Local".localized()) : Section()
         for proxy in proxies {
             section
@@ -79,6 +101,7 @@ class ProxyListViewController: FormViewController {
                 })
         }
         form +++ section
+        }
         
         if DataInitializer.cloudProxies.count > 0 {
             let cloudSection = Section("Cloud".localized())
@@ -115,21 +138,18 @@ class ProxyListViewController: FormViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    func tableView(_ tableView: UITableView, canEditRowAtIndexPath indexPath: IndexPath) -> Bool {
-        if allowNone && indexPath.row == 0 {
-            return false
-        }
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
 
-    func tableView(_ tableView: UITableView, editingStyleForRowAtIndexPath indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
         if indexPath.section == 0 {
             return .delete
         }
         return .delete
     }
 
-    func tableView(_ tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle != .delete {
             return
         }
@@ -165,7 +185,6 @@ class ProxyListViewController: FormViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView?.tableFooterView = UIView()
-        tableView?.tableHeaderView = UIView()
     }
 
 }

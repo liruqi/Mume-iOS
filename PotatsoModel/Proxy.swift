@@ -468,7 +468,7 @@ extension Proxy {
         return proxyString
     }
 
-    public static func schemeIsProxy(_ scheme: String) -> Bool {
+    private static func schemeIsProxy(_ scheme: String) -> Bool {
         return (scheme == Proxy.ssUriMethod)
             || (scheme == Proxy.ssrUriMethod)
             || (scheme == "mume")
@@ -481,9 +481,14 @@ extension Proxy {
 
     public static func uriIsProxy(_ uri: String) -> Bool {
         if let url = URL(string: uri) {
-            if let scheme = url.scheme {
-                return Proxy.schemeIsProxy(scheme.lowercased())
-            }
+            return Proxy.urlIsProxy(url)
+        }
+        return false
+    }
+    
+    public static func urlIsProxy(_ url: URL) -> Bool {
+        if let scheme = url.scheme {
+            return Proxy.schemeIsProxy(scheme.lowercased()) && (url.host != "on") && (url.host != "off")
         }
         return false
     }

@@ -40,7 +40,7 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
             return false
         }
         
-        if Proxy.schemeIsProxy(scheme) {
+        if Proxy.urlIsProxy(url) {
             do {
             if let proxy = try? Proxy(url: url), Proxy.insertOrUpdate(proxy: proxy) {
                 return true
@@ -52,7 +52,7 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
                 
                 for part in parts {
                     if let purl = URL(string: part),
-                        Proxy.schemeIsProxy(purl.scheme ?? "") {
+                        Proxy.urlIsProxy(purl) {
                         let proxy = try Proxy(url: purl)
                         if Proxy.insertOrUpdate(proxy: proxy) {
                             cnt += 1
@@ -96,6 +96,7 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
             let str = content.removingPercentEncoding,
             str.characters.count > 3 {
             if Proxy.uriIsProxy(str) {
+                UIPasteboard.general.string = ""
                 if let proxy = try? Proxy(string: str), Proxy.insertOrUpdate(proxy: proxy) {
                     return
                 }
@@ -105,7 +106,7 @@ class UrlHandler: NSObject, AppLifeCycleProtocol {
                 
                 for part in parts {
                     if let purl = URL(string: part),
-                        Proxy.schemeIsProxy(purl.scheme ?? "") {
+                        Proxy.urlIsProxy(purl) {
                         if let proxy = try? Proxy(url: purl), Proxy.insertOrUpdate(proxy: proxy) {
                             cnt += 1
                         }

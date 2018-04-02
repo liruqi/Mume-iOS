@@ -28,7 +28,7 @@ class RuleSetConfigurationViewController: FormViewController {
         if let ruleSet = ruleSet {
             self.ruleSet = RuleSet(value: ruleSet)
             self.isEdit = true
-        }else {
+        } else {
             self.ruleSet = RuleSet()
             self.isEdit = false
         }
@@ -54,7 +54,7 @@ class RuleSetConfigurationViewController: FormViewController {
         if editable {
             navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(save))
         }
-        tableView?.reloadSections(IndexSet(integer: 1), with: .none)
+        tableView?.reloadData()
     }
 
     func generateForm() {
@@ -131,14 +131,16 @@ class RuleSetConfigurationViewController: FormViewController {
         }
     }
     
-    func tableView(_ tableView: UITableView, canEditRowAtIndexPath indexPath: IndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if indexPath.section == 1 {
-            return editable
+            if editable {
+                return indexPath.row > 0
+            }
         }
         return false
     }
     
-    func tableView(_ tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             ruleSet.removeRule(atIndex: indexPath.row - 1)
             form[indexPath].hidden = true
@@ -146,7 +148,7 @@ class RuleSetConfigurationViewController: FormViewController {
         }
     }
     
-    func tableView(_ tableView: UITableView, editingStyleForRowAtIndexPath indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
         return UITableViewCellEditingStyle.delete
     }
     
