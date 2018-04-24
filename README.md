@@ -1,6 +1,6 @@
 # Mume ![GPLv3 License](https://img.shields.io/badge/License-GPLv3-blue.svg)
 
-<a href="https://itunes.apple.com/cn/app/mume-vpn/id1144787928?l=en&mt=8">![](https://cdn.rawgit.com/liruqi/Mume-iOS/master/Download.svg)</a>
+<a href="https://itunes.apple.com/app/mume-vpn/id1144787928?l=en&mt=8">![](https://cdn.rawgit.com/liruqi/Mume-iOS/master/Download.svg)</a>
 
 Mume is an iOS client that implements custom proxies with the leverage of Network Extension framework introduced by Apple since iOS 9.
 
@@ -10,7 +10,7 @@ Currently, Mume is compatible with following proxies:
 - [SOCKS5](https://www.ietf.org/rfc/rfc1928.txt)
 - [ShadowsocksR](https://github.com/breakwa11/shadowsocks-rss)
 
-[Join Telegram Group](https://telegram.me/mumevpn) to chat with users.
+[Join Telegram Group](https://t.me/joinchat/AN1ErED_RwZhHYrUdCKMOA) to chat with users.
 
 ## Guide
 
